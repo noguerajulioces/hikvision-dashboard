@@ -66,3 +66,5 @@ end
 
 gem "devise"
 gem "rolify"
+gem "annotaterb"
+gem "rails-erd"
