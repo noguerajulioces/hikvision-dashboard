@@ -1,0 +1,49 @@
+<div class="space-y-10 divide-y divide-gray-900/10">
+  <div class="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
+    <div class="px-4 sm:px-0">
+      <h2 class="text-base/7 font-semibold text-gray-900">Perfil</h2>
+      <p class="mt-1 text-sm/6 text-gray-600">Esta es la información pública asociada a tu cuenta que estará visible para otros usuarios.</p>
+    </div>
+
+    <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+      <div class="px-4 py-6 sm:p-8">
+        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="col-span-full">
+            <label for="username" class="block text-sm/6 font-medium text-gray-900">Nombre Completo</label>
+            <div class="mt-2">
+              <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                <input type="text" name="username" id="username" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6" value="<%= current_user&.name %>" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-full">
+            <label for="email" class="block text-sm/6 font-medium text-gray-900">Email</label>
+            <div class="mt-2">
+              <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled value="<%= current_user&.email %>">
+            </div>
+          </div>
+
+          <div class="col-span-full">
+            <label for="phone" class="block text-sm/6 font-medium text-gray-900">Teléfono</label>
+            <div class="mt-2">
+              <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                <input type="text" name="phone" id="phone" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6" value="<%= current_user&.phone %>" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-full">
+            <label for="created_at" class="block text-sm/6 font-medium text-gray-900">Fecha de creación</label>
+            <div class="mt-2">
+              <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                <input type="text" name="created_at" id="created_at" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6" value="<%= current_user&.created_at %>" disabled>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
