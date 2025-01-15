@@ -14,15 +14,10 @@
       <div class="px-4 py-5 sm:px-6">
         <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Nombre</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @employee.first_name %></dd>
+            <dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.first_name %> <%= @employee.last_name %></dd>
           </div>
           
-          <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Apellido</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @employee.last_name %></dd>
-          </div>
-
           <div class="sm:col-span-1">
             <dt class="text-sm font-medium text-gray-500">Rol</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee.role %></dd>
@@ -34,8 +29,19 @@
           </div>
 
           <div class="sm:col-span-1">
+            <dt class="text-sm font-medium text-gray-500">Fecha de Terminación</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.termination_date&.strftime("%d/%m/%Y") || '-' %></dd>
+          </div>
+
+          <div class="sm:col-span-1">
             <dt class="text-sm font-medium text-gray-500">Grupo</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @employee.group&.name || '-' %></dd>
+            <dd class="mt-1 text-sm text-gray-900">
+              <% if @employee.group %>
+                <%= link_to @employee.group.name, group_path(@employee.group), class: "text-indigo-600 hover:text-indigo-900" %>
+              <% else %>
+                -
+              <% end %>
+            </dd>
           </div>
 
           <div class="sm:col-span-1">
