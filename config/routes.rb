@@ -13,10 +13,19 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "home#index"
   get "profile", to: "users#show", as: "user_profile"
-  resources :groups
+  resources :groups do
+    member do
+      post :add_employee
+    end
+  end
   resources :users, except: [ :show ] do
     member do
       patch :toggle_active
+    end
+  end
+  resources :employees do
+    collection do
+      get "search"
     end
   end
 end

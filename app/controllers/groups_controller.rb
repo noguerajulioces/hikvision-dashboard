@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @groups = Group.all
@@ -35,6 +35,20 @@ class GroupsController < ApplicationController
   def destroy
     @group.destroy
     redirect_to groups_path, notice: "Grupo eliminado exitosamente."
+  end
+
+  def add_employee
+
+    byebug
+    
+    @group = Group.find(params[:id])
+    employee = Employee.find(params[:employee_id])
+
+    if employee.update(group: @group)
+      render json: { success: true }, status: :ok
+    else
+      render json: { error: "No se pudo asociar el empleado." }, status: :unprocessable_entity
+    end
   end
 
   private
