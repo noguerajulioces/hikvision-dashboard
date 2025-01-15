@@ -1,0 +1,49 @@
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-base font-semibold text-gray-900">Detalles del Empleado</h1>
+      <p class="mt-2 text-sm text-gray-700">Información detallada del empleado.</p>
+    </div>
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+      <%= link_to "Editar", edit_employee_path(@employee), class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" %>
+    </div>
+  </div>
+
+  <div class="mt-8 flow-root">
+    <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-medium text-gray-500">Nombre</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.first_name %></dd>
+          </div>
+          
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-medium text-gray-500">Apellido</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.last_name %></dd>
+          </div>
+
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-medium text-gray-500">Rol</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.role %></dd>
+          </div>
+
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-medium text-gray-500">Fecha de Contratación</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.hire_date&.strftime("%d/%m/%Y") %></dd>
+          </div>
+
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-medium text-gray-500">Grupo</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.group&.name || '-' %></dd>
+          </div>
+
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-medium text-gray-500">Fecha de Registro</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @employee.created_at.strftime("%d/%m/%Y") %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
