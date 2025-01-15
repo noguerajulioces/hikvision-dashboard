@@ -46,6 +46,13 @@
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <a href="<%= edit_user_path(user) %>" class="text-indigo-600 hover:text-indigo-900">Editar</a>
                   </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <% if user&.active %>
+                      <%= link_to "Desactivar", toggle_active_user_path(user), method: :patch, class: "ml-2 text-red-600 hover:text-red-900", data: { turbo_method: :patch } %>
+                    <% else %>
+                      <%= link_to "Activar", toggle_active_user_path(user), method: :patch, class: "ml-2 text-green-600 hover:text-green-900", data: { turbo_method: :patch } %>
+                    <% end %>
+                  </td>
                 </tr>
               <% end %>
             </tbody>

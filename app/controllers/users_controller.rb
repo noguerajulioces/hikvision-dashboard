@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [ :edit, :update, :destroy ]
+  before_action :set_user, only: [ :edit, :update, :destroy, :toggle_active ]
 
   def index
     @users = User.all
@@ -37,6 +37,15 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     redirect_to users_path, notice: "Usuario eliminado exitosamente."
+  end
+
+  def toggle_active
+    @user.active = !@user.active
+    if @user.save
+      redirect_to users_path, notice: "El estado del usuario ha sido actualizado."
+    else
+      redirect_to users_path, alert: "Hubo un error al intentar actualizar el estado del usuario."
+    end
   end
 
   private
