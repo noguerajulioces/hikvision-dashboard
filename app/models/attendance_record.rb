@@ -15,4 +15,6 @@ class AttendanceRecord < ApplicationRecord
   belongs_to :device
 
   validates :entry_time, presence: true
+
+  default_scope { order(entry_time: :desc) }
 end

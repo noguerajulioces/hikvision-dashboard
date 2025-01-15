@@ -3,9 +3,11 @@
 # Table name: employees
 #
 #  id               :integer          not null, primary key
+#  email            :string
 #  first_name       :string
 #  hire_date        :date
 #  last_name        :string
+#  phone            :string
 #  role             :string
 #  termination_date :date
 #  created_at       :datetime         not null
@@ -20,4 +22,6 @@ class Employee < ApplicationRecord
 
   validates :first_name, :last_name, :role, presence: true
   validates :hire_date, presence: true
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :phone, presence: true, length: { minimum: 10, maximum: 15 }
 end
