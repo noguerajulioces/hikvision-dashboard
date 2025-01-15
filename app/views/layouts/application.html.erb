@@ -32,6 +32,9 @@
 
         <main class="py-10">
           <div class="px-4 sm:px-6 lg:px-8">
+            <div class="fixed top-50 left-0 right-0 z-50">
+              <%= render 'layouts/shared/notice' %>
+            </div>
             <%= yield %>
           </div>
         </main>
