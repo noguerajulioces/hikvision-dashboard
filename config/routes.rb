@@ -13,4 +13,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "home#index"
   get "profile", to: "users#show", as: "user_profile"
+  get "users", to: "users#index", as: "users"
+  get "users/new", to: "users#new", as: "new_user"
 end
