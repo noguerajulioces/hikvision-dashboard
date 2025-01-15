@@ -22,8 +22,19 @@
 #
 class User < ApplicationRecord
   rolify
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+  validate :must_have_at_least_one_role
+
+  private
+
+  def must_have_at_least_one_role
+    if roles.blank?
+      errors.add(:roles, "debe tener al menos un rol asignado.")
+    end
+  end
 end
