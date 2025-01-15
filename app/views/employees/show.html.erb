@@ -105,7 +105,7 @@
                       <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
                         <circle cx="1" cy="1" r="1" />
                       </svg>
-                      <p class="truncate">Horas Trabajadas: <%= ((record.exit_time - record.entry_time) / 1.hour).round(2) %></p>
+                      <p class="truncate">Horas Trabajadas: <%= hours, minutes = ((record.exit_time - record.entry_time) / 60).to_i.divmod(60); "#{hours}:#{format('%02d', minutes)}" %></p>
                     <% end %>
                   </div>
                 </div>

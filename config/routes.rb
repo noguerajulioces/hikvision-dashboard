@@ -29,4 +29,5 @@ Rails.application.routes.draw do
       get "search"
     end
   end
+  resources :attendance_records
 end
