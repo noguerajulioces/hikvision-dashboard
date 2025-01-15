@@ -10,7 +10,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_14_215214) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_15_142647) do
+  create_table "attendance_records", force: :cascade do |t|
+    t.integer "employee_id"
+    t.datetime "entry_time"
+    t.datetime "exit_time"
+    t.integer "device_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "devices", force: :cascade do |t|
+    t.string "name"
+    t.string "ip_address"
+    t.string "model"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "group_id"
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.date "hire_date"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "incidents", force: :cascade do |t|
+    t.integer "employee_id"
+    t.date "date"
+    t.string "issue"
+    t.boolean "resolved"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "overtime_records", force: :cascade do |t|
+    t.integer "employee_id"
+    t.date "date"
+    t.decimal "hours_worked"
+    t.decimal "compensation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
@@ -20,6 +71,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_215214) do
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["name"], name: "index_roles_on_name"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.integer "group_id"
+    t.string "day_of_week"
+    t.time "expected_entry_time"
+    t.time "expected_exit_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

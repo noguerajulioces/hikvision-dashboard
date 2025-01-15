@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: schedules
+#
+#  id                  :integer          not null, primary key
+#  day_of_week         :string
+#  expected_entry_time :time
+#  expected_exit_time  :time
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  group_id            :integer
+#
+one:
+  group_id: 1
+  day_of_week: MyString
+  expected_entry_time: 2025-01-15 11:24:59
+  expected_exit_time: 2025-01-15 11:24:59
+
+two:
+  group_id: 1
+  day_of_week: MyString
+  expected_entry_time: 2025-01-15 11:24:59
+  expected_exit_time: 2025-01-15 11:24:59

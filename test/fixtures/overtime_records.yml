@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: overtime_records
+#
+#  id           :integer          not null, primary key
+#  compensation :decimal(, )
+#  date         :date
+#  hours_worked :decimal(, )
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  employee_id  :integer
+#
+one:
+  employee_id: 1
+  date: 2025-01-15
+  hours_worked: 9.99
+  compensation: 9.99
+
+two:
+  employee_id: 1
+  date: 2025-01-15
+  hours_worked: 9.99
+  compensation: 9.99

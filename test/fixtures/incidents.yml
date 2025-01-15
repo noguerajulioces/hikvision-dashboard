@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: incidents
+#
+#  id          :integer          not null, primary key
+#  date        :date
+#  issue       :string
+#  resolved    :boolean
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  employee_id :integer
+#
+one:
+  employee_id: 1
+  date: 2025-01-15
+  issue: MyString
+  resolved: false
+
+two:
+  employee_id: 1
+  date: 2025-01-15
+  issue: MyString
+  resolved: false
