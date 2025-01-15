@@ -64,22 +64,33 @@
 
     <!-- Lista de empleados -->
     <ul role="list" class="divide-y divide-gray-200 mt-5">
-      <% @group.employees.each do |employee| %>
-        <li class="flex justify-between gap-x-6 py-5">
-          <div class="flex gap-x-4">
-            <img class="h-12 w-12 flex-none rounded-full bg-gray-50" src="https://via.placeholder.com/48" alt="<%= employee&.first_name %>">
-            <div class="min-w-0 flex-auto">
-              <p class="text-sm font-semibold leading-6 text-gray-900"><%= employee&.first_name %> <%= employee&.last_name %></p>
-              <p class="mt-1 truncate text-xs leading-5 text-gray-500"><%= employee&.role %></p>
-            </div>
-          </div>
-          <div class="hidden sm:flex sm:flex-col sm:items-end">
-            <p class="text-sm leading-6 text-gray-900">Fecha de contratación:</p>
-            <p class="mt-1 text-xs leading-5 text-gray-500"><%= employee&.hire_date&.strftime('%d/%m/%Y') %></p>
-          </div>
-        </li>
-      <% end %>
-    </ul>
+  <% @group.employees.each do |employee| %>
+    <li class="flex justify-between gap-x-6 py-5">
+      <div class="flex gap-x-4">
+        <img class="h-12 w-12 flex-none rounded-full bg-gray-50" src="https://via.placeholder.com/48" alt="<%= employee&.first_name %>">
+        <div class="min-w-0 flex-auto">
+          <p class="text-sm font-semibold leading-6 text-gray-900"><%= employee&.first_name %> <%= employee&.last_name %></p>
+          <p class="mt-1 truncate text-xs leading-5 text-gray-500"><%= employee&.role %></p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="hidden sm:flex sm:flex-col sm:items-end">
+          <p class="text-sm leading-6 text-gray-900">Fecha de contratación:</p>
+          <p class="mt-1 text-xs leading-5 text-gray-500"><%= employee&.hire_date&.strftime('%d/%m/%Y') %></p>
+        </div>
+        <button
+          type="button"
+          class="rounded-md bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-500"
+          data-action="click->modal#removeEmployee"
+          data-employee-id="<%= employee.id %>"
+          data-group-id="<%= @group.id %>">
+          Desasociar <%= @group.id %>
+        </button>
+      </div>
+    </li>
+  <% end %>
+</ul>
+
   </div>
 
 

@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_group, only: [ :show, :edit, :update, :destroy, :remove_employee ]
 
   def index
     @groups = Group.all
@@ -38,9 +38,6 @@ class GroupsController < ApplicationController
   end
 
   def add_employee
-
-    byebug
-    
     @group = Group.find(params[:id])
     employee = Employee.find(params[:employee_id])
 
@@ -50,6 +47,17 @@ class GroupsController < ApplicationController
       render json: { error: "No se pudo asociar el empleado." }, status: :unprocessable_entity
     end
   end
+
+  def remove_employee
+    @employee = Employee.find(params[:employee_id])
+
+    if @group.employees.delete(@employee)
+      render json: { success: true }, status: :ok
+    else
+      render json: { error: "Error desasociando el empleado" }, status: :unprocessable_entity
+    end
+  end
+
 
   private
 

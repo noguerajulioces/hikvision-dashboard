@@ -66,4 +66,25 @@ export default class extends Controller {
       }
     });
   }
+
+  removeEmployee(event) {
+    const employeeId = event.target.dataset.employeeId;
+    const groupId = event.target.dataset.groupId;
+
+    fetch(`/groups/${groupId}/remove_employee`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+      },
+      body: JSON.stringify({ employee_id: employeeId }),
+    }).then((response) => {
+      if (response.ok) {
+        location.reload();
+      } else {
+        console.error("Error removing employee");
+      }
+    });
+  }
+  
 }

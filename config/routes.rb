@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :groups do
     member do
       post :add_employee
+      delete :remove_employee
     end
   end
   resources :users, except: [ :show ] do
