@@ -44,17 +44,65 @@
         </div>
       </div>
 
-      <div class="col-span-full">
+      <div class="col-span-full" data-controller="password-visibility">
         <%= f.label :password, "Contraseña", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.password_field :password, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        <div class="mt-2 relative">
+          <%= f.password_field :password, 
+              class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
+              data: {
+                password_visibility_target: "input"
+              } %>
+          <button
+            type="button"
+            data-password-visibility-target="toggle"
+            data-action="password-visibility#toggle"
+            class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-500 focus:outline-none"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none" 
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div class="col-span-full">
+      <div class="col-span-full" data-controller="password-visibility">
         <%= f.label :password_confirmation, "Confirmar contraseña", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.password_field :password_confirmation, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        <div class="mt-2 relative">
+          <%= f.password_field :password_confirmation,
+              class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
+              data: {
+                password_visibility_target: "input"
+              } %>
+          <button
+            type="button" 
+            data-password-visibility-target="toggle"
+            data-action="password-visibility#toggle"
+            class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-500 focus:outline-none"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor" 
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
         </div>
       </div>
 
