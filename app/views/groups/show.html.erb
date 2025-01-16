@@ -1,13 +1,20 @@
-<div class="space-y-10 divide-y divide-gray-900/10">
-  <div class="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
-    <div class="px-4 sm:px-0">
-      <h2 class="text-base/7 font-semibold text-gray-900">Grupo</h2>
-      <p class="mt-1 text-sm/6 text-gray-600">Esta es la información del grupo de trabajo.</p>
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center mb-4">
+    <div class="sm:flex-auto">
+      <h1 class="text-base font-semibold text-gray-900"><%= @group.name %></h1>
+      <p class="mt-2 text-sm text-gray-700">Toda la información del grupo.</p>
     </div>
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+      <%= link_to 'Editar Grupo', edit_group_path(@group), class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+    </div>
+  </div>
 
-    <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+<div class="space-y-10 divide-y divide-gray-900/10">
+  <div class="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-3">
+    <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-1">
       <div class="px-4 py-6 sm:p-8">
-        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Información del Grupo</h3>
+        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
           <div class="col-span-full">
             <label for="name" class="block text-sm/6 font-medium text-gray-900">Nombre del Grupo</label>
             <div class="mt-2">
@@ -37,11 +44,27 @@
 
         </div>
       </div>
-      <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-        <%= link_to "Volver", groups_path, class: "text-sm font-semibold leading-6 text-gray-900" %>
-        <%= link_to "Editar", edit_group_path(@group), class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-      </div>
     </form>
+
+    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-1">
+      <div class="px-4 py-6 sm:p-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Horarios del Grupo</h3>
+        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+          <% @group.schedules.each do |schedule| %>
+            <div class="col-span-full">
+              <label class="block text-sm/6 font-medium text-gray-900"><%= schedule.translated_day_of_week %></label>
+              <div class="mt-2">
+                <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                  <input type="text" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6" value="<%= schedule.expected_entry_time.strftime('%H:%M') %>" disabled>
+                  <span class="mx-2">-</span>
+                  <input type="text" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6" value="<%= schedule.expected_exit_time.strftime('%H:%M') %>" disabled>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -134,4 +157,6 @@
       </div>
     </div>
   </div>
+</div>
+
 </div>
