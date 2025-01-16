@@ -30,4 +30,5 @@ Rails.application.routes.draw do
     end
   end
   resources :attendance_records
+  resources :schedules
 end
