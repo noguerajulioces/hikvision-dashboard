@@ -32,17 +32,23 @@ class Schedule < ApplicationRecord
   validate :exit_time_after_entry_time
 
   # Scopes
+  default_scope { order(:group_id, :day_of_week) }
   scope :by_day, ->(day) { where(day_of_week: day) }
   scope :by_group, ->(group_id) { where(group_id: group_id) }
 
   # Métodos de clase
   def self.days_of_week_collection
-    DAYS_OF_WEEK.map { |key, value| [I18n.t("enums.schedule.day_of_week.#{key}", default: key.to_s.humanize), value] }
+    DAYS_OF_WEEK.map { |key, value| [ I18n.t("enums.schedule.day_of_week.#{key}", default: key.to_s.humanize), value ] }
   end
-  
+
   # Métodos de instancia
   def translated_day_of_week
     I18n.t("enums.schedule.day_of_week.#{day_of_week}", default: day_of_week.humanize)
+  end
+
+  def formatted_duration
+    seconds = expected_exit_time - expected_entry_time
+    Time.at(seconds).utc.strftime("%H:%M horas")
   end
 
   private

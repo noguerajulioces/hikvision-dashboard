@@ -31,10 +31,10 @@ en:
   enums:
     schedule:
       day_of_week:
-        lunes: "Lunes"
-        martes: "Martes"
-        miércoles: "Miércoles"
-        jueves: "Jueves"
-        viernes: "Viernes"
-        sábado: "Sábado"
-        domingo: "Domingo"
+        monday: "Lunes"
+        tuesday: "Martes"
+        wednesday: "Miércoles"
+        thursday: "Jueves"
+        friday: "Viernes"
+        saturday: "Sábado"
+        sunday: "Domingo"
