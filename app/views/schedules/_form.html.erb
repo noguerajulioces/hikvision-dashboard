@@ -25,7 +25,10 @@
       <div class="col-span-full">
         <%= form.label :day_of_week, "Día de la Semana", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= form.text_field :day_of_week, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+          <%= form.select :day_of_week, 
+                          Schedule.days_of_week_collection, 
+                          { include_blank: "Seleccione un día" }, 
+                          { class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" } %>
         </div>
       </div>
 

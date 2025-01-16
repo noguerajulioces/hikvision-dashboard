@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_15_201220) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_16_150455) do
   create_table "attendance_records", force: :cascade do |t|
     t.integer "employee_id"
     t.datetime "entry_time"
@@ -77,8 +77,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_201220) do
   end
 
   create_table "schedules", force: :cascade do |t|
-    t.integer "group_id"
-    t.string "day_of_week"
+    t.bigint "group_id"
+    t.integer "day_of_week"
     t.time "expected_entry_time"
     t.time "expected_exit_time"
     t.datetime "created_at", null: false

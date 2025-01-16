@@ -3,32 +3,31 @@
 # Table name: schedules
 #
 #  id                  :integer          not null, primary key
-#  day_of_week         :string
+#  day_of_week         :integer
 #  expected_entry_time :time
 #  expected_exit_time  :time
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  group_id            :integer
+#  group_id            :bigint
 #
 class Schedule < ApplicationRecord
   belongs_to :group
 
   # Constantes
   DAYS_OF_WEEK = {
-    1 => "lunes",
-    2 => "martes",
-    3 => "miércoles",
-    4 => "jueves",
-    5 => "viernes",
-    6 => "sábado",
-    7 => "domingo"
+    monday: 0,
+    tuesday: 1,
+    wednesday: 2,
+    thursday: 3,
+    friday: 4,
+    saturday: 5,
+    sunday: 6
   }.freeze
 
   # Enums
   enum :day_of_week, DAYS_OF_WEEK, suffix: true
 
   # Validaciones
-  validates :day_of_week, presence: true, inclusion: { in: DAYS_OF_WEEK.values }
   validates :expected_entry_time, :expected_exit_time, presence: true
   validate :exit_time_after_entry_time
 
@@ -36,9 +35,14 @@ class Schedule < ApplicationRecord
   scope :by_day, ->(day) { where(day_of_week: day) }
   scope :by_group, ->(group_id) { where(group_id: group_id) }
 
+  # Métodos de clase
+  def self.days_of_week_collection
+    DAYS_OF_WEEK.map { |key, value| [I18n.t("enums.schedule.day_of_week.#{key}", default: key.to_s.humanize), value] }
+  end
+  
   # Métodos de instancia
   def translated_day_of_week
-    I18n.t("enums.schedule.day_of_week.#{day_of_week}", default: day_of_week)
+    I18n.t("enums.schedule.day_of_week.#{day_of_week}", default: day_of_week.humanize)
   end
 
   private
