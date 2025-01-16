@@ -22,6 +22,6 @@ class Employee < ApplicationRecord
 
   validates :first_name, :last_name, :role, presence: true
   validates :hire_date, presence: true
-  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :phone, presence: true, length: { minimum: 10, maximum: 15 }
+  validates :email, uniqueness: true, allow_blank: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :phone, allow_blank: true, length: { minimum: 10, maximum: 15 }
 end

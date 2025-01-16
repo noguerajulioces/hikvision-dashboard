@@ -14,27 +14,27 @@
       <div class="px-4 py-5 sm:px-6">
         <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
+            <dt class="text-sm font-semibold text-gray-500">Nombre Completo</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee.first_name %> <%= @employee.last_name %></dd>
           </div>
           
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Rol</dt>
+            <dt class="text-sm font-semibold text-gray-500">Rol</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee.role %></dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Fecha de Contratación</dt>
+            <dt class="text-sm font-semibold text-gray-500">Fecha de Contratación</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee.hire_date&.strftime("%d/%m/%Y") %></dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Fecha de Desvinculación</dt>
+            <dt class="text-sm font-semibold text-gray-500">Fecha de Desvinculación</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee.termination_date&.strftime("%d/%m/%Y") || '-' %></dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Grupo</dt>
+            <dt class="text-sm font-semibold text-gray-500">Grupo</dt>
             <dd class="mt-1 text-sm text-gray-900">
               <% if @employee.group %>
                 <%= link_to @employee.group.name, group_path(@employee.group), class: "text-indigo-600 hover:text-indigo-900" %>
@@ -45,22 +45,22 @@
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Fecha de Registro</dt>
+            <dt class="text-sm font-semibold text-gray-500">Fecha de Registro</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee.created_at.strftime("%d/%m/%Y") %></dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Email</dt>
+            <dt class="text-sm font-semibold text-gray-500">Email</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee&.email || '-' %></dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500">Teléfono</dt>
+            <dt class="text-sm font-semibold text-gray-500">Teléfono</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @employee&.phone || '-' %></dd>
           </div>
 
           <div class="sm:col-span-2">
-            <dt class="text-sm font-medium text-gray-500">Estado Actual</dt>
+            <dt class="text-sm font-semibold text-gray-500">Estado Actual</dt>
             <dd class="mt-1 text-sm text-gray-900">
               <% if @employee&.termination_date %>
                 <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">Inactivo</span>
