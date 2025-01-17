@@ -31,4 +31,6 @@ Rails.application.routes.draw do
   end
   resources :attendance_records
   resources :schedules
+  resources :incidents
+  resources :overtime_records
 end
