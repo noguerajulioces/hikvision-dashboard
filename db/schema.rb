@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_16_150455) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_21_133018) do
+  create_table "absences", force: :cascade do |t|
+    t.integer "employee_id", null: false
+    t.date "start_date"
+    t.date "end_date"
+    t.integer "absence_type"
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_absences_on_employee_id"
+  end
+
   create_table "attendance_records", force: :cascade do |t|
     t.integer "employee_id"
     t.datetime "entry_time"
@@ -107,4 +118,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_16_150455) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
+
+  create_table "vacations", force: :cascade do |t|
+    t.integer "employee_id", null: false
+    t.date "start_date"
+    t.date "end_date"
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_vacations_on_employee_id"
+  end
+
+  add_foreign_key "absences", "employees"
+  add_foreign_key "vacations", "employees"
 end

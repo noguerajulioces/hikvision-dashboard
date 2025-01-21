@@ -33,4 +33,5 @@ Rails.application.routes.draw do
   resources :schedules
   resources :incidents
   resources :overtime_records
+  resources :absences
 end

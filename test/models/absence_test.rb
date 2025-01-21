@@ -1,0 +1,28 @@
+# == Schema Information
+#
+# Table name: absences
+#
+#  id           :integer          not null, primary key
+#  absence_type :integer
+#  end_date     :date
+#  reason       :string
+#  start_date   :date
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  employee_id  :integer          not null
+#
+# Indexes
+#
+#  index_absences_on_employee_id  (employee_id)
+#
+# Foreign Keys
+#
+#  employee_id  (employee_id => employees.id)
+#
+require "test_helper"
+
+class AbsenceTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
+end
