@@ -1,0 +1,68 @@
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center mb-4">
+    <div class="sm:flex-auto">
+      <h1 class="text-base font-semibold text-gray-900">Detalles de la Ausencia</h1>
+      <p class="mt-2 text-sm text-gray-700">Información detallada de la ausencia seleccionada.</p>
+    </div>
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+      <%= link_to 'Editar Ausencia', edit_absence_path(@absence), class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+    </div>
+  </div>
+
+  <div class="space-y-10 divide-y divide-gray-900/10">
+    <div class="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-3">
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-1">
+        <div class="px-4 py-6 sm:p-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Información de la Ausencia</h3>
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+            <div class="col-span-full">
+              <label class="block text-sm/6 font-medium text-gray-900">Empleado</label>
+              <div class="mt-2">
+                <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300">
+                  <input type="text" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900" value="<%= @absence.employee.full_name %>" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-span-full">
+              <label class="block text-sm/6 font-medium text-gray-900">Fecha de Inicio</label>
+              <div class="mt-2">
+                <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300">
+                  <input type="text" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900" value="<%= @absence.start_date.strftime('%d/%m/%Y') %>" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-span-full">
+              <label class="block text-sm/6 font-medium text-gray-900">Fecha de Fin</label>
+              <div class="mt-2">
+                <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300">
+                  <input type="text" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900" value="<%= @absence.end_date.strftime('%d/%m/%Y') %>" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-span-full">
+              <label class="block text-sm/6 font-medium text-gray-900">Tipo de Licencia</label>
+              <div class="mt-2">
+                <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300">
+                  <input type="text" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900" value="<%= @absence.absence_type.humanize %>" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-span-full">
+              <label class="block text-sm/6 font-medium text-gray-900">Días Efectivos</label>
+              <div class="mt-2">
+                <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300">
+                  <input type="text" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900" value="<%= @absence.effective_days %>" disabled>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
