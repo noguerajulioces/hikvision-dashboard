@@ -8,7 +8,6 @@
 #  hire_date        :date
 #  last_name        :string
 #  phone            :string
-#  role             :string
 #  termination_date :date
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
@@ -21,7 +20,7 @@ class Employee < ApplicationRecord
   has_many :incidents, dependent: :destroy
   has_many :absences, dependent: :destroy
 
-  validates :first_name, :last_name, :role, presence: true
+  validates :first_name, :last_name, presence: true
   validates :hire_date, presence: true
   validates :email, uniqueness: true, allow_blank: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, allow_blank: true, length: { minimum: 10, maximum: 15 }

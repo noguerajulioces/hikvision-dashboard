@@ -2,10 +2,10 @@
   <div class="sm:flex sm:items-center mb-4">
     <div class="sm:flex-auto">
       <h1 class="text-base font-semibold text-gray-900"><%= @group.name %></h1>
-      <p class="mt-2 text-sm text-gray-700">Toda la información del grupo.</p>
+      <p class="mt-2 text-sm text-gray-700">Toda la información del Función.</p>
     </div>
     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-      <%= link_to 'Editar Grupo', edit_group_path(@group), class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      <%= link_to 'Editar Función', edit_group_path(@group), class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
     </div>
   </div>
 
@@ -13,10 +13,10 @@
   <div class="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-3">
     <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-1">
       <div class="px-4 py-6 sm:p-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Información del Grupo</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Información del Función</h3>
         <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
           <div class="col-span-full">
-            <label for="name" class="block text-sm/6 font-medium text-gray-900">Nombre del Grupo</label>
+            <label for="name" class="block text-sm/6 font-medium text-gray-900">Nombre del Función</label>
             <div class="mt-2">
               <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                 <input type="text" name="name" id="name" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6" value="<%= @group.name %>" disabled>
@@ -48,7 +48,7 @@
 
     <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-1">
       <div class="px-4 py-6 sm:p-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Horarios del Grupo</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Horarios del Función</h3>
         <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
           <% @group.schedules.each do |schedule| %>
             <div class="col-span-full">

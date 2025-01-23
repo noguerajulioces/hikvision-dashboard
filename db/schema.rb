@@ -44,7 +44,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_143603) do
     t.string "first_name"
     t.string "last_name"
     t.integer "group_id"
-    t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "hire_date"
@@ -120,16 +119,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_143603) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
-  create_table "vacations", force: :cascade do |t|
-    t.integer "employee_id", null: false
-    t.date "start_date"
-    t.date "end_date"
-    t.string "reason"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["employee_id"], name: "index_vacations_on_employee_id"
-  end
-
   add_foreign_key "absences", "employees"
-  add_foreign_key "vacations", "employees"
 end

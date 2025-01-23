@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     if @group.save
-      redirect_to groups_path, notice: "Grupo creado exitosamente."
+      redirect_to groups_path, notice: "Función creado exitosamente."
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class GroupsController < ApplicationController
 
   def update
     if @group.update(group_params)
-      redirect_to groups_path, notice: "Grupo actualizado exitosamente."
+      redirect_to groups_path, notice: "Función actualizado exitosamente."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class GroupsController < ApplicationController
 
   def destroy
     @group.destroy
-    redirect_to groups_path, notice: "Grupo eliminado exitosamente."
+    redirect_to groups_path, notice: "Función eliminado exitosamente."
   end
 
   def add_employee
