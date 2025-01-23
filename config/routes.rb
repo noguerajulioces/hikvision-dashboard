@@ -25,6 +25,9 @@ Rails.application.routes.draw do
     end
   end
   resources :employees do
+    member do
+      get :unprocessed_records
+    end
     collection do
       get "search"
     end
@@ -34,4 +37,9 @@ Rails.application.routes.draw do
   resources :incidents
   resources :overtime_records
   resources :absences
+  resources :reports do
+    collection do
+      get :employee_report
+    end
+  end
 end
