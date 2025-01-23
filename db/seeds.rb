@@ -1,3 +1,5 @@
+## FOR TESTING
+
 5.times do
   Group.create!(
     name: Faker::Company.name
