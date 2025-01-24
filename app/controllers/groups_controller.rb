@@ -4,8 +4,8 @@ class GroupsController < ApplicationController
   def index
     @groups = Group
                 .left_joins(:employees)
-                .select('groups.*, COUNT(employees.id) AS employees_count')
-                .group('groups.id')
+                .select("groups.*, COUNT(employees.id) AS employees_count")
+                .group("groups.id")
   end
 
   def show

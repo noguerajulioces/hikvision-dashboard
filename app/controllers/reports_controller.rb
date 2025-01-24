@@ -11,6 +11,19 @@ class ReportsController < ApplicationController
     @report = AttendanceReportService.new(employee, start_date, end_date).generate_report
   end
 
+  def generate_report
+    @unprocessed_records = AttendanceRecord.where(processed: false)
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "Reporte_de_Asistencia", # Nombre del archivo PDF
+               template: "reports/report_pdf", # Ruta de la vista PDF
+               layout: false
+      end
+    end
+  end
+
   def employee_report
     employee_id = params[:employee_id]
     start_date = params[:start_date]

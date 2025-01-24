@@ -71,3 +71,5 @@ gem "annotaterb"
 gem "rails-erd"
 gem "faker"
 gem "kaminari"
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'

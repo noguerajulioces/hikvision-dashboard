@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   resources :reports do
     collection do
       get :employee_report
+      get :generate_report
     end
   end
 end

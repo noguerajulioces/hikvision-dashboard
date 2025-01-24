@@ -27,6 +27,31 @@
           <%= form.date_field :end_date, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" %>
         </div>
       </div>
+
+      <div class="col-span-3 sm:col-span-2 md:col-span-1">
+        <%= form.label :hourly_rate, "Monto por Hora", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.number_field :hourly_rate, step: "0.01", class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div class="col-span-3 sm:col-span-2 md:col-span-1">
+        <%= form.label :overtime_rate, "Monto Horas Extras", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.number_field :overtime_rate, step: "0.01", class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div class="col-span-3 sm:col-span-2 md:col-span-1">
+        <div class="relative flex items-start mt-6">
+          <div class="flex h-6 items-center">
+            <%= form.check_box :lunch_time, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" %>
+          </div>
+          <div class="ml-3 text-sm leading-6">
+            <%= form.label :lunch_time, "Horario de Almuerzo", class: "font-medium text-gray-900" %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
