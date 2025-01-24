@@ -5,6 +5,7 @@
 #  id          :integer          not null, primary key
 #  entry_time  :datetime
 #  exit_time   :datetime
+#  processed   :boolean
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  device_id   :integer

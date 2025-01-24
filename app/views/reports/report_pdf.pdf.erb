@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de Asistencia</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tarjeta de Horario</h1>
+  <% if @unprocessed_records.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Día</th>
+          <th>Fecha</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th>Horas Trabajadas</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @unprocessed_records.each.with_index(1) do |record, index| %>
+          <tr>
+            <td><%= index %></td>
+            <td><%= I18n.t("enums.schedule.day_of_week.#{record.entry_time.strftime('%A').downcase}") %></td>
+            <td><%= record.entry_time.strftime("%d/%m/%Y") %></td>
+            <td><%= record.entry_time.strftime("%H:%M") %></td>
+            <td><%= record.exit_time&.strftime("%H:%M") || '-' %></td>
+            <td>
+              <% if record.exit_time %>
+                <% hours, minutes = ((record.exit_time - record.entry_time) / 60).to_i.divmod(60) %>
+                <%= "#{hours}:#{format('%02d', minutes)}" %>
+              <% else %>
+                -
+              <% end %>
+            </td>
+            <td>
+              <% if record.exit_time %>
+                Completo
+              <% else %>
+                Incompleto
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No hay registros no procesados.</p>
+  <% end %>
+</body>
+</html>

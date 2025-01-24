@@ -8,7 +8,6 @@
 #  hire_date        :date
 #  last_name        :string
 #  phone            :string
-#  role             :string
 #  termination_date :date
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null

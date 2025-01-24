@@ -2,7 +2,10 @@ class GroupsController < ApplicationController
   before_action :set_group, only: [ :show, :edit, :update, :destroy, :remove_employee ]
 
   def index
-    @groups = Group.all
+    @groups = Group
+                .left_joins(:employees)
+                .select("groups.*, COUNT(employees.id) AS employees_count")
+                .group("groups.id")
   end
 
   def show
@@ -15,7 +18,7 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     if @group.save
-      redirect_to groups_path, notice: "Grupo creado exitosamente."
+      redirect_to groups_path, notice: "Función creado exitosamente."
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +29,7 @@ class GroupsController < ApplicationController
 
   def update
     if @group.update(group_params)
-      redirect_to groups_path, notice: "Grupo actualizado exitosamente."
+      redirect_to groups_path, notice: "Función actualizado exitosamente."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -34,7 +37,7 @@ class GroupsController < ApplicationController
 
   def destroy
     @group.destroy
-    redirect_to groups_path, notice: "Grupo eliminado exitosamente."
+    redirect_to groups_path, notice: "Función eliminado exitosamente."
   end
 
   def add_employee
