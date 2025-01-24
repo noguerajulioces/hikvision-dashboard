@@ -12,7 +12,7 @@ end
     last_name: Faker::Name.last_name,
     group_id: Group.pluck(:id).sample,
     hire_date: Faker::Date.between(from: 5.years.ago, to: Date.today),
-    termination_date: [nil, Faker::Date.between(from: Date.today, to: 1.year.from_now)].sample,
+    termination_date: [ nil, Faker::Date.between(from: Date.today, to: 1.year.from_now) ].sample,
     phone: Faker::PhoneNumber.cell_phone_in_e164,
     email: Faker::Internet.email
   )
@@ -36,7 +36,7 @@ Employee.all.each do |employee|
       device_id: Device.pluck(:id).sample,
       entry_time: entry_time,
       exit_time: exit_time,
-      processed: [true, false].sample
+      processed: [ true, false ].sample
     )
   end
 end
@@ -60,7 +60,7 @@ Employee.all.each do |employee|
       employee_id: employee.id,
       date: Faker::Date.backward(days: 30),
       issue: Faker::Lorem.sentence,
-      resolved: [true, false].sample
+      resolved: [ true, false ].sample
     )
   end
 end
@@ -93,7 +93,7 @@ end
     password: 'password',
     name: Faker::Name.name,
     phone: Faker::PhoneNumber.cell_phone_in_e164,
-    active: [true, false].sample
+    active: [ true, false ].sample
   )
 end
 

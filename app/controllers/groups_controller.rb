@@ -2,7 +2,10 @@ class GroupsController < ApplicationController
   before_action :set_group, only: [ :show, :edit, :update, :destroy, :remove_employee ]
 
   def index
-    @groups = Group.all
+    @groups = Group
+                .left_joins(:employees)
+                .select('groups.*, COUNT(employees.id) AS employees_count')
+                .group('groups.id')
   end
 
   def show

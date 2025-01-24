@@ -69,4 +69,5 @@ gem "devise"
 gem "rolify"
 gem "annotaterb"
 gem "rails-erd"
-gem 'faker'
+gem "faker"
+gem "kaminari"
