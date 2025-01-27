@@ -8,3 +8,61 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+ .pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e5e7eb; /* Tailwind border-gray-200 */
+  padding: 16px 0;
+}
+
+.pagination .previous_page,
+.pagination .next_page {
+  display: inline-flex;
+  align-items: center;
+  padding-top: 8px; /* Tailwind pt-4 */
+  font-size: 0.875rem; /* Tailwind text-sm */
+  font-weight: 500; /* Tailwind font-medium */
+  color: #6b7280; /* Tailwind text-gray-500 */
+  border-top: 2px solid transparent; /* Tailwind border-t-2 border-transparent */
+  transition: all 0.2s;
+}
+
+.pagination .previous_page:hover,
+.pagination .next_page:hover {
+  color: #374151; /* Tailwind text-gray-700 */
+  border-color: #d1d5db; /* Tailwind hover:border-gray-300 */
+}
+
+.pagination .previous_page.disabled,
+.pagination .next_page.disabled {
+  color: #d1d5db; /* Tailwind text-gray-300 */
+  pointer-events: none;
+}
+
+.pagination .current {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px; /* Tailwind px-4 pt-4 */
+  font-size: 0.875rem; /* Tailwind text-sm */
+  font-weight: 600; /* Tailwind font-semibold */
+  color: #4f46e5; /* Tailwind text-indigo-600 */
+  border-top: 2px solid #4f46e5; /* Tailwind border-indigo-500 */
+}
+
+.pagination a {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px; /* Tailwind px-4 pt-4 */
+  font-size: 0.875rem; /* Tailwind text-sm */
+  font-weight: 500; /* Tailwind font-medium */
+  color: #6b7280; /* Tailwind text-gray-500 */
+  border-top: 2px solid transparent; /* Tailwind border-t-2 border-transparent */
+  transition: all 0.2s;
+}
+
+.pagination a:hover {
+  color: #374151; /* Tailwind text-gray-700 */
+  border-color: #d1d5db; /* Tailwind hover:border-gray-300 */
+}

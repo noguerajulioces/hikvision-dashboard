@@ -70,6 +70,5 @@ gem "rolify"
 gem "annotaterb"
 gem "rails-erd"
 gem "faker"
-gem "kaminari"
+gem 'will_paginate', '~> 3.3'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'

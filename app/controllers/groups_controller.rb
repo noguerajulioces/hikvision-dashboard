@@ -3,6 +3,7 @@ class GroupsController < ApplicationController
 
   def index
     @groups = Group
+                .paginate(page: params[:page], per_page: 15)
                 .left_joins(:employees)
                 .select("groups.*, COUNT(employees.id) AS employees_count")
                 .group("groups.id")
