@@ -43,4 +43,8 @@ Rails.application.routes.draw do
       get :generate_report
     end
   end
+
+  namespace :admin do
+    resource :settings
+  end
 end

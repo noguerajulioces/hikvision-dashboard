@@ -1,0 +1,12 @@
+<%= form_for(Setting.new, url: admin_settings_path) do |f| %>
+
+
+  <div class="form-group">
+    <label class="control-label">Host</label>
+    <%= f.text_field :host, value: Setting.host, class: "form-control", placeholder: "http://localhost"  %>
+  </div>
+
+  <div>
+    <%= f.submit 'Update Settings' %>
+  </div>
+<% end %>
