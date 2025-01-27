@@ -70,5 +70,5 @@ gem "rolify"
 gem "annotaterb"
 gem "rails-erd"
 gem "faker"
-gem 'will_paginate', '~> 3.3'
+gem 'will_paginate'
 gem 'wicked_pdf'

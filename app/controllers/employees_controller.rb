@@ -2,7 +2,7 @@ class EmployeesController < ApplicationController
   before_action :set_employee, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @employees = Employee.includes(:group).page params[:page]
+    @employees = Employee.includes(:group).paginate(page: params[:page])
   end
 
   def show
@@ -57,6 +57,6 @@ class EmployeesController < ApplicationController
   end
 
   def employee_params
-    params.require(:employee).permit(:first_name, :last_name, :role, :group_id)
+    params.require(:employee).permit(:first_name, :last_name, :email, :phone, :hire_date, :termination_date, :group_id)
   end
 end

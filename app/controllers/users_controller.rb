@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [ :edit, :update, :destroy, :toggle_active ]
 
   def index
-    @users = User.all
+    @users = User.paginate(page: params[:page])
   end
 
   def new
