@@ -25,7 +25,6 @@
 class Payroll < ApplicationRecord
   belongs_to :employee
 
-  # Relaciones con otros modelos (opcional)
   has_many :overtime_records, through: :employee
   has_many :attendance_records, through: :employee
   has_many :incidents, through: :employee

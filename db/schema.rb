@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_27_022914) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_27_144508) do
   create_table "absences", force: :cascade do |t|
     t.integer "employee_id", null: false
     t.date "start_date"
@@ -30,6 +30,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_022914) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "processed"
+    t.integer "schedule_id"
+    t.index ["schedule_id"], name: "index_attendance_records_on_schedule_id"
   end
 
   create_table "devices", force: :cascade do |t|
@@ -103,11 +105,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_022914) do
 
   create_table "schedules", force: :cascade do |t|
     t.bigint "group_id"
-    t.integer "day_of_week"
     t.time "expected_entry_time"
     t.time "expected_exit_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "date", null: false
+    t.index ["group_id", "date"], name: "index_schedules_on_group_id_and_date", unique: true
   end
 
   create_table "settings", force: :cascade do |t|
@@ -142,5 +145,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_022914) do
   end
 
   add_foreign_key "absences", "employees"
+  add_foreign_key "attendance_records", "schedules"
   add_foreign_key "payrolls", "employees"
 end

@@ -21,35 +21,38 @@
     </div>
   <% end %>
   <div class="px-4 py-6 sm:p-8">
-    <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-      <div class="col-span-full">
-        <%= form.label :day_of_week, "Día de la Semana", class: "block text-sm/6 font-medium text-gray-900" %>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-8 sm:grid-cols-6">
+      <div class="col-span-full md:col-span-1">
+        <%= form.label :date, "Fecha", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= form.select :day_of_week, 
-                          Schedule.days_of_week_collection, 
-                          { include_blank: "Seleccione un día" }, 
-                          { class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" } %>
+          <%= form.date_field :date, 
+                          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
         </div>
       </div>
 
-      <div class="col-span-full">
+      <div class="col-span-full md:col-span-1">
         <%= form.label :expected_entry_time, "Hora de Entrada", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
           <%= form.time_field :expected_entry_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
         </div>
       </div>
 
-      <div class="col-span-full">
+      <div class="col-span-full md:col-span-1">
         <%= form.label :expected_exit_time, "Hora de Salida", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
           <%= form.time_field :expected_exit_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
         </div>
       </div>
 
-      <div class="col-span-full">
+      <div class="col-span-full md:col-span-1">
         <%= form.label :group_id, "Función", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= form.collection_select :group_id, Group.all, :id, :name, { include_blank: "Sin Función" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        <div class="mt-2 grid grid-cols-1">
+          <%= form.collection_select :group_id, Group.all, :id, :name, 
+              { include_blank: "Sin Función" }, 
+              class: "col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 outline outline-1 -outline-offset-1 outline-gray-300" %>
+          <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+            <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+          </svg>
         </div>
       </div>
     </div>

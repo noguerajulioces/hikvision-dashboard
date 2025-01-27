@@ -33,7 +33,7 @@
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= absence.employee.full_name %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= absence.start_date.strftime("%d/%m/%Y") %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= absence.end_date.strftime("%d/%m/%Y") %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= absence.absence_type.humanize %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= absence.translated_absence_type.humanize %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= absence.effective_days %></td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <a href="<%= absence_path(absence) %>" class="text-indigo-600 hover:text-indigo-900">Ver</a>

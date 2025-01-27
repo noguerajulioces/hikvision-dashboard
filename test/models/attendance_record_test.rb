@@ -10,6 +10,15 @@
 #  updated_at  :datetime         not null
 #  device_id   :integer
 #  employee_id :integer
+#  schedule_id :integer
+#
+# Indexes
+#
+#  index_attendance_records_on_schedule_id  (schedule_id)
+#
+# Foreign Keys
+#
+#  schedule_id  (schedule_id => schedules.id)
 #
 require "test_helper"
 
