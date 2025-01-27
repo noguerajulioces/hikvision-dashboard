@@ -1,0 +1,77 @@
+<%= form_with url: employee_report_reports_path, 
+              method: :get, 
+              data: { 
+                turbo: true,
+                turbo_stream: true 
+              }, 
+              class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl" do |form| %>
+  <div class="px-4 py-6 sm:p-8 md:col-span-3">
+    <div class="grid grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-6 md:grid-cols-3">
+      <div class="col-span-3 sm:col-span-2 md:col-span-1">
+        <%= form.label :employee_id, "Seleccionar Empleado", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.collection_select :employee_id, Employee.all, :id, :full_name, { prompt: "Seleccione un Empleado" }, { class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" } %>
+        </div>
+      </div>
+
+      <div class="col-span-3 sm:col-span-2 md:col-span-1">
+        <%= form.label :start_date, "Fecha de Inicio", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.date_field :start_date, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div class="col-span-3 sm:col-span-2 md:col-span-1">
+        <%= form.label :end_date, "Fecha de Fin", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.date_field :end_date, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+    <%= button_tag type: 'submit', class: "inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+      </svg>
+      <span class="ml-2">Buscar</span>
+    <% end %>
+  </div>
+<% end %>
+
+<br>
+
+<%= form_with model: @payroll_report, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl" do |form| %>
+  <div class="px-4 py-6 sm:p-8 md:col-span-4">
+    <div class="grid grid-cols-5 gap-x-6 gap-y-8 sm:grid-cols-8 md:grid-cols-4">
+      <div class="col-span-4 sm:col-span-2 md:col-span-1">
+        <%= form.label :employee_id, "Seleccionar Empleado", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.collection_select :employee_id, Employee.all, :id, :full_name, { prompt: "Seleccione un Empleado" }, { class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" } %>
+        </div>
+      </div>
+
+      <div class="col-span-4 sm:col-span-2 md:col-span-1">
+        <%= form.label :start_date, "Fecha de Inicio", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.date_field :start_date, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div class="col-span-4 sm:col-span-2 md:col-span-1">
+        <%= form.label :end_date, "Fecha de Fin", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.date_field :end_date, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+    <%= form.submit "Generar Nómina", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+  </div>
+<% end %>
+
+<div id="employee-list">
+</div>
