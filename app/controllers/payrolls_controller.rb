@@ -16,12 +16,21 @@ class PayrollsController < ApplicationController
   end
 
   def create
+
+    # los unproceesses debo pasar a true en el rango de fechas
+    # generar los incidents en caso que haya
+    # debo de crear los overtime
+    # 
+
+    byebug
+    
     @payroll_report = Payroll.new(payroll_report_params)
 
     if @payroll_report.save
       @payroll_report.calculate_totals
       redirect_to @payroll_report, notice: 'Reporte de nómina creado exitosamente.'
     else
+      flash.now[:alert] = 'Error al crear el reporte de nómina.'
       render :new, status: :unprocessable_entity
     end
   end
@@ -47,6 +56,6 @@ class PayrollsController < ApplicationController
   end
 
   def payroll_report_params
-    params.require(:payroll_report).permit(:employee_id, :start_date, :end_date, :comments)
+    params.permit(:employee_id, :start_date, :end_date, :comments)
   end
 end

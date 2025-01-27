@@ -40,7 +40,7 @@ class ReportsController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
           "employee-list",
-          partial: "reports/employee_report",
+          partial: "payrolls/unprocessed_records",
           locals: { unprocessed_records: @unprocessed_records }
         )
       end
