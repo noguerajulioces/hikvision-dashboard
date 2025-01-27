@@ -16,23 +16,27 @@ class PayrollsController < ApplicationController
   end
 
   def create
+    ActiveRecord::Base.transaction do
+      service = WorkHoursService.new(
+        params[:employee_id],
+        params[:start_date],
+        params[:end_date],
+        params[:lunch_time] == "1"
+      )
 
-    # los unproceesses debo pasar a true en el rango de fechas
-    # generar los incidents en caso que haya
-    # debo de crear los overtime
-    # 
+      service.process_overtime
 
-    byebug
-    
-    @payroll_report = Payroll.new(payroll_report_params)
+      @payroll = Payroll.new(payroll_report_params)
 
-    if @payroll_report.save
-      @payroll_report.calculate_totals
-      redirect_to @payroll_report, notice: 'Reporte de nómina creado exitosamente.'
-    else
-      flash.now[:alert] = 'Error al crear el reporte de nómina.'
-      render :new, status: :unprocessable_entity
+      if @payroll.save
+        redirect_to @payroll, notice: 'Reporte de nómina creado exitosamente.'
+      else
+        raise ActiveRecord::Rollback, 'Error al guardar el reporte de nómina'
+      end
     end
+  rescue ActiveRecord::Rollback
+    flash.now[:alert] = 'Error al crear el reporte de nómina. Operación revertida.'
+    render :new, status: :unprocessable_entity
   end
 
   def update

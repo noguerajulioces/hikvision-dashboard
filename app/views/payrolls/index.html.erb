@@ -35,9 +35,9 @@
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= payroll.employee.first_name %> <%= payroll.employee.last_name %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll.start_date.strftime("%d/%m/%Y") %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll.end_date.strftime("%d/%m/%Y") %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll.total_hours_worked %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll.total_overtime_hours %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll.total_incidents %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll.attendance_records.count %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll.overtime_records.sum(:hours_worked).to_i %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= payroll&.incidents&.count %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">$<%= payroll.total_payment %></td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <%= link_to "Ver", payroll_path(payroll), class: "text-indigo-600 hover:text-indigo-900" %>

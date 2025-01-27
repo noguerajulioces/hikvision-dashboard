@@ -1,7 +1,3 @@
-# Que necesito en mi services.
-# Generar reporte de pago por usuario, por fecha de inicio a fecha de fin a partir del attendanceRecord.
-# 
-
 class WorkHoursService
   def initialize(employee_id, start_date, end_date, lunch_time = false)
     @employee = Employee.find(employee_id)
@@ -23,11 +19,14 @@ class WorkHoursService
       else
         hours = calculate_overtime_hours(record)
         
+        compensation = hours * 20_000 # TODO
+
         if hours > 0
           OvertimeRecord.create!(
             employee: @employee,
             date: record.entry_time.to_date,
-            hours: hours
+            hours_worked: hours,
+            compensation: compensation
           )
         end
       end
