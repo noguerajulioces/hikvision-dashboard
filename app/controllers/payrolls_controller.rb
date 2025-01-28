@@ -1,5 +1,5 @@
 class PayrollsController < ApplicationController
-  before_action :set_payroll, only: [:show, :edit, :update, :destroy]
+  before_action :set_payroll, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @payrolls = Payroll.paginate(page: params[:page])
@@ -17,32 +17,35 @@ class PayrollsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
+      lunch_time = params[:lunch_time] == "1"
+
       service = WorkHoursService.new(
         params[:employee_id],
         params[:start_date],
         params[:end_date],
-        params[:lunch_time] == "1"
+        params[:lunch_time] = lunch_time
       )
 
       service.process_overtime
 
       @payroll = Payroll.new(payroll_params)
+      @payroll.calculate_totals(lunch_time)
 
       if @payroll.save
-        redirect_to @payroll, notice: 'Reporte de nómina creado exitosamente.'
+        redirect_to @payroll, notice: "Reporte de nómina creado exitosamente."
       else
-        raise ActiveRecord::Rollback, 'Error al guardar el reporte de nómina'
+        raise ActiveRecord::Rollback, "Error al guardar el reporte de nómina"
       end
     end
   rescue ActiveRecord::Rollback
-    flash.now[:alert] = 'Error al crear el reporte de nómina. Operación revertida.'
+    flash.now[:alert] = "Error al crear el reporte de nómina. Operación revertida."
     render :new, status: :unprocessable_entity
   end
 
   def update
     if @payroll.update(payroll_params)
       @payroll.calculate_totals
-      redirect_to @payroll, notice: 'Reporte de nómina actualizado exitosamente.'
+      redirect_to @payroll, notice: "Reporte de nómina actualizado exitosamente."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -50,7 +53,7 @@ class PayrollsController < ApplicationController
 
   def destroy
     @payroll.destroy
-    redirect_to payrolls_url, notice: 'Reporte de nómina eliminado exitosamente.'
+    redirect_to payrolls_url, notice: "Reporte de nómina eliminado exitosamente."
   end
 
   private

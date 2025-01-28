@@ -51,7 +51,7 @@ class Absence < ApplicationRecord
 
   def self.absence_types_collection
     absence_types.keys.map do |key|
-      [I18n.t("enums.absence.absence_type.#{key}"), key]
+      [ I18n.t("enums.absence.absence_type.#{key}"), key ]
     end
   end
 end

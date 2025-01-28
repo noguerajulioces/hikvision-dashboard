@@ -70,6 +70,6 @@ class WorkHoursService
 
     # Las horas extras se calculan en base al horario esperado de salida
     expected_work_hours = (schedule.expected_exit_time - schedule.expected_entry_time) / 3600.0
-    [total_hours - expected_work_hours, 0].max
+    [ total_hours - expected_work_hours, 0 ].max
   end
 end

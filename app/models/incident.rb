@@ -17,6 +17,8 @@ class Incident < ApplicationRecord
 
   after_initialize :set_default_resolved, if: :new_record?
 
+  default_scope -> { order(created_at: :asc) }
+
   private
 
   def set_default_resolved

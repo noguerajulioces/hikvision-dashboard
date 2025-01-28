@@ -94,7 +94,7 @@ end
     name: Faker::Name.name,
     phone: Faker::PhoneNumber.cell_phone_in_e164,
     active: [ true, false ].sample,
-    roles: [Role.find_or_create_by(name: 'admin')]
+    roles: [ Role.find_or_create_by(name: 'admin') ]
   )
 end
 
@@ -104,5 +104,5 @@ User.create!(
   name: 'Julio Noguera',
   phone: '1234567890',
   active: true,
-  roles: [Role.find_or_create_by(name: 'admin')]
+  roles: [ Role.find_or_create_by(name: 'admin') ]
 )

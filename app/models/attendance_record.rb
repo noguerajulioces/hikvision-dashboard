@@ -42,5 +42,4 @@ class AttendanceRecord < ApplicationRecord
       date: entry_time.to_date
     )
   end
-
 end

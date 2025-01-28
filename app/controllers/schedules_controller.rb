@@ -32,7 +32,7 @@ class SchedulesController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-  
+
   def destroy
     @schedule.destroy
     redirect_to schedules_url, notice: "El horario fue eliminado exitosamente."
