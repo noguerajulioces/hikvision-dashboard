@@ -29,7 +29,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-              <% @payroll_reports.each.with_index(1) do |payroll, index| %>
+              <% @payrolls.each.with_index(1) do |payroll, index| %>
                 <tr>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= payroll.employee.first_name %> <%= payroll.employee.last_name %></td>

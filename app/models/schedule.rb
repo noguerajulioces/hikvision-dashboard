@@ -22,6 +22,7 @@ class Schedule < ApplicationRecord
   validate :exit_time_after_entry_time
 
   # Scopes
+  default_scope -> { order(date: :desc) }
   scope :by_group, ->(group_id) { where(group_id: group_id) }
 
   # Métodos de instancia
