@@ -29,7 +29,7 @@
             <tbody class="divide-y divide-gray-200 bg-white">
               <% @attendance_records&.each.with_index(1) do |record, index| %>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= paginated_index(@attendance_records, index) %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                     <%= link_to "#{record&.employee&.first_name} #{record&.employee&.last_name}", employee_path(record&.employee), class: "text-indigo-600 hover:text-indigo-900" %>
                   </td>

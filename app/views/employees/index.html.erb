@@ -28,7 +28,7 @@
               <tbody class="divide-y divide-gray-200 bg-white">
                 <% @employees&.each.with_index(1) do |employee, index| %>
                   <tr>
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= paginated_index(@employees, index) %></td>
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= employee&.first_name %></td>
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= employee&.last_name %></td>
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= employee&.hire_date&.strftime("%d/%m/%Y") %></td>

@@ -3,7 +3,7 @@ class AbsencesController < ApplicationController
 
   # GET /absences
   def index
-    @absences = Absence.all
+    @absences = Absence.paginate(page: params[:page])
   end
 
   # GET /absences/1

@@ -1,39 +1,45 @@
-<%= form_for(Setting.new, url: admin_settings_path, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-3") do |f| %>
-  <div class="px-4 py-6 sm:p-8">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-8 sm:grid-cols-6">
-      <div class="col-span-2">
-        <%= f.label :margin_of_tolerance, "Margen de Tolerancia (minutos)", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :margin_of_tolerance, value: Setting.margin_of_tolerance, placeholder: 'en minutos', class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+<div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-3">
+  <div class="px-4 py-5 sm:p-6">
+    <h3 class="text-base font-semibold leading-6 text-gray-900">Configuración</h3>
+    
+    <%= form_for(Setting.new, url: admin_settings_path) do |f| %>
+      <div class="mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="col-span-2">
+            <%= f.label :margin_of_tolerance, "Margen de Tolerancia (minutos)", class: "block text-sm/6 font-medium text-gray-900" %>
+            <div class="mt-2">
+              <%= f.text_field :margin_of_tolerance, value: Setting.margin_of_tolerance, placeholder: 'en minutos', class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+            </div>
+          </div>
+
+          <div class="col-span-2">
+            <%= f.label :hourly_rate, "Tarifa por horas (Gs.)", class: "block text-sm/6 font-medium text-gray-900" %>
+            <div class="mt-2">
+              <%= f.text_field :hourly_rate, 
+                  value: number_with_delimiter(Setting.hourly_rate, delimiter: "."), 
+                  data: { controller: "number-format" },
+                  placeholder: '', 
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+            </div>
+          </div>
+
+          <div class="col-span-2">
+            <%= f.label :overtime_rate, "Tarifa por horas extras (Gs.)", class: "block text-sm/6 font-medium text-gray-900" %>
+            <div class="mt-2">
+              <%= f.text_field :overtime_rate, 
+                  value: number_with_delimiter(Setting.overtime_rate, delimiter: "."), 
+                  data: { controller: "number-format" },
+                  placeholder: '', 
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="col-span-2">
-        <%= f.label :hourly_rate, "Tarifa por horas (Gs.)", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :hourly_rate, 
-              value: number_with_delimiter(Setting.hourly_rate, delimiter: "."), 
-              data: { controller: "number-format" },
-              placeholder: '', 
-              class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-        </div>
+      <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8 mt-6">
+        <%= link_to "Cancelar", root_path, class: "text-sm/6 font-semibold text-gray-900" %>
+        <%= f.submit "Guardar", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
       </div>
-
-      <div class="col-span-2">
-        <%= f.label :overtime_rate, "Tarifa por horas extras (Gs.)", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :overtime_rate, 
-              value: number_with_delimiter(Setting.overtime_rate, delimiter: "."), 
-              data: { controller: "number-format" },
-              placeholder: '', 
-              class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-        </div>
-      </div>
-    </div>
+    <% end %>
   </div>
-
-  <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-    <%= link_to "Cancelar", root_path, class: "text-sm/6 font-semibold text-gray-900" %>
-    <%= f.submit "Guardar", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-  </div>
-<% end %>
+</div>

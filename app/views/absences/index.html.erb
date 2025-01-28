@@ -29,7 +29,7 @@
             <tbody class="divide-y divide-gray-200 bg-white">
               <% @absences.each.with_index(1) do |absence, index| %>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= paginated_index(@absences, index) %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= absence.employee.full_name %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= absence.start_date.strftime("%d/%m/%Y") %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= absence.end_date.strftime("%d/%m/%Y") %></td>
@@ -49,3 +49,5 @@
     </div>
   </div>
 </div>
+
+<%= will_paginate @absences %>

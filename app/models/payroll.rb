@@ -37,7 +37,13 @@ class Payroll < ApplicationRecord
   def calculate_totals(include_lunch)
     # Calcular totales en base al rango de fechas
     self.total_hours_worked = attendance_records.where(entry_time: start_date.beginning_of_day..end_date.end_of_day).sum do |record|
-      record.exit_time ? (record.exit_time - record.entry_time) / 3600.0 : 0
+      if record.exit_time
+        hours = (record.exit_time - record.entry_time) / 3600.0
+        # Subtract lunch hour if worked more than 4 hours and include_lunch is true
+        include_lunch && hours > 4 ? hours - 1 : hours
+      else
+        0
+      end
     end
 
     self.total_overtime_hours = overtime_records.where(date: start_date..end_date).sum(:hours_worked)
@@ -50,19 +56,14 @@ class Payroll < ApplicationRecord
   def calculate_payment
     base_payment = total_hours_worked * hourly_rate
     overtime_payment = total_overtime_hours * overtime_rate
-    penalty = total_incidents * incident_penalty
-    base_payment + overtime_payment - penalty
+    base_payment + overtime_payment
   end
 
   def hourly_rate
-    10_000.0
+    Setting.hourly_rate
   end
 
   def overtime_rate
-    25_000.0
-  end
-
-  def incident_penalty
-    5.0
+    Setting.overtime_rate
   end
 end

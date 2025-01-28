@@ -2,7 +2,7 @@ class OvertimeRecordsController < ApplicationController
   before_action :set_overtime_record, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @overtime_records = OvertimeRecord.all
+    @overtime_records = OvertimeRecord.page(params[:page])
   end
 
   def show

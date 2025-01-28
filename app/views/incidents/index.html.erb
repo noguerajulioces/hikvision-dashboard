@@ -17,8 +17,9 @@
               <tr>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">#</th>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Fecha</th>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Empleado</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Problema</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Resuelto</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 flex items-center justify-center">Resuelto</th>
                 <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                   <span class="sr-only">Acciones</span>
                 </th>
@@ -27,10 +28,21 @@
             <tbody class="divide-y divide-gray-200 bg-white">
               <% @incidents.each.with_index(1) do |incident, index| %>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= paginated_index(@incidents, index) %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= incident.date.strftime("%d/%m/%Y") %></td>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= incident.employee.full_name %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= incident.issue %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= incident.resolved ? "Sí" : "No" %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm flex items-center justify-center">
+                    <% if incident.resolved %>
+                      <svg class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                      </svg>
+                    <% else %>
+                      <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                      </svg>
+                    <% end %>
+                  </td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <a href="<%= incident_path(incident) %>" class="text-indigo-600 hover:text-indigo-900">Ver</a>
                     <a href="<%= edit_incident_path(incident) %>" class="ml-2 text-indigo-600 hover:text-indigo-900">Editar</a>

@@ -124,8 +124,16 @@
               <tr>
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900"><%= incident.date.strftime("%d/%m/%Y") %></td>
                 <td class="px-3 py-4 text-sm text-gray-500"><%= incident.issue %></td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <%= incident.resolved ? "Resuelto" : "Pendiente" %>
+                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                  <% if incident.resolved %>
+                    <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      Resuelto
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                      Pendiente
+                    </span>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
@@ -166,8 +174,16 @@
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <%= record.exit_time ? ((record.exit_time - record.entry_time) / 3600.0).round(2) : "-" %>
                 </td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <%= record.processed ? "Procesado" : "Pendiente" %>
+                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                  <% if record.processed %>
+                    <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      Procesado
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-red-600/10 ring-inset">
+                      Pendiente
+                    </span>
+                  <% end %>
                 </td>
               </tr>
             <% end %>

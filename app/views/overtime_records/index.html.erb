@@ -29,7 +29,7 @@
             <tbody class="divide-y divide-gray-200 bg-white">
               <% @overtime_records.each.with_index(1) do |overtime_record, index| %>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= paginated_index(@overtime_records, index) %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= overtime_record.date.strftime("%d/%m/%Y") %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= overtime_record&.employee&.full_name %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= overtime_record.hours_worked %></td>
@@ -48,4 +48,5 @@
     </div>
   </div>
 </div>
-<!-- End Generation Here -->
+
+<%= will_paginate @overtime_records %>

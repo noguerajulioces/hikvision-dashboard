@@ -30,7 +30,7 @@
             <tbody class="divide-y divide-gray-200 bg-white">
               <% @schedules.each.with_index(1) do |schedule, index| %>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= paginated_index(@schedules, index) %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= schedule&.translated_day_of_week %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                     <%= l(schedule&.date, format: :default) %>
@@ -53,3 +53,5 @@
     </div>
   </div>
 </div>
+
+<%= will_paginate @schedules %>
