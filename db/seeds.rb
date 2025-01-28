@@ -36,7 +36,7 @@ Employee.all.each do |employee|
       device_id: Device.pluck(:id).sample,
       entry_time: entry_time,
       exit_time: exit_time,
-      processed: [ true, false ].sample
+      processed: false
     )
   end
 end
@@ -66,10 +66,10 @@ Employee.all.each do |employee|
 end
 
 Group.all.each do |group|
-  (1..6).each do |day|
+  (1..6).each do
     Schedule.create!(
       group_id: group.id,
-      day_of_week: day,
+      date: rand(Date.today..(Date.today + 30)),
       expected_entry_time: '09:00',
       expected_exit_time: '17:00'
     )
@@ -93,7 +93,8 @@ end
     password: 'password',
     name: Faker::Name.name,
     phone: Faker::PhoneNumber.cell_phone_in_e164,
-    active: [ true, false ].sample
+    active: [ true, false ].sample,
+    roles: [ Role.find_or_create_by(name: 'admin') ]
   )
 end
 
@@ -103,5 +104,5 @@ User.create!(
   name: 'Julio Noguera',
   phone: '1234567890',
   active: true,
-  role: Role.find_by(name: 'admin')
+  roles: [ Role.find_or_create_by(name: 'admin') ]
 )

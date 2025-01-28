@@ -22,32 +22,32 @@
   <% end %>
 
   <div class="px-4 py-6 sm:p-8">
-    <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-      <div class="col-span-full">
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:grid-cols-2">
+      <div class="col-span-1">
+        <%= form.label :employee_id, "Empleado", class: "block text-sm/6 font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.collection_select :employee_id, Employee.all, :id, :full_name, { prompt: "Selecciona un empleado" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        </div>
+      </div>
+
+      <div class="col-span-1">
+        <%= form.label :absence_type, "Tipo de Licencia", class: "block text-sm/6 font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= form.select :absence_type, options_for_select(Absence.absence_types.keys.map { |type| [I18n.t("enums.absence.absence_type.#{type}"), type] }, selected: @absence.absence_type), { include_blank: "Selecciona tipo de ausencia" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        </div>
+      </div>
+
+      <div class="col-span-1">
         <%= form.label :start_date, "Fecha de Inicio", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
           <%= form.date_field :start_date, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
         </div>
       </div>
 
-      <div class="col-span-full">
+      <div class="col-span-1">
         <%= form.label :end_date, "Fecha de Fin", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
           <%= form.date_field :end_date, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-        </div>
-      </div>
-
-      <div class="col-span-full">
-        <%= form.label :absence_type, "Tipo de Licencia", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= form.select :absence_type, options_for_select(Absence.absence_types.keys.map { |type| [type.humanize, type] }, selected: @absence.absence_type), { include_blank: "Selecciona tipo de ausencia" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-        </div>
-      </div>
-
-      <div class="col-span-full">
-        <%= form.label :employee_id, "Empleado", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= form.collection_select :employee_id, Employee.all, :id, :full_name, { prompt: "Selecciona un empleado" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
         </div>
       </div>
     </div>

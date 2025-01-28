@@ -2,7 +2,7 @@ class IncidentsController < ApplicationController
   before_action :set_incident, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @incidents = Incident.all
+    @incidents = Incident.page(params[:page])
   end
 
   def show

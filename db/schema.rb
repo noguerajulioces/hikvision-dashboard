@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_27_013436) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_27_144508) do
   create_table "absences", force: :cascade do |t|
     t.integer "employee_id", null: false
     t.date "start_date"
@@ -30,6 +30,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_013436) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "processed"
+    t.integer "schedule_id"
+    t.index ["schedule_id"], name: "index_attendance_records_on_schedule_id"
   end
 
   create_table "devices", force: :cascade do |t|
@@ -76,6 +78,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_013436) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "payrolls", force: :cascade do |t|
+    t.integer "employee_id", null: false
+    t.date "start_date"
+    t.date "end_date"
+    t.decimal "total_hours_worked", precision: 15, scale: 2
+    t.decimal "total_overtime_hours", precision: 15, scale: 2
+    t.integer "total_incidents"
+    t.integer "total_payment"
+    t.text "comments"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_payrolls_on_employee_id"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
@@ -89,11 +105,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_013436) do
 
   create_table "schedules", force: :cascade do |t|
     t.bigint "group_id"
-    t.integer "day_of_week"
     t.time "expected_entry_time"
     t.time "expected_exit_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "date", null: false
+    t.index ["group_id", "date"], name: "index_schedules_on_group_id_and_date", unique: true
   end
 
   create_table "settings", force: :cascade do |t|
@@ -128,4 +145,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_013436) do
   end
 
   add_foreign_key "absences", "employees"
+  add_foreign_key "attendance_records", "schedules"
+  add_foreign_key "payrolls", "employees"
 end

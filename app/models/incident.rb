@@ -14,4 +14,14 @@ class Incident < ApplicationRecord
   belongs_to :employee
 
   validates :date, :issue, presence: true
+
+  after_initialize :set_default_resolved, if: :new_record?
+
+  default_scope -> { order(created_at: :asc) }
+
+  private
+
+  def set_default_resolved
+    self.resolved = false if resolved.nil?
+  end
 end

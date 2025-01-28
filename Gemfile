@@ -70,6 +70,6 @@ gem "rolify"
 gem "annotaterb"
 gem "rails-erd"
 gem "faker"
-gem 'will_paginate'
-gem 'wicked_pdf'
+gem "will_paginate"
+gem "wicked_pdf"
 gem "rails-settings-cached", "~> 2.9"

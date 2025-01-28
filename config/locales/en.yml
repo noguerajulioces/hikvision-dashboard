@@ -28,6 +28,20 @@
 #       enabled: "ON"
 
 en:
+  date:
+    formats:
+      default: "%d-%m-%Y"
+    day_names: [Domingo, Lunes, Martes, Miércoles, Jueves, Viernes, Sábado]
+    abbr_day_names: [Dom, Lun, Mar, Mié, Jue, Vie, Sáb]
+
+  number:
+    currency:
+      format:
+        unit: 'Gs.'
+        format: '%u %n'
+        delimiter: '.'
+        separator: ''
+        precision: 0
   enums:
     schedule:
       day_of_week:
@@ -38,3 +52,9 @@ en:
         friday: "Viernes"
         saturday: "Sábado"
         sunday: "Domingo"
+    absence:
+      absence_type:
+        vacation: "Vacaciones"
+        medical: "Licencia médica"
+        personal: "Asuntos personales"
+        unpaid: "Licencia sin sueldo"

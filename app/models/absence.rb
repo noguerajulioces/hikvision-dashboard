@@ -44,4 +44,14 @@ class Absence < ApplicationRecord
   def effective_days
     (start_date..end_date).reject { |date| date.sunday? }.count
   end
+
+  def translated_absence_type
+    I18n.t("enums.absence.absence_type.#{absence_type}")
+  end
+
+  def self.absence_types_collection
+    absence_types.keys.map do |key|
+      [ I18n.t("enums.absence.absence_type.#{key}"), key ]
+    end
+  end
 end
