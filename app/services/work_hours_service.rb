@@ -10,67 +10,88 @@ class WorkHoursService
     records = @employee.unprocessed_attendance_records(@start_date, @end_date)
 
     records.each do |record|
-      # Buscar el horario correspondiente al grupo del empleado y la fecha
-      schedule = Schedule.find_by(group_id: @employee.group_id, date: record.entry_time.to_date)
-
-      # Validar si existe un horario para el día
-      if schedule.nil?
-        Incident.create!(
-          employee: @employee,
-          date: record.entry_time.to_date,
-          issue: "No se encontró horario para este día"
-        )
-        next
-      end
-
-      # Verificar si el empleado llegó tarde (con tolerancia de 5 minutos)
-      if record.entry_time.to_time > schedule.expected_entry_time + Setting&.margin_of_tolerance&.to_i&.minutes
-        delay_minutes = ((record.entry_time.to_time - schedule.expected_entry_time) / 60).round
-        Incident.create!(
-          employee: @employee,
-          date: record.entry_time.to_date,
-          issue: "Llegó tarde (#{delay_minutes} minutos)"
-        )
-      end
-
-      # Calcular horas extras si tiene hora de salida
-      if record.exit_time.nil?
-        Incident.create!(
-          employee: @employee,
-          date: record.entry_time.to_date,
-          issue: "No se registró hora de salida"
-        )
-      else
-        hours = calculate_overtime_hours(record, schedule)
-        compensation = hours * 20_000 # Ejemplo de cálculo de compensación
-
-        if hours > 0
-          OvertimeRecord.create!(
-            employee: @employee,
-            date: record.entry_time.to_date,
-            hours_worked: hours,
-            compensation: compensation
-          )
-        end
-      end
-
-      # Marcar el registro como procesado
-      record.update(processed: true)
+      process_record(record)
     end
   end
 
   private
 
+  # Procesar cada registro de asistencia
+  def process_record(record)
+    schedule = find_schedule(record)
+    return unless schedule
+
+    handle_lateness(record, schedule)
+    handle_exit_time(record, schedule)
+
+    record.update(processed: true)
+  end
+
+  # Encontrar el horario correspondiente
+  def find_schedule(record)
+    schedule = Schedule.find_by(group_id: @employee.group_id, date: record.entry_time.to_date)
+    unless schedule
+      create_incident(record, "No se encontró horario para este día")
+    end
+    schedule
+  end
+
+  # Manejar llegadas tarde
+  def handle_lateness(record, schedule)
+    if record.entry_time.to_time > schedule.expected_entry_time + margin_of_tolerance
+      delay_minutes = ((record.entry_time.to_time - schedule.expected_entry_time) / 60).round
+      create_incident(record, "Llegó tarde (#{delay_minutes} minutos)")
+    end
+  end
+
+  # Manejar horas extras o falta de hora de salida
+  def handle_exit_time(record, schedule)
+    if record.exit_time.nil?
+      create_incident(record, "No se registró hora de salida")
+    else
+      hours = calculate_overtime_hours(record, schedule)
+      create_overtime_record(record, hours) if hours > 0
+    end
+  end
+
+  # Calcular horas extras
   def calculate_overtime_hours(record, schedule)
     total_hours = (record.exit_time - record.entry_time) / 3600.0
 
     # Restar hora de almuerzo si corresponde
-    if @lunch_time && total_hours > 4
-      total_hours -= 1
-    end
+    total_hours -= 1 if @lunch_time && total_hours > 4
 
-    # Las horas extras se calculan en base al horario esperado de salida
+    # Horas extras en base al horario esperado
     expected_work_hours = (schedule.expected_exit_time - schedule.expected_entry_time) / 3600.0
     [ total_hours - expected_work_hours, 0 ].max
+  end
+
+  # Crear registro de horas extras
+  def create_overtime_record(record, hours)
+    compensation = hours * overtime_rate
+    OvertimeRecord.create!(
+      employee: @employee,
+      date: record.entry_time.to_date,
+      hours_worked: hours,
+      compensation: compensation
+    )
+  end
+
+  # Crear incidente
+  def create_incident(record, issue)
+    Incident.create!(
+      employee: @employee,
+      date: record.entry_time.to_date,
+      issue: issue
+    )
+  end
+
+  # Configuraciones de tolerancia y tarifas
+  def margin_of_tolerance
+    Setting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
+  end
+
+  def overtime_rate
+    Setting.overtime_rate
   end
 end
