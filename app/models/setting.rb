@@ -17,7 +17,9 @@ class Setting < RailsSettings::Base
   cache_prefix { "v1" }
 
   # Define your fields
-  field :host, type: :string, default: "http://localhost:3000"
+  field :margin_of_tolerance, type: :string, default: "5"
+  field :hourly_rate, type: :integer, default: 10_000
+  field :overtime_rate, type: :integer, default: 15_000
   # field :default_locale, default: "en", type: :string
   # field :confirmable_enable, default: "0", type: :boolean
   # field :admin_emails, default: "admin@rubyonrails.org", type: :array

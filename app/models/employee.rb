@@ -26,7 +26,7 @@ class Employee < ApplicationRecord
   validates :phone, allow_blank: true, length: { minimum: 10, maximum: 15 }
 
   def self.margin_of_tolerance
-    5.minutes
+    Setting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
   end
 
   # Verificar si el empleado tiene una licencia en una fecha específica

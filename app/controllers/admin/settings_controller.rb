@@ -6,7 +6,11 @@ module Admin
         next if setting_params[key].nil?
 
         setting = Setting.new(var: key)
-        setting.value = setting_params[key].strip
+        # Remove dots from numeric values before validation
+        value = setting_params[key].strip
+        value = value.gsub(".", "") if [ "hourly_rate", "overtime_rate" ].include?(key)
+        setting.value = value
+
         unless setting.valid?
           @errors.merge!(setting.errors)
         end
@@ -17,16 +21,17 @@ module Admin
       end
 
       setting_params.keys.each do |key|
-        Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
+        value = setting_params[key].strip
+        value = value.gsub(".", "") if [ "hourly_rate", "overtime_rate" ].include?(key)
+        Setting.send("#{key}=", value) unless setting_params[key].nil?
       end
 
-      redirect_to admin_settings_path, notice: "Setting was successfully updated."
+      redirect_to admin_settings_path, notice: "La configuración se actualizó correctamente."
     end
 
     private
       def setting_params
-        params.require(:setting).permit(:host, :user_limits, :admin_emails,
-          :captcha_enable, :notification_options)
+        params.require(:setting).permit(:hourly_rate, :overtime_rate, :margin_of_tolerance)
       end
   end
 end
