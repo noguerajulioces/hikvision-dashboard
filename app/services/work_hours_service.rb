@@ -24,11 +24,12 @@ class WorkHoursService
       end
 
       # Verificar si el empleado llegó tarde (con tolerancia de 5 minutos)
-      if record.entry_time.to_time > schedule.expected_entry_time + 5.minutes
+      if record.entry_time.to_time > schedule.expected_entry_time + Setting&.margin_of_tolerance&.to_i&.minutes
+        delay_minutes = ((record.entry_time.to_time - schedule.expected_entry_time) / 60).round
         Incident.create!(
           employee: @employee,
           date: record.entry_time.to_date,
-          issue: "Llegó tarde"
+          issue: "Llegó tarde (#{delay_minutes} minutos)"
         )
       end
 
