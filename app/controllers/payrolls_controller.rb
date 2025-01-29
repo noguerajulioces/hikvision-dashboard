@@ -5,7 +5,17 @@ class PayrollsController < ApplicationController
     @payrolls = Payroll.paginate(page: params[:page])
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html # Renderiza la vista normal en HTML
+      format.pdf do
+        render pdf: "tarjeta_de_horario",
+               template: "payrolls/show",
+               layout: "pdf",
+               disposition: "inline"
+      end
+    end
+  end
 
   def new
     @payroll = Payroll.new

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjeta de Horario</title>
+    <style>
+        <%= Net::HTTP.get(URI("https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css")) %>
+    </style>
+</head>
+<body class="p-6 bg-gray-100">
+    <div class="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-lg">
+        <!-- Encabezado -->
+        <div class="flex justify-between border-b pb-4 mb-4">
+            <div>
+                <h2 class="text-lg font-bold">MULTICARNES S.R.L.</h2>
+                <p class="text-sm">RUT/RFC: 800380940</p>
+                <p class="text-sm">Descripción Prov: Matadero</p>
+            </div>
+            <div class="text-right">
+                <h2 class="text-lg font-bold">Tarjeta de Horario</h2>
+                <p class="text-sm">Del 27/10/2024 al 09/11/2024</p>
+            </div>
+        </div>
+        
+        <!-- Datos del Empleado -->
+        <div class="mb-4">
+            <p class="text-sm"><strong>Nombre:</strong> Guillermo Godoy</p>
+            <p class="text-sm"><strong>Nómina:</strong> 3487974 | <strong>Ingreso:</strong> 01/05/2023</p>
+            <p class="text-sm"><strong>Función:</strong> Encargado del Personal</p>
+            <p class="text-sm"><strong>Departamento:</strong> Logística</p>
+        </div>
+        
+        <!-- Horario de Trabajo -->
+        <table class="w-full text-sm border mb-4">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border p-2">Día</th>
+                    <th class="border p-2">Entrada</th>
+                    <th class="border p-2">Salida</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border"><td class="p-2">Lunes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
+                <tr class="border"><td class="p-2">Martes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
+                <tr class="border"><td class="p-2">Miércoles</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
+                <tr class="border"><td class="p-2">Jueves</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
+                <tr class="border"><td class="p-2">Viernes</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
+                <tr class="border"><td class="p-2">Sábado</td><td class="p-2">05:00</td><td class="p-2">12:00</td></tr>
+            </tbody>
+        </table>
+        
+        <!-- Tabla de Entradas y Salidas -->
+        <table class="w-full text-sm border mb-4">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border p-2">Fecha</th>
+                    <th class="border p-2">Entrada</th>
+                    <th class="border p-2">Salida</th>
+                    <th class="border p-2">Extras</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border"><td class="p-2">01/24 - Lun</td><td class="p-2">05:52</td><td class="p-2">17:23</td><td class="p-2">03:23</td></tr>
+                <tr class="border"><td class="p-2">01/24 - Mar</td><td class="p-2">05:54</td><td class="p-2">16:09</td><td class="p-2">03:09</td></tr>
+                <tr class="border"><td class="p-2">01/24 - Mié</td><td class="p-2">05:52</td><td class="p-2">13:07</td><td class="p-2">04:58</td></tr>
+            </tbody>
+        </table>
+        
+        <!-- Notas -->
+        <div class="mb-4">
+            <p class="text-sm font-bold">Días No Trabajados: <span class="text-blue-600">2</span></p>
+            <p class="text-sm font-bold">Llegadas Tardías: <span class="text-blue-600">0</span></p>
+        </div>
+        
+        <!-- Sello de Pago -->
+        <div class="flex justify-center my-6">
+            <span class="text-3xl font-bold text-blue-600 border-4 border-blue-600 px-6 py-2">PAGADO</span>
+        </div>
+        
+        <!-- Firmas -->
+        <div class="flex justify-between text-sm mt-6 pt-4 border-t">
+            <div>
+                <p><strong>Guillermo Godoy</strong></p>
+            </div>
+            <div class="text-right">
+                <p><strong>Anabella Oviedo</strong></p>
+                <p>Encargada Administrativa</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
