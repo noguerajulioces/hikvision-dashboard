@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_27_144508) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_29_131804) do
   create_table "absences", force: :cascade do |t|
     t.integer "employee_id", null: false
     t.date "start_date"
@@ -76,6 +76,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_144508) do
     t.decimal "compensation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "payroll_entries", force: :cascade do |t|
+    t.integer "payroll_id", null: false
+    t.string "recordable_type", null: false
+    t.integer "recordable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payroll_id"], name: "index_payroll_entries_on_payroll_id"
+    t.index ["recordable_type", "recordable_id"], name: "index_payroll_entries_on_recordable"
   end
 
   create_table "payrolls", force: :cascade do |t|
@@ -146,5 +156,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_144508) do
 
   add_foreign_key "absences", "employees"
   add_foreign_key "attendance_records", "schedules"
+  add_foreign_key "payroll_entries", "payrolls"
   add_foreign_key "payrolls", "employees"
 end

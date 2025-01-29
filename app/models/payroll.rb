@@ -25,9 +25,10 @@
 class Payroll < ApplicationRecord
   belongs_to :employee
 
-  has_many :overtime_records, through: :employee
-  has_many :attendance_records, through: :employee
-  has_many :incidents, through: :employee
+  has_many :payroll_entries, dependent: :destroy
+  has_many :attendance_records, through: :payroll_entries, source: :recordable, source_type: "AttendanceRecord"
+  has_many :overtime_records, through: :payroll_entries, source: :recordable, source_type: "OvertimeRecord"
+  has_many :incidents, through: :payroll_entries, source: :recordable, source_type: "Incident"
 
   validates :start_date, :end_date, presence: true
 

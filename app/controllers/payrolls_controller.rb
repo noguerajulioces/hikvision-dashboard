@@ -5,8 +5,7 @@ class PayrollsController < ApplicationController
     @payrolls = Payroll.paginate(page: params[:page])
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @payroll = Payroll.new
@@ -29,6 +28,7 @@ class PayrollsController < ApplicationController
       service.process_overtime
 
       @payroll = Payroll.new(payroll_params)
+      link_related_records(@payroll)
       @payroll.calculate_totals(lunch_time)
 
       if @payroll.save
@@ -64,5 +64,15 @@ class PayrollsController < ApplicationController
 
   def payroll_params
     params.permit(:employee_id, :start_date, :end_date, :comments)
+  end
+
+  def link_related_records(payroll)
+    attendance_records = AttendanceRecord.where(employee_id: payroll.employee_id, entry_time: payroll.start_date.beginning_of_day..payroll.end_date.end_of_day)
+    overtime_records = OvertimeRecord.where(employee_id: payroll.employee_id, date: payroll.start_date..payroll.end_date)
+    incidents = Incident.where(employee_id: payroll.employee_id, date: payroll.start_date..payroll.end_date)
+
+    (attendance_records + overtime_records + incidents).each do |record|
+      PayrollEntry.create!(payroll: payroll, recordable: record)
+    end
   end
 end
