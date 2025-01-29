@@ -1,93 +1,152 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarjeta de Horario</title>
-    <style>
-        <%= Net::HTTP.get(URI("https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css")) %>
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarjeta de Horario</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: #111827;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .header, .footer {
+      width: 100%;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .header table, .footer table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #e2e8f0;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #1e40af;
+    }
+    .signature {
+      width: 100%;
+      margin-top: 20px;
+      border-top: 2px solid #ccc;
+      padding-top: 10px;
+    }
+    .signature table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  </style>
 </head>
-<body class="p-6 bg-gray-100">
-    <div class="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-lg">
-        <!-- Encabezado -->
-        <div class="flex justify-between border-b pb-4 mb-4">
-            <div>
-                <h2 class="text-lg font-bold">MULTICARNES S.R.L.</h2>
-                <p class="text-sm">RUT/RFC: 800380940</p>
-                <p class="text-sm">Descripción Prov: Matadero</p>
-            </div>
-            <div class="text-right">
-                <h2 class="text-lg font-bold">Tarjeta de Horario</h2>
-                <p class="text-sm">Del 27/10/2024 al 09/11/2024</p>
-            </div>
-        </div>
-        
-        <!-- Datos del Empleado -->
-        <div class="mb-4">
-            <p class="text-sm"><strong>Nombre:</strong> Guillermo Godoy</p>
-            <p class="text-sm"><strong>Nómina:</strong> 3487974 | <strong>Ingreso:</strong> 01/05/2023</p>
-            <p class="text-sm"><strong>Función:</strong> Encargado del Personal</p>
-            <p class="text-sm"><strong>Departamento:</strong> Logística</p>
-        </div>
-        
-        <!-- Horario de Trabajo -->
-        <table class="w-full text-sm border mb-4">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border p-2">Día</th>
-                    <th class="border p-2">Entrada</th>
-                    <th class="border p-2">Salida</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="border"><td class="p-2">Lunes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
-                <tr class="border"><td class="p-2">Martes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
-                <tr class="border"><td class="p-2">Miércoles</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
-                <tr class="border"><td class="p-2">Jueves</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
-                <tr class="border"><td class="p-2">Viernes</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
-                <tr class="border"><td class="p-2">Sábado</td><td class="p-2">05:00</td><td class="p-2">12:00</td></tr>
-            </tbody>
-        </table>
-        
-        <!-- Tabla de Entradas y Salidas -->
-        <table class="w-full text-sm border mb-4">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border p-2">Fecha</th>
-                    <th class="border p-2">Entrada</th>
-                    <th class="border p-2">Salida</th>
-                    <th class="border p-2">Extras</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="border"><td class="p-2">01/24 - Lun</td><td class="p-2">05:52</td><td class="p-2">17:23</td><td class="p-2">03:23</td></tr>
-                <tr class="border"><td class="p-2">01/24 - Mar</td><td class="p-2">05:54</td><td class="p-2">16:09</td><td class="p-2">03:09</td></tr>
-                <tr class="border"><td class="p-2">01/24 - Mié</td><td class="p-2">05:52</td><td class="p-2">13:07</td><td class="p-2">04:58</td></tr>
-            </tbody>
-        </table>
-        
-        <!-- Notas -->
-        <div class="mb-4">
-            <p class="text-sm font-bold">Días No Trabajados: <span class="text-blue-600">2</span></p>
-            <p class="text-sm font-bold">Llegadas Tardías: <span class="text-blue-600">0</span></p>
-        </div>
-        
-        <!-- Sello de Pago -->
-        <div class="flex justify-center my-6">
-            <span class="text-3xl font-bold text-blue-600 border-4 border-blue-600 px-6 py-2">PAGADO</span>
-        </div>
-        
-        <!-- Firmas -->
-        <div class="flex justify-between text-sm mt-6 pt-4 border-t">
-            <div>
-                <p><strong>Guillermo Godoy</strong></p>
-            </div>
-            <div class="text-right">
-                <p><strong>Anabella Oviedo</strong></p>
-                <p>Encargada Administrativa</p>
-            </div>
-        </div>
+<body>
+  <div class="container">
+    <div class="header">
+      <table>
+        <tr>
+          <td>
+            <h2>MULTICARNES S.R.L.</h2>
+            <p>RUT/RFC: 800380940</p>
+            <p>Descripción Prov: Matadero</p>
+          </td>
+          <td style="text-align: right;">
+            <h2>Tarjeta de Horario</h2>
+            <p>Del <%= @payroll.start_date.strftime("%d/%m/%Y") %> al <%= @payroll.end_date.strftime("%d/%m/%Y") %></p>
+          </td>
+        </tr>
+      </table>
     </div>
+    
+    <div>
+      <p><strong>Nombre:</strong> <%= @payroll.employee.full_name %></p>
+      <p><strong>Nómina:</strong> <%= number_with_delimiter(@payroll.employee&.document_number&.to_i) %> | <strong>Ingreso:</strong> <%= @payroll.employee.hire_date.strftime("%d/%m/%Y") %></p>
+      <p><strong>Función:</strong> <%= @payroll.employee.group.name %></p>
+    </div>
+    
+    <table>
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border p-2">Día</th>
+          <th class="border p-2">Entrada</th>
+          <th class="border p-2">Salida</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border"><td class="p-2">Lunes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
+        <tr class="border"><td class="p-2">Martes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
+        <tr class="border"><td class="p-2">Miércoles</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
+        <tr class="border"><td class="p-2">Jueves</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
+        <tr class="border"><td class="p-2">Viernes</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
+        <tr class="border"><td class="p-2">Sábado</td><td class="p-2">05:00</td><td class="p-2">12:00</td></tr>
+      </tbody>
+    </table>
+        
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th>Extras</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @payroll.attendance_records.each do |record| %>
+          <tr>
+            <td><%= record.entry_time.strftime("%d/%m/%y - %a") %></td>
+            <td><%= record.entry_time.strftime("%H:%M") %></td>
+            <td><%= record.exit_time&.strftime("%H:%M") || "-" %></td>
+            <td>
+              <% if overtime = @payroll.overtime_records.find_by(date: record.entry_time.to_date) %>
+                <%= sprintf("%02d:%02d", overtime.hours_worked.to_i, ((overtime.hours_worked % 1) * 60).to_i) %>
+              <% else %>
+                -
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <div>
+      <p class="highlight">Días No Trabajados: 2</p>
+      <p class="highlight">Llegadas Tardías: 0</p>
+    </div>
+    
+    <div class="signature">
+      <table>
+        <tr>
+          <td>
+            <p><strong>Guillermo Godoy</strong></p>
+          </td>
+          <td style="text-align: right;">
+            <p><strong>Anabella Oviedo</strong></p>
+            <p>Encargada Administrativa</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </body>
 </html>

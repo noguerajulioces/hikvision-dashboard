@@ -3,6 +3,7 @@
 # Table name: employees
 #
 #  id               :integer          not null, primary key
+#  document_number  :string
 #  email            :string
 #  first_name       :string
 #  hire_date        :date

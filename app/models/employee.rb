@@ -3,6 +3,7 @@
 # Table name: employees
 #
 #  id               :integer          not null, primary key
+#  document_number  :string
 #  email            :string
 #  first_name       :string
 #  hire_date        :date
@@ -24,6 +25,7 @@ class Employee < ApplicationRecord
   validates :hire_date, presence: true
   validates :email, uniqueness: true, allow_blank: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, allow_blank: true, length: { minimum: 10, maximum: 15 }
+  validates :document_number, presence: true, uniqueness: true
 
   def self.margin_of_tolerance
     Setting&.margin_of_tolerance&.to_i&.minutes || 5.minutes

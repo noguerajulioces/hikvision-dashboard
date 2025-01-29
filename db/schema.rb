@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_29_131804) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
   create_table "absences", force: :cascade do |t|
     t.integer "employee_id", null: false
     t.date "start_date"
@@ -52,6 +52,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_131804) do
     t.date "termination_date"
     t.string "phone"
     t.string "email"
+    t.string "document_number"
   end
 
   create_table "groups", force: :cascade do |t|
