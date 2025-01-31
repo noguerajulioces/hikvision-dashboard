@@ -1,5 +1,5 @@
 class IncidentsController < ApplicationController
-  before_action :set_incident, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_incident, only: [ :show, :edit, :update, :destroy, :resolve ]
 
   def index
     @incidents = Incident.page(params[:page])
@@ -35,6 +35,14 @@ class IncidentsController < ApplicationController
   def destroy
     @incident.destroy
     redirect_to incidents_url, notice: "Incidente eliminado exitosamente."
+  end
+
+  def resolve
+    if @incident.update(resolved: true)
+      redirect_to incidents_path, notice: "El incidente fue marcado como resuelto."
+    else
+      redirect_to incidents_path, alert: "Hubo un error al actualizar el incidente."
+    end
   end
 
   private

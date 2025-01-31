@@ -34,7 +34,11 @@ Rails.application.routes.draw do
   end
   resources :attendance_records
   resources :schedules
-  resources :incidents
+  resources :incidents, only: [ :index, :new, :show, :edit ] do
+    member do
+      patch :resolve
+    end
+  end
   resources :overtime_records
   resources :absences
   resources :reports do
