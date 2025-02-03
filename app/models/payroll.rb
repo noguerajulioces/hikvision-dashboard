@@ -2,7 +2,7 @@
 #
 # Table name: payrolls
 #
-#  id                   :integer          not null, primary key
+#  id                   :bigint           not null, primary key
 #  comments             :text
 #  end_date             :date
 #  start_date           :date
@@ -20,7 +20,7 @@
 #
 # Foreign Keys
 #
-#  employee_id  (employee_id => employees.id)
+#  fk_rails_...  (employee_id => employees.id)
 #
 class Payroll < ApplicationRecord
   belongs_to :employee

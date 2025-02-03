@@ -2,7 +2,7 @@
 #
 # Table name: overtime_records
 #
-#  id           :integer          not null, primary key
+#  id           :bigint           not null, primary key
 #  compensation :decimal(, )
 #  date         :date
 #  hours_worked :decimal(, )

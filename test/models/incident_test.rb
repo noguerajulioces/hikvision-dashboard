@@ -2,7 +2,7 @@
 #
 # Table name: incidents
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  date        :date
 #  issue       :string
 #  resolved    :boolean

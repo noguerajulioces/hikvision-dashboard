@@ -2,7 +2,7 @@
 #
 # Table name: schedules
 #
-#  id                  :integer          not null, primary key
+#  id                  :bigint           not null, primary key
 #  date                :date             not null
 #  expected_entry_time :time
 #  expected_exit_time  :time

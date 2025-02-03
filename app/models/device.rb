@@ -2,7 +2,7 @@
 #
 # Table name: devices
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  ip_address :string
 #  model      :string
 #  name       :string

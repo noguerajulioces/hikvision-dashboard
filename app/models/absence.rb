@@ -2,7 +2,7 @@
 #
 # Table name: absences
 #
-#  id           :integer          not null, primary key
+#  id           :bigint           not null, primary key
 #  absence_type :integer
 #  end_date     :date
 #  reason       :string
@@ -17,7 +17,7 @@
 #
 # Foreign Keys
 #
-#  employee_id  (employee_id => employees.id)
+#  fk_rails_...  (employee_id => employees.id)
 #
 class Absence < ApplicationRecord
   belongs_to :employee

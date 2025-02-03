@@ -2,7 +2,7 @@
 #
 # Table name: payroll_entries
 #
-#  id              :integer          not null, primary key
+#  id              :bigint           not null, primary key
 #  recordable_type :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -16,7 +16,7 @@
 #
 # Foreign Keys
 #
-#  payroll_id  (payroll_id => payrolls.id)
+#  fk_rails_...  (payroll_id => payrolls.id)
 #
 class PayrollEntry < ApplicationRecord
   belongs_to :payroll

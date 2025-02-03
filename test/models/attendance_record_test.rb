@@ -2,7 +2,7 @@
 #
 # Table name: attendance_records
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  entry_time  :datetime
 #  exit_time   :datetime
 #  processed   :boolean
@@ -18,7 +18,7 @@
 #
 # Foreign Keys
 #
-#  schedule_id  (schedule_id => schedules.id)
+#  fk_rails_...  (schedule_id => schedules.id)
 #
 require "test_helper"
 
