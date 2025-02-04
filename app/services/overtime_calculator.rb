@@ -7,13 +7,15 @@ class OvertimeCalculator
   end
 
   def calculate_overtime_hours
-    total_hours = (@record.exit_time - @record.entry_time) / 3600.0
+    return 0 unless @record.exit_time > @schedule.expected_exit_time
 
-    # Restar hora de almuerzo si corresponde
-    total_hours -= lunch_hours if @lunch_time && total_hours > 4
+    # Calculate overtime only from expected exit time to actual exit time
+    overtime_hours = (@record.exit_time - @schedule.expected_exit_time) / 3600.0
 
-    expected_work_hours = ((@schedule.expected_exit_time - @schedule.expected_entry_time) / 3600.0) - lunch_hours if @lunch_time
-    [ total_hours - expected_work_hours, 0 ].max
+    # If overtime period includes lunch time and is over 4 hours, subtract lunch
+    overtime_hours -= lunch_hours if @lunch_time && overtime_hours > 4
+
+    [overtime_hours, 0].max
   end
 
   def create_overtime_record(hours)

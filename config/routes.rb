@@ -38,7 +38,7 @@ Rails.application.routes.draw do
       post :duplicate
     end
   end
-  resources :incidents, only: [ :index, :new, :show, :edit ] do
+  resources :incidents, only: [ :index, :new, :show, :edit, :destroy ] do
     member do
       patch :resolve
     end
