@@ -146,12 +146,6 @@ end
 Employee.create!(employees)
 
 
-## SEED
-# Convertir horarios a objetos Time para evitar problemas de comparación
-def time_from_string(time_str)
-  Time.zone.parse(time_str) # Asegura que use la zona horaria de Rails
-end
-
 # Lista de horarios de trabajo
 shifts = [
   { entry: "06:00", exit: "14:00" }, # Turno Mañana
@@ -163,17 +157,27 @@ shifts = [
 # Precargar todos los grupos en memoria
 groups = Group.all.to_a
 
+dates = Date.new(2025, 1, 1)..Date.new(2025, 1, 30)
 # Iterar sobre los días del mes
-(Date.new(2025, 1, 1)..Date.new(2025, 1, 30)).each do |date|
+dates.each do |date|
   groups.each do |group|
     shifts.each do |shift|
-      Schedule.find_or_create_by!(
-        date: date,
-        group_id: group.id
-      ) do |schedule|
-        schedule.expected_entry_time = time_from_string(shift[:entry])
-        schedule.expected_exit_time = time_from_string(shift[:exit])
-      end
+      puts "DATE: #{date}"
+      schedule = Schedule.find_or_initialize_by(date: date, group_id: group.id)
+
+      # Convert shift times to DateTime by combining with the date
+      entry_time = "#{date} #{shift[:entry]}".to_datetime
+      exit_time = "#{date} #{shift[:exit]}".to_datetime
+
+      # Handle overnight shifts where exit time is on the next day
+      exit_time += 1.day if exit_time < entry_time
+
+      # Asignar valores
+      schedule.expected_entry_time = entry_time
+      schedule.expected_exit_time = exit_time
+
+      # Guardar los cambios si es un nuevo registro o si hay cambios
+      schedule.save!
     end
   end
 end
@@ -200,6 +204,18 @@ employees.each do |employee|
       # Random variation in exit time (-15 to +30 minutes from expected)
       exit_variation = rand(-15..30).minutes
       exit_time = schedule.expected_exit_time + exit_variation
+
+      # Select a random shift
+      random_shift = shifts.sample
+
+      # Generate random dates within a 30-day range
+      random_date = Date.today - rand(30).days
+
+      entry_time = "#{random_date} #{random_shift[:entry]}".to_datetime
+      exit_time = "#{random_date} #{random_shift[:exit]}".to_datetime
+
+      # Handle overnight shifts where exit time is on the next day
+      exit_time += 1.day if exit_time < entry_time
 
       AttendanceRecord.create!(
         employee: employee,
