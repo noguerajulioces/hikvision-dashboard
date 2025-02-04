@@ -40,8 +40,21 @@ class SchedulesController < ApplicationController
 
   def duplicate
     @original_schedule = Schedule.find(params[:id])
+
+    # Calcula la nueva fecha
+    new_date = @original_schedule.date + 1.day
+
+    # Verifica si ya existe un registro con el mismo group_id y date
+    if Schedule.exists?(group_id: @original_schedule.group_id, date: new_date)
+      redirect_to schedules_path, alert: "Ya existe un horario para esta fecha y función."
+      return
+    end
+
+    # Si no existe, proceder a duplicar
     @new_schedule = @original_schedule.dup
-    @new_schedule.date = @original_schedule.date + 1.day # Incrementa la fecha en 1 día
+    @new_schedule.date = new_date
+    @new_schedule.expected_entry_time = @original_schedule.expected_entry_time + 1.day
+    @new_schedule.expected_exit_time = @original_schedule.expected_exit_time + 1.day
 
     if @new_schedule.save
       redirect_to schedules_path, notice: "Horario duplicado exitosamente."

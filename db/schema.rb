@@ -15,7 +15,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
   enable_extension "pg_catalog.plpgsql"
 
   create_table "absences", force: :cascade do |t|
-    t.integer "employee_id", null: false
+    t.bigint "employee_id", null: false
     t.date "start_date"
     t.date "end_date"
     t.integer "absence_type"
@@ -33,7 +33,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "processed"
-    t.integer "schedule_id"
+    t.bigint "schedule_id"
     t.index ["schedule_id"], name: "index_attendance_records_on_schedule_id"
   end
 
@@ -83,9 +83,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
   end
 
   create_table "payroll_entries", force: :cascade do |t|
-    t.integer "payroll_id", null: false
+    t.bigint "payroll_id", null: false
     t.string "recordable_type", null: false
-    t.integer "recordable_id", null: false
+    t.bigint "recordable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["payroll_id"], name: "index_payroll_entries_on_payroll_id"
@@ -93,7 +93,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
   end
 
   create_table "payrolls", force: :cascade do |t|
-    t.integer "employee_id", null: false
+    t.bigint "employee_id", null: false
     t.date "start_date"
     t.date "end_date"
     t.decimal "total_hours_worked", precision: 15, scale: 2
@@ -109,7 +109,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
-    t.integer "resource_id"
+    t.bigint "resource_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
@@ -119,8 +119,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
 
   create_table "schedules", force: :cascade do |t|
     t.bigint "group_id"
-    t.time "expected_entry_time"
-    t.time "expected_exit_time"
+    t.datetime "expected_entry_time"
+    t.datetime "expected_exit_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "date", null: false
@@ -151,8 +151,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_152136) do
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "role_id"
+    t.bigint "user_id"
+    t.bigint "role_id"
     t.index ["role_id"], name: "index_users_roles_on_role_id"
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
     t.index ["user_id"], name: "index_users_roles_on_user_id"

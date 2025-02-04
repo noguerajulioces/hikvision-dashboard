@@ -11,7 +11,7 @@
 #  start_date   :date
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  employee_id  :integer          not null
+#  employee_id  :bigint           not null
 #
 # Indexes
 #

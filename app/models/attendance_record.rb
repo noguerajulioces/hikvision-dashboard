@@ -5,12 +5,12 @@
 #  id          :bigint           not null, primary key
 #  entry_time  :datetime
 #  exit_time   :datetime
-#  processed   :boolean
+#  processed   :boolean          default: false
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  device_id   :integer
 #  employee_id :integer
-#  schedule_id :integer
+#  schedule_id :bigint
 #
 # Indexes
 #

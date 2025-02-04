@@ -6,8 +6,8 @@
 #
 #  id                  :bigint           not null, primary key
 #  date                :date             not null
-#  expected_entry_time :time
-#  expected_exit_time  :time
+#  expected_entry_time :datetime
+#  expected_exit_time  :datetime
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  group_id            :bigint

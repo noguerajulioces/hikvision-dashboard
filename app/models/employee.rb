@@ -70,7 +70,7 @@ class Employee < ApplicationRecord
   def active?
       termination_date.nil?
     end
-  
+
     def status
       active? ? "Activo" : "Inactivo"
     end

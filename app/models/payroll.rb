@@ -12,7 +12,7 @@
 #  total_payment        :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  employee_id          :integer          not null
+#  employee_id          :bigint           not null
 #
 # Indexes
 #
@@ -41,7 +41,7 @@ class Payroll < ApplicationRecord
       if record.exit_time
         hours = (record.exit_time - record.entry_time) / 3600.0
         # Subtract lunch hour if worked more than 4 hours and include_lunch is true
-        include_lunch && hours > 4 ? hours - 1 : hours
+        include_lunch && hours > 4 ? hours - Setting&.lunch_hours : hours
       else
         0
       end

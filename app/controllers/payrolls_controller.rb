@@ -26,20 +26,18 @@ class PayrollsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      lunch_time = params[:lunch_time] == "1"
-
       service = WorkHoursService.new(
         params[:employee_id],
         params[:start_date],
         params[:end_date],
-        params[:lunch_time] = lunch_time
+        params[:lunch_time]
       )
 
       service.process_overtime
 
       @payroll = Payroll.new(payroll_params)
       link_related_records(@payroll)
-      @payroll.calculate_totals(lunch_time)
+      @payroll.calculate_totals(Setting&.lunch_hours)
 
       if @payroll.save
         redirect_to @payroll, notice: "Reporte de nómina creado exitosamente."

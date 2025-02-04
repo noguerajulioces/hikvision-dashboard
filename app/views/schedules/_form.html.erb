@@ -21,26 +21,18 @@
     </div>
   <% end %>
   <div class="px-4 py-6 sm:p-8">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-8 sm:grid-cols-6">
-      <div class="col-span-full md:col-span-1">
-        <%= form.label :date, "Fecha", class: "block text-sm/6 font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= form.date_field :date, 
-                          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-        </div>
-      </div>
-
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-6">
       <div class="col-span-full md:col-span-1">
         <%= form.label :expected_entry_time, "Hora de Entrada", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= form.time_field :expected_entry_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+          <%= form.datetime_field :expected_entry_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
         </div>
       </div>
 
       <div class="col-span-full md:col-span-1">
         <%= form.label :expected_exit_time, "Hora de Salida", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= form.time_field :expected_exit_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+          <%= form.datetime_field :expected_exit_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
         </div>
       </div>
 

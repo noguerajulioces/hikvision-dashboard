@@ -10,7 +10,7 @@
 #  updated_at  :datetime         not null
 #  device_id   :integer
 #  employee_id :integer
-#  schedule_id :integer
+#  schedule_id :bigint
 #
 # Indexes
 #

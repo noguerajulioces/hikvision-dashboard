@@ -6,8 +6,8 @@
 #  recordable_type :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  payroll_id      :integer          not null
-#  recordable_id   :integer          not null
+#  payroll_id      :bigint           not null
+#  recordable_id   :bigint           not null
 #
 # Indexes
 #

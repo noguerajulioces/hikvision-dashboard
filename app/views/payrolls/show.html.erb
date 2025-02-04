@@ -162,7 +162,8 @@
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Fecha</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Entrada</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Salida</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Horas</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hora de Almuerzo</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Horas Trabajadas</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Estado</th>
             </tr>
           </thead>
@@ -177,6 +178,9 @@
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <%= record.exit_time&.strftime("%H:%M") || "Pendiente" %>
+                </td>
+                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <%= record.exit_time ? ((record.exit_time - record.entry_time) / 3600.0).round(2) : "-" %>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <%= record.exit_time ? ((record.exit_time - record.entry_time) / 3600.0).round(2) : "-" %>
