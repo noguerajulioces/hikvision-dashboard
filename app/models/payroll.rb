@@ -52,6 +52,9 @@ class Payroll < ApplicationRecord
     self.total_payment = calculate_payment
   end
 
+  def unresolved_incidents
+    self.incidents.where(resolved: false)&.count
+  end
   private
 
   def calculate_payment

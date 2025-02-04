@@ -50,7 +50,7 @@
           </div>
           <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Total Incidentes</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @payroll.total_incidents %> pendientes (de <%= @payroll.incidents.count %>)</dd>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @payroll.unresolved_incidents %> pendientes (de <%= @payroll.incidents.count %>)</dd>
           </div>
           <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Pago Base</dt>
@@ -132,6 +132,7 @@
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Fecha</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Problema</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Estado</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Acciones</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
@@ -148,6 +149,11 @@
                     <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
                       Pendiente
                     </span>
+                  <% end %>
+                </td>
+                <td>
+                  <% unless incident.resolved %>
+                    <%= button_to "Marcar como Resuelto", resolve_incident_path(incident), method: :patch, class: "text-indigo-600 hover:text-indigo-900 px-3 py-1" %>
                   <% end %>
                 </td>
               </tr>
