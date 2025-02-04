@@ -19,35 +19,30 @@
           </div>
         </div>
       <% end %>
-
       <div class="col-span-full sm:col-span-3">
         <%= form.label :first_name, "Nombre", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
           <%= form.text_field :first_name, class: "block w-full rounded-md border-0 px-3 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
         </div>
       </div>
-
       <div class="col-span-full sm:col-span-3">
         <%= form.label :last_name, "Apellido", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
           <%= form.text_field :last_name, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
         </div>
       </div>
-
       <div class="col-span-full sm:col-span-3">
         <%= form.label :document_number, "Número de Documento", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
           <%= form.text_field :document_number, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
         </div>
       </div>
-
       <div class="col-span-full sm:col-span-3">
         <%= form.label :email, "Correo Electrónico", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
           <%= form.email_field :email, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
         </div>
       </div>
-
       <div class="col-span-full sm:col-span-3">
         <%= form.label :phone, "Teléfono", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
@@ -70,6 +65,15 @@
           <%= form.date_field :hire_date, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
         </div>
       </div>
+
+      <% if !employee.new_record? %>
+        <div class="col-span-full sm:col-span-3">
+          <%= form.label :termination_date, "Finalización de Contrato", class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.date_field :termination_date, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 

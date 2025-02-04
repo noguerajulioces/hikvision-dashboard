@@ -66,4 +66,12 @@ class Employee < ApplicationRecord
       [ hours - standard_hours, 0 ].max
     end
   end
+
+  def active?
+      termination_date.nil?
+    end
+  
+    def status
+      active? ? "Activo" : "Inactivo"
+    end
 end
