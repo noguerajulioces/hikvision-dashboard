@@ -33,7 +33,11 @@ Rails.application.routes.draw do
     end
   end
   resources :attendance_records
-  resources :schedules
+  resources :schedules do
+    member do
+      post :duplicate
+    end
+  end
   resources :incidents, only: [ :index, :new, :show, :edit ] do
     member do
       patch :resolve

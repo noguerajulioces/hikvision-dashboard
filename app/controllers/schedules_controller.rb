@@ -38,6 +38,18 @@ class SchedulesController < ApplicationController
     redirect_to schedules_url, notice: "El horario fue eliminado exitosamente."
   end
 
+  def duplicate
+    @original_schedule = Schedule.find(params[:id])
+    @new_schedule = @original_schedule.dup
+    @new_schedule.date = @original_schedule.date + 1.day # Incrementa la fecha en 1 día
+
+    if @new_schedule.save
+      redirect_to schedules_path, notice: "Horario duplicado exitosamente."
+    else
+      redirect_to schedules_path, alert: "Error al duplicar el horario."
+    end
+  end
+
   private
     def set_schedule
       @schedule = Schedule.find(params[:id])
