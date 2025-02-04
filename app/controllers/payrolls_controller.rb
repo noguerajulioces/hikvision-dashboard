@@ -1,5 +1,5 @@
 class PayrollsController < ApplicationController
-  before_action :set_payroll, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_payroll, only: [ :show, :edit, :update, :destroy, :recalculate ]
 
   def index
     @payrolls = Payroll.paginate(page: params[:page])
@@ -48,6 +48,30 @@ class PayrollsController < ApplicationController
   rescue ActiveRecord::Rollback
     flash.now[:alert] = "Error al crear el reporte de nómina. Operación revertida."
     render :new, status: :unprocessable_entity
+  end
+
+  def recalculate
+    ActiveRecord::Base.transaction do
+      service = WorkHoursService.new(
+        @payroll.employee_id,
+        @payroll.start_date,
+        @payroll.end_date,
+        Setting&.lunch_hours
+      )
+
+      service.process_overtime
+
+      @payroll.calculate_totals(Setting&.lunch_hours)
+
+      if @payroll.save
+        redirect_to @payroll, notice: "Cálculo de nómina regenerado exitosamente."
+      else
+        raise ActiveRecord::Rollback, "Error al recalcular la nómina"
+      end
+    end
+  rescue ActiveRecord::Rollback
+    flash.now[:alert] = "Error al recalcular la nómina. Operación revertida."
+    render :show, status: :unprocessable_entity
   end
 
   def update

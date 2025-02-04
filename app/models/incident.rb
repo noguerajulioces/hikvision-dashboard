@@ -18,7 +18,7 @@ class Incident < ApplicationRecord
   after_initialize :set_default_resolved, if: :new_record?
 
   default_scope -> { order(created_at: :asc) }
-  
+
   # Scope to find incidents where issue contains "Llegó tarde"
   scope :late_arrivals, -> { where("issue LIKE ?", "%Llegó tarde%") }
 

@@ -36,12 +36,7 @@
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= record&.entry_time&.strftime("%d/%m/%Y %H:%M") %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= record&.exit_time&.strftime("%d/%m/%Y %H:%M") || '-' %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    <% if record&.exit_time %>
-                      <% hours, minutes = ((record&.exit_time - record&.entry_time) / 60).to_i.divmod(60) %>
-                      <%= "#{hours}:#{format('%02d', minutes)}" %>
-                    <% else %>
-                      -
-                    <% end %>
+                    <%= record.hours_worked %> <span class="text-xs">(<%= format_hours_to_human_readable(record.hours_worked) %>)</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
                     <% if record&.exit_time %>
@@ -51,7 +46,6 @@
                     <% end %>
                   </td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a href="<%= attendance_record_path(record) %>" class="text-indigo-600 hover:text-indigo-900">Ver</a>
                     <a href="<%= edit_attendance_record_path(record) %>" class="ml-2 text-indigo-600 hover:text-indigo-900">Editar</a>
                     <%= link_to "Eliminar", attendance_record_path(record), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" }, class: "ml-2 text-red-600 hover:text-red-900" %>
                   </td>

@@ -56,5 +56,9 @@ Rails.application.routes.draw do
     resource :settings
   end
 
-  resources :payrolls
+  resources :payrolls do
+    member do
+      patch :recalculate
+    end
+  end
 end
