@@ -64,7 +64,7 @@ class WorkHoursService
     total_hours -= lunch_hours if @lunch_time && total_hours > 4
 
     # Horas extras en base al horario esperado
-    expected_work_hours = ((schedule.expected_exit_time - schedule.expected_entry_time) / 3600.0) - lunch_hours if @lunch_time 
+    expected_work_hours = ((schedule.expected_exit_time - schedule.expected_entry_time) / 3600.0) - lunch_hours if @lunch_time
     [ total_hours - expected_work_hours, 0 ].max
   end
 

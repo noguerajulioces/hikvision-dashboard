@@ -5,7 +5,7 @@
 #  id          :bigint           not null, primary key
 #  entry_time  :datetime
 #  exit_time   :datetime
-#  processed   :boolean          default: false
+#  processed   :boolean
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  device_id   :integer
@@ -30,6 +30,19 @@ class AttendanceRecord < ApplicationRecord
   default_scope { order(entry_time: :desc) }
 
   before_validation :assign_schedule
+
+  def hours_worked
+    return "-" unless exit_time
+
+    total_hours = ((exit_time - entry_time) / 3600.0)
+
+    # Subtract lunch hour if schedule has lunch time
+    if schedule&.include_lunch
+      total_hours -= Setting&.lunch_hours
+    end
+
+    total_hours.round(2)
+  end
 
   private
 

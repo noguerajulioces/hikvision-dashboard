@@ -42,15 +42,23 @@
           </div>
           <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Total Horas Trabajadas</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @payroll.total_hours_worked %></dd>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @payroll.total_hours_worked %> <span class="text-xs">(<%= format_hours_to_human_readable(@payroll.total_hours_worked ) %>)</span>  </dd>
           </div>
           <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Total Horas Extra</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @payroll.total_overtime_hours %></dd>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @payroll.total_overtime_hours %> <span class="text-xs">(<%= format_hours_to_human_readable(@payroll.total_overtime_hours ) %>)</span> </dd>
           </div>
           <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Total Incidentes</dt>
             <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @payroll.total_incidents %> pendientes (de <%= @payroll.incidents.count %>)</dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Pago Base</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= number_to_currency(@payroll.total_payment - @payroll.overtime_records.sum(:compensation)) %></dd>
+          </div>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Pago Horas Extras</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= number_to_currency(@payroll.overtime_records.sum(:compensation)) %></dd>
           </div>
           <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Pago Total</dt>
@@ -93,7 +101,7 @@
             <tr>
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Fecha</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Horas</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tasa</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Valor Hora</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Total</th>
             </tr>
           </thead>
@@ -101,7 +109,7 @@
             <% @payroll.overtime_records.each do |overtime| %>
               <tr>
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900"><%= overtime.date.strftime("%d/%m/%Y") %></td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= overtime.hours_worked %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= overtime.hours_worked.round(2) %> <span class="text-xs">(<%= format_hours_to_human_readable(overtime.hours_worked) %>)</span> </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= number_to_currency(overtime.compensation / overtime.hours_worked) %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= number_to_currency(overtime.compensation) %></td>
               </tr>
@@ -179,11 +187,11 @@
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <%= record.exit_time&.strftime("%H:%M") || "Pendiente" %>
                 </td>
-                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <%= record.exit_time ? ((record.exit_time - record.entry_time) / 3600.0).round(2) : "-" %>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <%= lunch_inclusion_label(record.schedule) %>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <%= record.exit_time ? ((record.exit_time - record.entry_time) / 3600.0).round(2) : "-" %>
+                  <%= record.hours_worked %> <span class="text-xs">(<%= format_hours_to_human_readable(record.hours_worked) %>)</span>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm">
                   <% if record.processed %>

@@ -8,6 +8,7 @@
 #  date                :date             not null
 #  expected_entry_time :datetime
 #  expected_exit_time  :datetime
+#  include_lunch       :boolean
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  group_id            :bigint

@@ -6,15 +6,16 @@
           <%= form.hidden_field :employee_id, value: params[:employee_id] %>
           <%= form.hidden_field :start_date, value: params[:start_date] %>
           <%= form.hidden_field :end_date, value: params[:end_date] %>
-
-        <div class="relative flex items-start">
+          <%= form.hidden_field :lunch_time, value: false %>
+        <!-- <div class="relative flex items-start">
           <div class="flex h-6 items-center">
             <%= form.check_box :lunch_time, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" %>
           </div>
           <div class="ml-3 text-sm leading-6">
             <%= form.label :lunch_time, "Horario de Almuerzo", class: "font-medium text-gray-900" %>
           </div>
-        </div>
+        </div> -->
+        
         <%= form.submit "Generar Nómina", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
       <% end %>
     </div>
@@ -28,6 +29,7 @@
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Fecha</th>
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Entrada</th>
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Salida</th>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Horario de Almuerzo</th>
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Horas Trabajadas</th>
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Estado</th>
             </tr>
@@ -43,9 +45,11 @@
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= record.entry_time&.strftime("%H:%M") %></td>
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= record.exit_time&.strftime("%H:%M") || '-' %></td>
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                  <%= lunch_inclusion_label(record.schedule) %>
+                </td>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                   <% if record.exit_time %>
-                    <% hours, minutes = ((record.exit_time - record.entry_time) / 60).to_i.divmod(60) %>
-                    <%= "#{hours}:#{format('%02d', minutes)}" %>
+                    <%= record.hours_worked %> <span class="text-xs">(<%= format_hours_to_human_readable(record.hours_worked ) %>)</span>
                   <% else %>
                     -
                   <% end %>

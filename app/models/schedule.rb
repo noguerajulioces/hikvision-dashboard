@@ -6,6 +6,7 @@
 #  date                :date             not null
 #  expected_entry_time :datetime
 #  expected_exit_time  :datetime
+#  include_lunch       :boolean
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  group_id            :bigint
@@ -32,8 +33,9 @@ class Schedule < ApplicationRecord
 
   # Métodos de instancia
   def formatted_duration
-    seconds = expected_exit_time - expected_entry_time
-    Time.at(seconds).utc.strftime("%H:%M horas")
+    total_seconds = expected_exit_time - expected_entry_time
+    total_seconds -= 1.hour if include_lunch? && total_seconds > 4.hours
+    Time.at(total_seconds).utc.strftime("%H:%M horas")
   end
 
   def day_of_week
