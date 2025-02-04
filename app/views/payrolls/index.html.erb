@@ -41,9 +41,6 @@
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= number_to_currency(payroll.total_payment) %></td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <%= link_to "Ver", payroll_path(payroll), class: "text-indigo-600 hover:text-indigo-900" %>
-                    <%= link_to "Recalcular", recalculate_payroll_path(payroll), 
-                        data: { turbo_method: :patch }, 
-                        class: "ml-2 text-indigo-600 hover:text-indigo-900" %>
                     <%= link_to "Eliminar", payroll_path(payroll), 
                         data: { turbo_method: :delete, turbo_confirm: '¿Estás seguro?' }, 
                         class: "ml-2 text-red-600 hover:text-red-900" %>
