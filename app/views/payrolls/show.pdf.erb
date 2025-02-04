@@ -67,8 +67,7 @@
         <tr>
           <td>
             <h2>MULTICARNES S.R.L.</h2>
-            <p>RUT/RFC: 800380940</p>
-            <p>Descripción Prov: Matadero</p>
+            <p>RUC: 800380940</p>
           </td>
           <td style="text-align: right;">
             <h2>Tarjeta de Horario</h2>
@@ -93,12 +92,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="border"><td class="p-2">Lunes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
-        <tr class="border"><td class="p-2">Martes</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
-        <tr class="border"><td class="p-2">Miércoles</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
-        <tr class="border"><td class="p-2">Jueves</td><td class="p-2">05:00</td><td class="p-2">13:00</td></tr>
-        <tr class="border"><td class="p-2">Viernes</td><td class="p-2">04:00</td><td class="p-2">12:00</td></tr>
-        <tr class="border"><td class="p-2">Sábado</td><td class="p-2">05:00</td><td class="p-2">12:00</td></tr>
+        <% @payroll.schedules.each do |record| %>
+          <tr class="border">
+            <td class="p-2"><%= record.date.strftime("%a") %></td> 
+            <td class="p-2"><%= record.expected_entry_time.strftime("%H:%M") %></td>
+            <td class="p-2"><%= record.expected_exit_time.strftime("%H:%M") %></td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
         
@@ -130,8 +130,7 @@
     </table>
     
     <div>
-      <p class="highlight">Días No Trabajados: 2</p>
-      <p class="highlight">Llegadas Tardías: 0</p>
+      <p class="highlight">Llegadas Tardías: <%= @payroll&.incidents&.late_arrivals&.count %></p>
     </div>
     
     <div class="signature">

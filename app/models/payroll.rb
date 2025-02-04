@@ -30,6 +30,8 @@ class Payroll < ApplicationRecord
   has_many :overtime_records, through: :payroll_entries, source: :recordable, source_type: "OvertimeRecord"
   has_many :incidents, through: :payroll_entries, source: :recordable, source_type: "Incident"
 
+  has_many :schedules, through: :attendance_records
+
   validates :start_date, :end_date, presence: true
 
   default_scope { order(created_at: :desc) }
