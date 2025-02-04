@@ -69,6 +69,6 @@ class SchedulesController < ApplicationController
     end
 
     def schedule_params
-      params.require(:schedule).permit(:date, :expected_entry_time, :expected_exit_time, :group_id)
+      params.require(:schedule).permit(:date, :expected_entry_time, :expected_exit_time, :group_id, :include_lunch)
     end
 end

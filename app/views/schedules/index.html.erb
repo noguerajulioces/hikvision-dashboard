@@ -20,6 +20,7 @@
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Fecha</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hora de Entrada</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hora de Salida</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hora de almuerzo</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Función</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Horas de Trabajo</th>
                 <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -37,12 +38,20 @@
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= schedule.expected_entry_time.strftime("%H:%M") %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= schedule.expected_exit_time.strftime("%H:%M") %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= schedule&.include_lunch ? 'Incluye' : 'No incluye' %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= schedule&.group&.name %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= schedule&.formatted_duration || "00:00 horas" %></td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a href="<%= edit_schedule_path(schedule) %>" class="ml-2 text-indigo-600 hover:text-indigo-900">Editar</a>
-                    <%= button_to duplicate_schedule_path(schedule), method: :post, class: "ml-2 inline-block text-indigo-600 hover:text-indigo-900" do %>Duplicar<% end %>
-                    <%= link_to "Eliminar", schedule_path(schedule), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" }, class: "ml-2 text-red-600 hover:text-red-900" %></td>
+                    <div class="flex space-x-4">
+                      <a href="<%= edit_schedule_path(schedule) %>" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                      
+                      <%= button_to duplicate_schedule_path(schedule), method: :post, class: "text-indigo-600 hover:text-indigo-900" do %>
+                        Duplicar
+                      <% end %>
+
+                      <%= link_to "Eliminar", schedule_path(schedule), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" }, class: "text-red-600 hover:text-red-900" %>
+                    </div>
+                  </td>
                 </tr>
               <% end %>
             </tbody>

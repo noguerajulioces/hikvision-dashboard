@@ -31,7 +31,7 @@ module Admin
 
     private
       def setting_params
-        params.require(:setting).permit(:hourly_rate, :overtime_rate, :margin_of_tolerance)
+        params.require(:setting).permit(:hourly_rate, :overtime_rate, :margin_of_tolerance, :lunch_hours)
       end
   end
 end
