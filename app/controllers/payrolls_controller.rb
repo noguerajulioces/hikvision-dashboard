@@ -33,10 +33,8 @@ class PayrollsController < ApplicationController
         params[:lunch_time]
       )
 
-      service.process_overtime
+      @payroll = service.process_overtime
 
-      @payroll = Payroll.new(payroll_params)
-      link_related_records(@payroll)
       @payroll.calculate_totals(Setting&.lunch_hours)
 
       if @payroll.save
@@ -56,7 +54,8 @@ class PayrollsController < ApplicationController
         @payroll.employee_id,
         @payroll.start_date,
         @payroll.end_date,
-        Setting&.lunch_hours
+        Setting&.lunch_hours,
+        recalculate: true
       )
 
       service.process_overtime
