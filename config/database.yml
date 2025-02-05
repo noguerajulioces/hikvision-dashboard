@@ -84,6 +84,8 @@ production:
     database: multicarnesd
     username: multicarnesd_user
     password: <%= ENV["MULTICARNES_DATABASE_PASSWORD"] %>
+    port: 5432
+    hostname: <%= ENV["HOSTNAME"] %>
   cache:
     <<: *primary_production
     database: multicarnes_production_cache
