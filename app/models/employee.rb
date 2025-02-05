@@ -27,6 +27,8 @@ class Employee < ApplicationRecord
   validates :phone, allow_blank: true, length: { minimum: 10, maximum: 15 }
   validates :document_number, presence: true, uniqueness: true
 
+  scope :active, -> { where(termination_date: nil) }
+
   def self.margin_of_tolerance
     Setting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
   end
@@ -68,10 +70,10 @@ class Employee < ApplicationRecord
   end
 
   def active?
-      termination_date.nil?
-    end
+    termination_date.nil?
+  end
 
-    def status
-      active? ? "Activo" : "Inactivo"
-    end
+  def status
+    active? ? "Activo" : "Inactivo"
+  end
 end
