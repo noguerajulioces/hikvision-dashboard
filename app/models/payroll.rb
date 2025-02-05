@@ -32,8 +32,6 @@ class Payroll < ApplicationRecord
 
   has_many :schedules, through: :attendance_records
 
-  before_destroy :destroy_related_records
-
   validates :start_date, :end_date, presence: true
 
   default_scope { order(created_at: :desc) }
@@ -60,12 +58,6 @@ class Payroll < ApplicationRecord
     self.incidents.where(resolved: false)&.count
   end
   private
-
-  def destroy_related_records
-    incidents.destroy_all
-    overtime_records.destroy_all
-    attendance_records.update_all(processed: false)
-  end
 
   def calculate_payment
     base_payment = total_hours_worked * hourly_rate

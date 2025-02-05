@@ -58,8 +58,14 @@ class PayrollsController < ApplicationController
   end
 
   def destroy
-    @payroll.destroy
-    redirect_to payrolls_url, notice: "Reporte de nómina eliminado exitosamente."
+    service = PayrollDestroyService.new(@payroll)
+
+    if service.call
+      redirect_to payrolls_url, notice: "Reporte de nómina eliminado exitosamente."
+    else
+      flash.now[:alert] = "Error al eliminar el reporte de nómina. Operación revertida."
+      render :index, status: :unprocessable_entity
+    end
   end
 
   private
