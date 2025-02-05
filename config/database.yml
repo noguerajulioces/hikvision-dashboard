@@ -81,8 +81,8 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: multicarnes_production
-    username: multicarnes
+    database: multicarnesd
+    username: multicarnesd_user
     password: <%= ENV["MULTICARNES_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
