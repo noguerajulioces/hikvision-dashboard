@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [ :show, :edit, :update, :destroy, :remove_employee ]
+  before_action :set_group, only: [ :show, :edit, :update, :destroy, :remove_employee, :hours ]
 
   def index
     @groups = Group
@@ -60,6 +60,10 @@ class GroupsController < ApplicationController
     else
       render json: { error: "Error desasociando el empleado" }, status: :unprocessable_entity
     end
+  end
+
+  def hours
+    @hours = @group.schedules.paginate(page: params[:page])
   end
 
 

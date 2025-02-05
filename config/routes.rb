@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get "profile", to: "users#show", as: "user_profile"
   resources :groups do
     member do
+      get :hours
       post :add_employee
       delete :remove_employee
     end
