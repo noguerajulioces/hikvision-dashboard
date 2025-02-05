@@ -15,7 +15,7 @@ class OvertimeCalculator
     # If overtime period includes lunch time and is over 4 hours, subtract lunch
     overtime_hours -= lunch_hours if @lunch_time && overtime_hours > 4
 
-    [overtime_hours, 0].max
+    [ overtime_hours, 0 ].max
   end
 
   def create_overtime_record(hours)
