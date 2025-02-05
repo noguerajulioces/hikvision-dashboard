@@ -39,9 +39,9 @@ class IncidentsController < ApplicationController
 
   def resolve
     if @incident.update(resolved: true)
-      redirect_to incidents_path, notice: "El incidente fue marcado como resuelto."
+      redirect_to params[:redirect_to] || incidents_path, notice: "El incidente fue marcado como resuelto."
     else
-      redirect_to incidents_path, alert: "Hubo un error al actualizar el incidente."
+      redirect_to params[:redirect_to] || incidents_path, notice: "El incidente fue marcado como resuelto."
     end
   end
 

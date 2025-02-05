@@ -151,7 +151,7 @@
                 </td>
                 <td>
                   <% unless incident.resolved %>
-                    <%= button_to "Marcar como Resuelto", resolve_incident_path(incident), method: :patch, class: "text-indigo-600 hover:text-indigo-900 px-3 py-1" %>
+                    <%= button_to "Marcar como Resuelto", resolve_incident_path(incident, redirect_to: request.fullpath), method: :patch, class: "text-indigo-600 hover:text-indigo-900 px-3 py-1" %>
                   <% end %>
                 </td>
               </tr>
