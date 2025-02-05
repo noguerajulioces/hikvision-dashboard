@@ -29,6 +29,10 @@ class User < ApplicationRecord
 
   validate :must_have_at_least_one_role
 
+  def active_for_authentication?
+    super && active?
+  end
+
   private
 
   def must_have_at_least_one_role
