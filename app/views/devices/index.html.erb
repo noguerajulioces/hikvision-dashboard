@@ -32,7 +32,6 @@
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= device.ip_address %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= device.model %></td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a href="<%= device_path(device) %>" class="text-indigo-600 hover:text-indigo-900">Ver</a>
                     <a href="<%= edit_device_path(device) %>" class="ml-2 text-indigo-600 hover:text-indigo-900">Editar</a>
                     <%= link_to "Eliminar", device_path(device), 
                         data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" }, 
