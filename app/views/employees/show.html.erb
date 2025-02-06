@@ -118,7 +118,7 @@
         <h2 class="text-lg font-semibold text-gray-900">Historial de Horas Extras</h2>
         <div class="mt-4">
           <ul role="list" class="divide-y divide-gray-100">
-            <% @employee.overtime_records.each do |record| %>
+            <% @employee.overtime_records.limit(10).each do |record| %>
               <li class="flex items-center justify-between gap-x-6 py-5">
                 <div class="min-w-0">
                   <div class="flex items-start gap-x-3">
@@ -151,7 +151,7 @@
         <h2 class="text-lg font-semibold text-gray-900">Incidencias</h2>
         <div class="mt-4">
           <ul role="list" class="divide-y divide-gray-100">
-            <% @employee.incidents.each do |incident| %>
+            <% @employee.incidents.limit(10).each do |incident| %>
               <li class="flex items-center justify-between gap-x-6 py-5">
                 <div class="min-w-0">
                   <div class="flex items-start gap-x-3">
