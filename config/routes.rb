@@ -58,4 +58,5 @@ Rails.application.routes.draw do
   end
 
   resources :payrolls
+  resources :devices
 end
