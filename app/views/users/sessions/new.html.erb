@@ -1,24 +1,24 @@
-<div class="flex justify-center">
-  <div class="w-1/2 px-24 py-12">
+<div class="flex justify-center min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+  <div class="w-full max-w-md">
     <div>
-      <h2 class="mt-8 text-2xl/9 font-bold tracking-tight text-gray-900 text-center">Multicarnes S.R.L.</h2>
+      <h2 class="mt-6 text-2xl font-bold tracking-tight text-gray-900 text-center sm:text-3xl">Multicarnes S.R.L.</h2>
     </div>
 
-    <div class="mt-10">
+    <div class="mt-8">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f| %>
         <div>
-          <%= f.label :email, class: "block text-sm/6 font-medium text-gray-900" %>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "block w-full rounded-md bg-white px-3 py-2 text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-sm sm:text-base" %>
           </div>
         </div>
 
         <div>
-          <%= f.label :password, class: "block text-sm/6 font-medium text-gray-900" %>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-900" %>
           <div class="relative mt-2" data-controller="password-visibility">
             <!-- Campo de contraseña -->
             <%= f.password_field :password, autocomplete: "current-password", required: true, spellcheck: "false",
-                                  class: "block w-full pr-10 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm",
+                                  class: "block w-full pr-10 rounded-md bg-white px-3 py-2 text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-sm sm:text-base",
                                   "data-password-visibility-target" => "input" %>
 
             <!-- Botón para alternar visibilidad -->
@@ -39,20 +39,17 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
           <% if devise_mapping.rememberable? %>
-            <div class="flex gap-3">
+            <div class="flex items-center gap-3">
               <%= f.check_box :remember_me, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" %>
-              <%= f.label :remember_me, "Recordar", class: "text-sm/6 text-gray-900" %>
+              <%= f.label :remember_me, "Recordar", class: "text-sm text-gray-900" %>
             </div>
           <% end %>
-          <div class="text-sm/6">
-            <%= link_to "¿Olvidó su contraseña?", new_password_path(resource_name), class: "font-semibold text-indigo-600 hover:text-indigo-500" %>
-          </div>
         </div>
 
         <div>
-          <%= f.submit "Iniciar Sesión", class: "flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+          <%= f.submit "Iniciar Sesión", class: "w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:text-base" %>
         </div>
       <% end %>
     </div>
