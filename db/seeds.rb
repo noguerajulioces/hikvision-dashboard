@@ -1,6 +1,6 @@
 admin_role = Role.find_or_create_by!(name: 'Admin')
 
-user = User.create(roles: [ admin_role ], phone: '+595995352192', email: 'admin@multicarnes.com', name: 'Multicarnes', password: 123456)
+user = User.create(roles: [ admin_role ], phone: '+595995352192', email: 'admin@multicarnes.com', name: 'Multicarnes', password: 123456, active: true)
 
 # Example company roles/groups
 company_groups = [
