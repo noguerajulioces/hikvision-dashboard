@@ -1,5 +1,5 @@
 class DevicesController < ApplicationController
-  before_action :set_device, only: [:show, :edit, :update, :destroy]
+  before_action :set_device, only: [ :show, :edit, :update, :destroy ]
 
   # GET /devices
   def index
@@ -24,7 +24,7 @@ class DevicesController < ApplicationController
     @device = Device.new(device_params)
 
     if @device.save
-      redirect_to @device, notice: 'Dispositivo creado exitosamente.'
+      redirect_to @device, notice: "Dispositivo creado exitosamente."
     else
       render :new
     end
@@ -33,7 +33,7 @@ class DevicesController < ApplicationController
   # PATCH/PUT /devices/1
   def update
     if @device.update(device_params)
-      redirect_to @device, notice: 'Dispositivo actualizado exitosamente.'
+      redirect_to @device, notice: "Dispositivo actualizado exitosamente."
     else
       render :edit
     end
@@ -42,7 +42,7 @@ class DevicesController < ApplicationController
   # DELETE /devices/1
   def destroy
     @device.destroy
-    redirect_to devices_url, notice: 'Dispositivo eliminado exitosamente.'
+    redirect_to devices_url, notice: "Dispositivo eliminado exitosamente."
   end
 
   private

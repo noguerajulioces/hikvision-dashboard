@@ -21,11 +21,11 @@ class Employee < ApplicationRecord
   has_many :incidents, dependent: :destroy
   has_many :absences, dependent: :destroy
 
-  validates :first_name, :last_name, presence: true
-  validates :hire_date, presence: true
-  validates :email, uniqueness: true, allow_blank: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :phone, allow_blank: true, length: { minimum: 10, maximum: 15 }
-  validates :document_number, presence: true, uniqueness: true
+  # validates :first_name, :last_name, presence: true
+  # validates :hire_date, presence: true
+  # validates :email, uniqueness: true, allow_blank: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  # validates :phone, allow_blank: true, length: { minimum: 10, maximum: 15 }
+  # validates :document_number, presence: true, uniqueness: true
 
   scope :active, -> { where(termination_date: nil) }
 
@@ -70,7 +70,7 @@ class Employee < ApplicationRecord
   end
 
   def active?
-    termination_date.nil?
+    !hire_date.nil? || !termination_date.nil?
   end
 
   def status

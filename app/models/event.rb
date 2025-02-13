@@ -30,7 +30,7 @@
 #  fk_rails_...  (device_id => devices.id)
 #  fk_rails_...  (employee_id => employees.id)
 #
-require 'csv'
+require "csv"
 
 class Event < ApplicationRecord
   belongs_to :device, optional: true
@@ -39,11 +39,12 @@ class Event < ApplicationRecord
   validates :date, :time, :in_out, presence: true
 
   before_validation :assign_employee
+  before_create :clean_params
 
   default_scope { order(date: :desc, time: :asc) }
 
   def self.import_from_csv(file_path)
-    CSV.foreach(file_path, headers: true) do |row|
+    CSV.foreach(file_path, headers: true, encoding: "bom|utf-8") do |row|
       create(
         s_name: row["sName"],
         s_job_no: row["sJobNo"],
@@ -57,14 +58,22 @@ class Event < ApplicationRecord
         attendance_status: row["AttendanceStatus"],
         wear_mask: row["WearMask"],
         serial_no: row["SerialNo"],
-        employee: Employee.find_by(card_number: row["sCard"]) # Asignar empleado basado en la tarjeta
+        employee: Employee.find_by(document_number: row["sCard"]) # Asignar empleado basado en la tarjeta
       )
     end
   end
 
   private
 
+  def clean_params
+    self.s_job_no = s_job_no.delete_prefix("'") if s_job_no.present?
+    self.s_card = s_card.delete_prefix("'") if s_card.present?
+  end
+
   def assign_employee
-    self.employee = Employee.find_by(card_number: s_card) if s_card.present?
+    s_job_no = s_job_no.delete_prefix("'") if s_job_no.present?
+    if s_job_no.present?
+      self.employee = Employee.find_or_create_by!(document_number: s_job_no)
+    end
   end
 end
