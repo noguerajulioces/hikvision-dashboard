@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_04_141514) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_13_181139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -56,6 +56,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_141514) do
     t.string "phone"
     t.string "email"
     t.string "document_number"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "s_name"
+    t.string "s_job_no"
+    t.string "s_card"
+    t.date "date"
+    t.time "time"
+    t.string "in_out"
+    t.integer "read_id"
+    t.integer "event_main_code"
+    t.integer "event_sub_code"
+    t.string "attendance_status"
+    t.string "wear_mask"
+    t.integer "serial_no"
+    t.bigint "device_id"
+    t.bigint "employee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["device_id"], name: "index_events_on_device_id"
+    t.index ["employee_id"], name: "index_events_on_employee_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -161,6 +182,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_141514) do
 
   add_foreign_key "absences", "employees"
   add_foreign_key "attendance_records", "schedules"
+  add_foreign_key "events", "devices"
+  add_foreign_key "events", "employees"
   add_foreign_key "payroll_entries", "payrolls"
   add_foreign_key "payrolls", "employees"
 end

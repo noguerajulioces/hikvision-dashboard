@@ -59,4 +59,9 @@ Rails.application.routes.draw do
 
   resources :payrolls
   resources :devices
+  resources :events do
+    collection do
+      post :import
+    end
+  end
 end
