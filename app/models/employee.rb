@@ -20,6 +20,7 @@ class Employee < ApplicationRecord
   has_many :overtime_records, dependent: :destroy
   has_many :incidents, dependent: :destroy
   has_many :absences, dependent: :destroy
+  has_many :events
 
   # validates :first_name, :last_name, presence: true
   # validates :hire_date, presence: true

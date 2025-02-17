@@ -33,7 +33,7 @@ class EventsController < ApplicationController
   # POST /events/import
   def import
     if params[:file].present?
-      Event.import_from_csv(params[:file].path)
+      EventImportService.new(params[:file].path).call
       redirect_to events_path, notice: "Events were successfully imported."
     else
       redirect_to events_path, alert: "Please select a file to import."

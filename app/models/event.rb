@@ -3,27 +3,27 @@
 # Table name: events
 #
 #  id                :bigint           not null, primary key
-#  s_name            :string
-#  s_job_no          :string
-#  s_card            :string
+#  attendance_status :string
 #  date              :date
-#  time              :time
-#  in_out            :string
-#  read_id           :integer
 #  event_main_code   :integer
 #  event_sub_code    :integer
-#  attendance_status :string
-#  wear_mask         :string
+#  in_out            :string
+#  s_card            :string
+#  s_job_no          :string
+#  s_name            :string
 #  serial_no         :integer
+#  time              :time
+#  wear_mask         :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  device_id         :integer
-#  employee_id       :integer
+#  device_id         :bigint
+#  employee_id       :bigint
+#  read_id           :integer
 #
 # Indexes
 #
-#  index_events_on_device_id   (device_id)
-#  index_events_on_employee_id (employee_id)
+#  index_events_on_device_id    (device_id)
+#  index_events_on_employee_id  (employee_id)
 #
 # Foreign Keys
 #
@@ -71,7 +71,7 @@ class Event < ApplicationRecord
   end
 
   def assign_employee
-    s_job_no = s_job_no.delete_prefix("'") if s_job_no.present?
+    s_job_no = self.s_job_no.delete_prefix("'") if self.s_job_no.present?
     if s_job_no.present?
       self.employee = Employee.find_or_create_by!(document_number: s_job_no)
     end
