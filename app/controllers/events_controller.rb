@@ -3,7 +3,8 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @events = Event.paginate(page: params[:page])
+    @q = Event.ransack(params[:q])
+    @events = @q.result.paginate(page: params[:page])
   end
 
   # GET /events/1

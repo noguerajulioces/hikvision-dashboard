@@ -9,6 +9,7 @@ class EventImportService
 
   def call
     import_events
+    process_attendance_records
     summary
   end
 
@@ -19,7 +20,7 @@ class EventImportService
       process_row(row)
     end
   rescue StandardError => e
-    @errors << "Error general en la importación: #{e.message}"
+    @errors << "⚠️ Error general en la importación: #{e.message}"
   end
 
   def process_row(row)
@@ -44,7 +45,7 @@ class EventImportService
     if event.save
       @imported_count += 1
     else
-      @errors << "Error en fila #{row['sJobNo']}: #{event.errors.full_messages.join(', ')}"
+      @errors << "⚠️ Error en fila #{row['sJobNo']}: #{event.errors.full_messages.join(', ')}"
     end
   end
 
@@ -54,8 +55,13 @@ class EventImportService
     cleaned_document = document_number.delete_prefix("'")
     Employee.find_or_create_by!(document_number: cleaned_document)
   rescue ActiveRecord::RecordInvalid => e
-    @errors << "Error al crear empleado con documento #{document_number}: #{e.message}"
+    @errors << "⚠️ Error al crear empleado con documento #{document_number}: #{e.message}"
     nil
+  end
+
+  def process_attendance_records
+    puts "🔄 Procesando registros de asistencia..."
+    AttendanceProcessorService.new.call
   end
 
   def summary

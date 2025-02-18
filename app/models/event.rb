@@ -8,6 +8,7 @@
 #  event_main_code   :integer
 #  event_sub_code    :integer
 #  in_out            :string
+#  processed         :boolean          default(FALSE)
 #  s_card            :string
 #  s_job_no          :string
 #  s_name            :string
@@ -43,24 +44,12 @@ class Event < ApplicationRecord
 
   default_scope { order(date: :desc, time: :asc) }
 
-  def self.import_from_csv(file_path)
-    CSV.foreach(file_path, headers: true, encoding: "bom|utf-8") do |row|
-      create(
-        s_name: row["sName"],
-        s_job_no: row["sJobNo"],
-        s_card: row["sCard"],
-        date: row["Date"],
-        time: row["Time"],
-        in_out: row["IN/OUT"],
-        read_id: row["ReadID"],
-        event_main_code: row["EventMainCode"],
-        event_sub_code: row["EventSubCode"],
-        attendance_status: row["AttendanceStatus"],
-        wear_mask: row["WearMask"],
-        serial_no: row["SerialNo"],
-        employee: Employee.find_by(document_number: row["sCard"]) # Asignar empleado basado en la tarjeta
-      )
-    end
+  def self.ransackable_attributes(auth_object = nil)
+    [ "attendance_status", "created_at", "date", "device_id", "employee_id", "event_main_code", "event_sub_code", "id", "in_out", "read_id", "s_card", "s_job_no", "s_name", "serial_no", "time", "updated_at", "wear_mask" ]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    [ "device", "employee" ]
   end
 
   private
