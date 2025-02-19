@@ -186,10 +186,20 @@
                   <%= record.entry_time.strftime("%d/%m/%Y") %>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <%= record.entry_time.strftime("%H:%M") %>
+                  <%= record.entry_time&.strftime("%H:%M") %>
+                  <% if record&.schedule&.expected_entry_time.present? %>
+                    <span class="text-xs text-gray-400 ml-1">
+                      (<%= record.schedule.expected_entry_time.strftime("%H:%M") %>)
+                    </span>
+                  <% end %>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <%= record.exit_time&.strftime("%H:%M") || "Pendiente" %>
+                  <% if record&.schedule&.expected_exit_time.present? %>
+                    <span class="text-xs text-gray-400 ml-1">
+                      (<%= record.schedule.expected_exit_time.strftime("%H:%M") %>)
+                    </span>
+                  <% end %>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <%= lunch_inclusion_label(record.schedule) %>
