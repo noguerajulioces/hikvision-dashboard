@@ -42,7 +42,7 @@ class Event < ApplicationRecord
   before_validation :assign_employee
   before_create :clean_params
 
-  default_scope { order(date: :desc, time: :asc) }
+  default_scope { order(date: :desc, time: :desc) }
 
   def self.ransackable_attributes(auth_object = nil)
     [ "attendance_status", "created_at", "date", "device_id", "employee_id", "event_main_code", "event_sub_code", "id", "in_out", "read_id", "s_card", "s_job_no", "s_name", "serial_no", "time", "updated_at", "wear_mask" ]

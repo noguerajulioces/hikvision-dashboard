@@ -30,6 +30,7 @@ class AttendanceRecord < ApplicationRecord
   default_scope { order(entry_time: :desc) }
 
   before_validation :assign_schedule
+  after_initialize :set_defaults
 
   def hours_worked
     return "-" unless exit_time
@@ -54,5 +55,9 @@ class AttendanceRecord < ApplicationRecord
       group_id: employee.group_id,
       date: entry_time.to_date
     )
+  end
+
+  def set_defaults
+    self.processed ||= false
   end
 end

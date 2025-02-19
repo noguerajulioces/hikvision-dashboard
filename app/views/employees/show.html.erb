@@ -69,195 +69,46 @@
     </div>
   </div>
 
-  <div class="mt-8 flow-root">
-    <div class="bg-white shadow sm:rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <h2 class="text-lg font-semibold text-gray-900">Historial de Asistencia</h2>
-        <div class="mt-4">
-          <ul role="list" class="divide-y divide-gray-100">
-            <% @employee.attendance_records.each do |record| %>
-              <li class="flex items-center justify-between gap-x-6 py-5">
-                <div class="min-w-0">
-                  <div class="flex items-start gap-x-3">
-                    <p class="text-sm/6 font-semibold text-gray-900">Registro de Asistencia</p>
-                    <% if record.exit_time %>
-                      <p class="mt-0.5 whitespace-nowrap rounded-md bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Completo</p>
-                    <% else %>
-                      <p class="mt-0.5 whitespace-nowrap rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Pendiente Salida</p>
-                    <% end %>
-                  </div>
-                  <div class="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
-                    <p class="whitespace-nowrap">Fecha: <time datetime="<%= record.entry_time.strftime("%Y-%m-%d") %>"><%= record.entry_time.strftime("%d/%m/%Y") %></time></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Entrada: <%= record.entry_time.strftime("%H:%M") %></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Salida: <%= record.exit_time&.strftime("%H:%M") || '-' %></p>
-                    <% if record.exit_time %>
-                      <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                        <circle cx="1" cy="1" r="1" />
-                      </svg>
-                      <p class="truncate">Horas Trabajadas: <%= hours, minutes = ((record.exit_time - record.entry_time) / 60).to_i.divmod(60); "#{hours}:#{format('%02d', minutes)}" %></p>
-                    <% end %>
-                  </div>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="mt-8" data-controller="tab">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8">
+        <button data-tab="attendance" data-action="click->tab#switch" data-tab-target="tab"
+          class="whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium text-indigo-600 border-indigo-500">
+          Historial de Asistencia
+        </button>
 
-  <div class="mt-8 flow-root">
-    <div class="bg-white shadow sm:rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <h2 class="text-lg font-semibold text-gray-900">Historial de Asistencia</h2>
-        <div class="mt-4">
-          <ul role="list" class="divide-y divide-gray-100">
-            <% @employee.attendance_records.each do |record| %>
-              <li class="flex items-center justify-between gap-x-6 py-5">
-                <div class="min-w-0">
-                  <div class="flex items-start gap-x-3">
-                    <p class="text-sm/6 font-semibold text-gray-900">Registro de Asistencia</p>
-                    <% if record.exit_time %>
-                      <p class="mt-0.5 whitespace-nowrap rounded-md bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Completo</p>
-                    <% else %>
-                      <p class="mt-0.5 whitespace-nowrap rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Pendiente Salida</p>
-                    <% end %>
-                  </div>
-                  <div class="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
-                    <p class="whitespace-nowrap">Fecha: <time datetime="<%= record.entry_time.strftime("%Y-%m-%d") %>"><%= record.entry_time.strftime("%d/%m/%Y") %></time></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Entrada: <%= record.entry_time.strftime("%H:%M") %></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Salida: <%= record.exit_time&.strftime("%H:%M") || '-' %></p>
-                    <% if record.exit_time %>
-                      <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                        <circle cx="1" cy="1" r="1" />
-                      </svg>
-                      <p class="truncate">Horas Trabajadas: <%= hours, minutes = ((record.exit_time - record.entry_time) / 60).to_i.divmod(60); "#{hours}:#{format('%02d', minutes)}" %></p>
-                    <% end %>
-                  </div>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="mt-8 flow-root">
-    <div class="bg-white shadow sm:rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <h2 class="text-lg font-semibold text-gray-900">Historial de Horas Extras</h2>
-        <div class="mt-4">
-          <ul role="list" class="divide-y divide-gray-100">
-            <% @employee.overtime_records.limit(10).each do |record| %>
-              <li class="flex items-center justify-between gap-x-6 py-5">
-                <div class="min-w-0">
-                  <div class="flex items-start gap-x-3">
-                    <p class="text-sm/6 font-semibold text-gray-900">Registro de Horas Extras</p>
-                    <p class="mt-0.5 whitespace-nowrap rounded-md bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Completado</p>
-                  </div>
-                  <div class="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
-                    <p class="whitespace-nowrap">Fecha: <time datetime="<%= record.date.strftime("%Y-%m-%d") %>"><%= record.date.strftime("%d/%m/%Y") %></time></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Horas: <%= record.hours_worked %></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Compensación: <%= number_to_currency(record.compensation) %></p>
-                  </div>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+        <button data-tab="overtime" data-action="click->tab#switch" data-tab-target="tab"
+          class="whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium text-gray-500 border-transparent">
+          Horas Extras
+        </button>
 
-  <div class="mt-8 flow-root">
-    <div class="bg-white shadow sm:rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <h2 class="text-lg font-semibold text-gray-900">Eventos del Dispositivo</h2>
-        <div class="mt-4">
-          <ul role="list" class="divide-y divide-gray-100">
-            <% @employee.events.each do |event| %>
-              <li class="flex items-center justify-between gap-x-6 py-5">
-                <div class="min-w-0">
-                  <div class="flex items-start gap-x-3">
-                    <p class="text-sm/6 font-semibold text-gray-900">
-                      <%= link_to "Evento ##{event.id}", event_path(event), class: "text-indigo-600 hover:text-indigo-900" %>
-                    </p>
-                    <p class="mt-0.5 whitespace-nowrap rounded-md <%= event.in_out == 'IN' ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-blue-50 text-blue-700 ring-blue-600/20' %> px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset">
-                      <%= event.in_out == 'IN' ? 'Entrada' : 'Salida' %>
-                    </p>
-                  </div>
-                  <div class="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
-                    <p class="whitespace-nowrap">Fecha: <time datetime="<%= event.date %>"><%= event.date.strftime("%d/%m/%Y") %></time></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Hora: <%= event.time.strftime("%H:%M") %></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Dispositivo: <%= event.device&.name || 'N/A' %></p>
-                    <% if event.attendance_status.present? %>
-                      <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                        <circle cx="1" cy="1" r="1" />
-                      </svg>
-                      <p class="truncate">Estado: <%= event.attendance_status %></p>
-                    <% end %>
-                  </div>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
+        <button data-tab="events" data-action="click->tab#switch" data-tab-target="tab"
+          class="whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium text-gray-500 border-transparent">
+          Eventos del Dispositivo
+        </button>
+
+        <button data-tab="incidents" data-action="click->tab#switch" data-tab-target="tab"
+          class="whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium text-gray-500 border-transparent">
+          Incidencias
+        </button>
+      </nav>
     </div>
-  </div>
-  
-  <div class="mt-8 flow-root">
-    <div class="bg-white shadow sm:rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <h2 class="text-lg font-semibold text-gray-900">Incidencias</h2>
-        <div class="mt-4">
-          <ul role="list" class="divide-y divide-gray-100">
-            <% @employee.incidents.limit(10).each do |incident| %>
-              <li class="flex items-center justify-between gap-x-6 py-5">
-                <div class="min-w-0">
-                  <div class="flex items-start gap-x-3">
-                    <p class="text-sm/6 font-semibold text-gray-900">Incidencia</p>
-                    <p class="mt-0.5 whitespace-nowrap rounded-md <%= incident.resolved? ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-yellow-50 text-yellow-700 ring-yellow-600/20' %> px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset">
-                      <%= incident.resolved? ? "Resuelto" : "Pendiente" %>
-                    </p>
-                  </div>
-                  <div class="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
-                    <p class="whitespace-nowrap">Fecha: <time datetime="<%= incident.created_at.strftime("%Y-%m-%d") %>"><%= incident.created_at.strftime("%d/%m/%Y") %></time></p>
-                    <svg viewBox="0 0 2 2" class="size-0.5 fill-current">
-                      <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="truncate">Descripción: <%= incident&.issue %></p>
-                  </div>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        </div>
+
+    <div class="mt-4">
+      <div data-tab="attendance" data-tab-target="content">
+        <%= render "employees/attendance_records" %>
+      </div>
+
+      <div data-tab="overtime" data-tab-target="content" class="hidden">
+        <%= render "employees/overtime_records" %>
+      </div>
+
+      <div data-tab="events" data-tab-target="content" class="hidden">
+        <%= render "employees/events" %>
+      </div>
+
+      <div data-tab="incidents" data-tab-target="content" class="hidden">
+        <%= render "employees/incidents" %>
       </div>
     </div>
   </div>

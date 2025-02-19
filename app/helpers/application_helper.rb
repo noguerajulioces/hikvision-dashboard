@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def format_hours_to_human_readable(total_hours)
-    return "0 horas" if total_hours.nil? || total_hours.zero?
+    return "0 horas" if total_hours&.nil? || total_hours.to_i&.zero?
 
     hours = total_hours.to_i
     minutes = ((total_hours - hours) * 60).round
@@ -19,6 +19,6 @@ module ApplicationHelper
   end
 
   def lunch_inclusion_label(schedule)
-    schedule.include_lunch ? "Incluye" : "No incluye"
+    schedule&.include_lunch ? "Incluye" : "No incluye"
   end
 end
