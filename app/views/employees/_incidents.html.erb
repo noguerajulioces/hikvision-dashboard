@@ -1,3 +1,4 @@
+<turbo-frame id="incidents">
   <div class="mt-8 flow-root">
     <div class="bg-white shadow sm:rounded-lg">
       <div class="px-4 py-5 sm:p-6">
@@ -24,7 +25,7 @@
               </li>
             <% end %>
           </ul>
-          <%= will_paginate @incidents, param_name: :incidents_page, params: { 
+          <%= will_paginate @incidents, param_name: :incidents_page, remote: true, params: { 
             attendance_page: params[:attendance_page], 
             overtime_page: params[:overtime_page], 
             events_page: params[:events_page] 
@@ -33,3 +34,4 @@
       </div>
     </div>
   </div>
+</turbo-frame>

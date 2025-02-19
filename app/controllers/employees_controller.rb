@@ -6,11 +6,19 @@ class EmployeesController < ApplicationController
   end
 
   def show
+    @employee = Employee.find(params[:id])
+
     @attendance_records = @employee.attendance_records.paginate(page: params[:attendance_page], per_page: 10)
-    @events = @employee.events.paginate(page: params[:events_page], per_page: 10)
     @overtime_records = @employee.overtime_records.paginate(page: params[:overtime_page], per_page: 10)
+    @events = @employee.events.paginate(page: params[:events_page], per_page: 10)
     @incidents = @employee.incidents.paginate(page: params[:incidents_page], per_page: 10)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
+
 
   def new
     @employee = Employee.new
