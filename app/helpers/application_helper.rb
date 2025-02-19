@@ -19,6 +19,8 @@ module ApplicationHelper
   end
 
   def lunch_inclusion_label(schedule)
-    schedule&.include_lunch ? "Incluye" : "No incluye"
+    return content_tag(:span, "-", class: "text-red-500") if schedule.nil?
+
+    schedule.include_lunch ? "Incluye" : "No incluye"
   end
 end

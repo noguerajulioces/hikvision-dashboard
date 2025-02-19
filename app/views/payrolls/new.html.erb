@@ -20,7 +20,7 @@
         <div class="col-span-3 sm:col-span-2 md:col-span-1">
           <%= form.label :employee_id, "Seleccionar Empleado", class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
-            <%= form.collection_select :employee_id, Employee.all, :id, :full_name, { prompt: "Seleccione un Empleado" }, { class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" } %>
+            <%= form.collection_select :employee_id, Employee.active, :id, :full_name, { prompt: "Seleccione un Empleado" }, { class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" } %>
           </div>
         </div>
 
