@@ -82,26 +82,7 @@
       <p><strong>Nómina:</strong> <%= number_with_delimiter(@payroll.employee&.document_number&.to_i) %> | <strong>Ingreso:</strong> <%= @payroll.employee.hire_date.strftime("%d/%m/%Y") %></p>
       <p><strong>Función:</strong> <%= @payroll.employee.group.name %></p>
     </div>
-    
-    <table>
-      <thead>
-        <tr class="bg-gray-200">
-          <th class="border p-2">Día</th>
-          <th class="border p-2">Entrada</th>
-          <th class="border p-2">Salida</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @payroll.schedules.each do |record| %>
-          <tr class="border">
-            <td class="p-2"><%= record.date.strftime("%a") %></td> 
-            <td class="p-2"><%= record.expected_entry_time.strftime("%H:%M") %></td>
-            <td class="p-2"><%= record.expected_exit_time.strftime("%H:%M") %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-        
+
     <table>
       <thead>
         <tr>
@@ -114,9 +95,15 @@
       <tbody>
         <% @payroll.attendance_records.each do |record| %>
           <tr>
-            <td><%= record.entry_time.strftime("%d/%m/%y - %a") %></td>
-            <td><%= record.entry_time.strftime("%H:%M") %></td>
-            <td><%= record.exit_time&.strftime("%H:%M") || "-" %></td>
+            <td><%= l(record.entry_time, format: "%A - %d/%m/%y") %></td>
+            <td>
+              <%= record.entry_time.strftime("%H:%M") %> 
+              <span style="font-size: 0.85em; color: #9CA3AF;">(<%= record.schedule.expected_entry_time.strftime("%H:%M") %>)</span>
+            </td>
+            <td>
+              <%= record.exit_time&.strftime("%H:%M") || "-" %> 
+              <span style="font-size: 0.85em; color: #9CA3AF;">(<%= record.schedule.expected_exit_time.strftime("%H:%M") %>)</span>
+            </td>
             <td>
               <% if overtime = @payroll.overtime_records.find_by(date: record.entry_time.to_date) %>
                 <%= sprintf("%02d:%02d", overtime.hours_worked.to_i, ((overtime.hours_worked % 1) * 60).to_i) %>
