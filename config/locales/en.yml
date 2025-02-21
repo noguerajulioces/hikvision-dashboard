@@ -28,6 +28,11 @@
 #       enabled: "ON"
 
 en:
+  activerecord:
+    models:
+      user: "Usuario"
+      attendance_record: "Registro de Asistencia"
+      schedule: "Horario"
   date:
     formats:
       default: "%d-%m-%Y"

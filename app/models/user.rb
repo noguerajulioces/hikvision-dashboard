@@ -28,6 +28,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   validate :must_have_at_least_one_role
+  validate :cannot_deactivate_last_active_user, on: :update
 
   def active_for_authentication?
     super && active?
@@ -38,6 +39,16 @@ class User < ApplicationRecord
   def must_have_at_least_one_role
     if roles.blank?
       errors.add(:roles, "debe tener al menos un rol asignado.")
+    end
+  end
+
+  def cannot_deactivate_last_active_user
+    # Verifica si se está cambiando el estado de activo a inactivo
+    if active_changed?(from: true, to: false)
+      # Verifica si es el único usuario activo
+      if User.where(active: true).count == 1
+        errors.add(:user, "no se puede desactivar porque es el único usuario activo.")
+      end
     end
   end
 end

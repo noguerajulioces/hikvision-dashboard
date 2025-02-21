@@ -31,6 +31,7 @@ class AttendanceRecord < ApplicationRecord
 
   before_validation :assign_schedule
   after_initialize :set_defaults
+  after_find :check_and_assign_schedule
 
   def hours_worked
     return "-" unless exit_time
@@ -55,6 +56,13 @@ class AttendanceRecord < ApplicationRecord
       group_id: employee.group_id,
       date: entry_time.to_date
     )
+  end
+
+  def check_and_assign_schedule
+    if schedule.nil?
+      assign_schedule
+      save if schedule.present?
+    end
   end
 
   def set_defaults

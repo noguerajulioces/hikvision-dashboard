@@ -44,7 +44,9 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to users_path, notice: "El estado del usuario ha sido actualizado."
     else
-      redirect_to users_path, alert: "Hubo un error al intentar actualizar el estado del usuario."
+      # Si falló, muestra el mensaje de error específico
+      error_message = @user.errors.full_messages.to_sentence
+      redirect_to users_path, alert: "Hubo un error: #{error_message}"
     end
   end
 

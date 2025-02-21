@@ -1,4 +1,6 @@
 <% if unprocessed_records.any? %>
+  <% disable_button = unprocessed_records.any? { |record| record.schedule.nil? } %>
+
   <div id="employee-list" class="mt-4 -mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
       <%= form_with url: payrolls_path, method: :post, class: "inline-flex items-center gap-x-4" do |form| %>
@@ -15,9 +17,11 @@
             <%= form.label :lunch_time, "Horario de Almuerzo", class: "font-medium text-gray-900" %>
           </div>
         </div> -->
-        
-        <%= form.submit "Generar Nómina", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+        <%= form.submit "Generar Nómina", 
+          class: "cursor-pointer rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs ring-1 ring-inset #{disable_button ? 'bg-gray-100 text-gray-400 ring-gray-200 cursor-not-allowed' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'}", 
+          disabled: disable_button %>
       <% end %>
+
     </div>
     <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
       <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
@@ -42,7 +46,7 @@
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
             <% unprocessed_records.each.with_index(1) do |record, index| %>
-              <tr>
+              <tr class="<%= record.schedule.nil? ? 'bg-red-300' : 'bg-transparent' %>" title="<%= record.schedule.nil? ? 'No hay horario configurado' : '' %>">
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= index %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                     <%= I18n.t("enums.schedule.day_of_week.#{record.entry_time.strftime('%A').downcase}") %>
