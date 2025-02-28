@@ -4,9 +4,17 @@ class IncidentManager
   end
 
   def create_incident(record, issue)
+    date = if record.is_a?(AttendanceRecord)
+      record.entry_time&.to_date
+    elsif record.is_a?(Schedule)
+      record.date
+    else
+      Date.today
+    end
+
     Incident.create!(
       employee: @employee,
-      date: record.entry_time.to_date,
+      date: date,
       issue: issue
     )
   end

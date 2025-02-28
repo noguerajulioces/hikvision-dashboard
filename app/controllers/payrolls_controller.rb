@@ -6,6 +6,10 @@ class PayrollsController < ApplicationController
   end
 
   def show
+    @not_worked_days = @payroll.incidents
+                         .where("issue LIKE ?", "%No se presentó%")
+                         .count
+
     respond_to do |format|
       format.html # Renderiza la vista normal en HTML
       format.pdf do
