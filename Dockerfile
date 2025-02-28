@@ -16,6 +16,9 @@ RUN apt-get update -qq && \
     libvips \
     nodejs \
     npm \
+    wkhtmltopdf \
+    libxrender1 \
+    libfontconfig1 \
     libpq-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
