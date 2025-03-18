@@ -1,8 +1,8 @@
 class IncidentsController < ApplicationController
-  before_action :set_incident, only: [ :show, :edit, :update, :destroy, :resolve ]
+  before_action :set_incident, only: [:show, :edit, :update, :destroy, :resolve]
 
   def index
-    @incidents = Incident.page(params[:page])
+    @incidents = Incident.includes(:employee).paginate(page: params[:page], per_page: 10)
   end
 
   def show
@@ -10,14 +10,16 @@ class IncidentsController < ApplicationController
 
   def new
     @incident = Incident.new
+    @incident.date = Date.today
   end
 
   def create
     @incident = Incident.new(incident_params)
+
     if @incident.save
-      redirect_to @incident, notice: "Incidente creado exitosamente."
+      redirect_to incidents_path, notice: 'Incidente creado exitosamente.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -26,23 +28,20 @@ class IncidentsController < ApplicationController
 
   def update
     if @incident.update(incident_params)
-      redirect_to @incident, notice: "Incidente actualizado exitosamente."
+      redirect_to incidents_path, notice: 'Incidente actualizado exitosamente.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @incident.destroy
-    redirect_to incidents_url, notice: "Incidente eliminado exitosamente."
+    redirect_to incidents_path, notice: 'Incidente eliminado exitosamente.'
   end
 
   def resolve
-    if @incident.update(resolved: true)
-      redirect_to params[:redirect_to] || incidents_path, notice: "El incidente fue marcado como resuelto."
-    else
-      redirect_to params[:redirect_to] || incidents_path, notice: "El incidente fue marcado como resuelto."
-    end
+    @incident.update(resolved: true)
+    redirect_to incidents_path, notice: 'Incidente marcado como resuelto.'
   end
 
   private
@@ -52,6 +51,6 @@ class IncidentsController < ApplicationController
   end
 
   def incident_params
-    params.require(:incident).permit(:date, :issue, :resolved, :employee_id)
+    params.require(:incident).permit(:employee_id, :date, :issue, :resolved)
   end
 end
