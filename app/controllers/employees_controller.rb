@@ -2,7 +2,8 @@ class EmployeesController < ApplicationController
   before_action :set_employee, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @employees = Employee.includes(:group).paginate(page: params[:page])
+    @q = Employee.ransack(params[:q])
+    @employees = @q.result.paginate(page: params[:page], per_page: 10)
   end
 
   def show
