@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_18_130432) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_18_205640) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -56,6 +56,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_18_130432) do
     t.string "phone"
     t.string "email"
     t.string "document_number"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_employees_on_deleted_at"
   end
 
   create_table "events", force: :cascade do |t|

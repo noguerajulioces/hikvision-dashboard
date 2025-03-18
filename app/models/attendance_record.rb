@@ -34,7 +34,7 @@ class AttendanceRecord < ApplicationRecord
   after_find :check_and_assign_schedule
 
   def hours_worked
-    return "-" unless exit_time
+    return 0 unless exit_time
 
     total_hours = ((exit_time - entry_time) / 3600.0)
 

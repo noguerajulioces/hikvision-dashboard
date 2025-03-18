@@ -4,7 +4,8 @@ module ApplicationHelper
   end
 
   def format_hours_to_human_readable(total_hours)
-    return "0 horas" if total_hours.nil? || total_hours <= 0
+    numeric_hours = total_hours.to_f
+    return "0 horas" if numeric_hours <= 0
 
     hours = total_hours.to_i
     minutes = ((total_hours - hours) * 60).round

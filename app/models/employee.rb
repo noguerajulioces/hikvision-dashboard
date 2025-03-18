@@ -3,6 +3,7 @@
 # Table name: employees
 #
 #  id               :bigint           not null, primary key
+#  deleted_at       :datetime
 #  document_number  :string
 #  email            :string
 #  first_name       :string
@@ -14,7 +15,13 @@
 #  updated_at       :datetime         not null
 #  group_id         :integer
 #
+# Indexes
+#
+#  index_employees_on_deleted_at  (deleted_at)
+#
 class Employee < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :group, optional: true
   has_many :attendance_records, dependent: :destroy
   has_many :overtime_records, dependent: :destroy
