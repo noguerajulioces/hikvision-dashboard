@@ -79,10 +79,10 @@ class Employee < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["absences", "attendance_records", "events", "group", "incidents", "overtime_records"]
+    [ "absences", "attendance_records", "events", "group", "incidents", "overtime_records" ]
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["first_name", "last_name", "document_number", "status", "created_at", "updated_at", "id"]
+    [ "first_name", "last_name", "document_number", "status", "created_at", "updated_at", "id" ]
   end
 end

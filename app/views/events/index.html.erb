@@ -76,4 +76,6 @@
   </div>
 </div>
 
-<%= will_paginate @events %>
+<div class="mt-4 justify-center flex">
+  <%= will_paginate @events, renderer: TailwindPaginateRenderer %>
+</div>
