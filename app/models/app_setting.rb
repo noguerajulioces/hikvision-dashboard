@@ -44,15 +44,15 @@ class AppSetting < ApplicationRecord
   # Automatically convert values to appropriate types
   def self.auto_convert_value(key, value)
     return value if value.nil?
-    
+
     # List of keys that should be treated as numeric
     numeric_keys = %w[hourly_rate overtime_rate margin_of_tolerance lunch_hours]
-    
+
     if numeric_keys.include?(key.to_s)
       # Try to convert to integer first
       int_val = value.to_i
       float_val = value.to_f
-      
+
       # If it looks like a float (has decimal part)
       if float_val != int_val
         return float_val
@@ -60,7 +60,7 @@ class AppSetting < ApplicationRecord
         return int_val
       end
     end
-    
+
     # Return original value for non-numeric keys
     value
   end
@@ -74,4 +74,3 @@ class AppSetting < ApplicationRecord
     ActiveModel::Type::Boolean.new.cast(self[key]) || default
   end
 end
-

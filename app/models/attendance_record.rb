@@ -71,10 +71,10 @@ class AttendanceRecord < ApplicationRecord
 
   # Add these methods at the end of your model, before the final 'end'
   def self.ransackable_attributes(auth_object = nil)
-    ["entry_time", "exit_time", "processed", "employee_id", "device_id", "schedule_id", "created_at", "updated_at", "id"]
+    [ "entry_time", "exit_time", "processed", "employee_id", "device_id", "schedule_id", "created_at", "updated_at", "id" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["employee", "device", "schedule"]
+    [ "employee", "device", "schedule" ]
   end
 end

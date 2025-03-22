@@ -9,16 +9,16 @@ WickedPdf.config = {
   exe_path: (
     if Gem.win_platform?
       # Windows
-      'C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe'
-    elsif File.exist?('/usr/local/bin/wkhtmltopdf')
+      "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
+    elsif File.exist?("/usr/local/bin/wkhtmltopdf")
       # macOS (Homebrew)
-      '/usr/local/bin/wkhtmltopdf'
-    elsif File.exist?('/usr/bin/wkhtmltopdf')
+      "/usr/local/bin/wkhtmltopdf"
+    elsif File.exist?("/usr/bin/wkhtmltopdf")
       # Ubuntu/Debian
-      '/usr/bin/wkhtmltopdf'
+      "/usr/bin/wkhtmltopdf"
     else
       # Try to find it in PATH
-      Gem.win_platform? ? 'wkhtmltopdf.exe' : 'wkhtmltopdf'
+      Gem.win_platform? ? "wkhtmltopdf.exe" : "wkhtmltopdf"
     end
   )
 }

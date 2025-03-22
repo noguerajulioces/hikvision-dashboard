@@ -23,10 +23,10 @@ module Admin
           value = setting_params[key]
           # Clean numeric values
           value = value.gsub(".", "") if %w[hourly_rate overtime_rate].include?(key.to_s)
-          
+
           # Use raw SQL to bypass the Paranoia gem's conditions
           setting = AppSetting.unscoped.find_by(key: key.to_s)
-          
+
           if setting
             # Update existing setting
             setting.update_column(:value, value)
