@@ -36,7 +36,7 @@
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= record&.entry_time&.strftime("%d/%m/%Y %H:%M") %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= record&.exit_time&.strftime("%d/%m/%Y %H:%M") || '-' %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    <%= record.hours_worked %> <span class="text-xs">(<%#= format_hours_to_human_readable(record.hours_worked) %>)</span>
+                    <%= record.hours_worked %> <span class="text-xs">(<%= format_hours_to_human_readable(record.hours_worked) %>)</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
                     <% if record&.exit_time %>
