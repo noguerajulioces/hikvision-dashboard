@@ -17,32 +17,61 @@ class AttendanceProcessorService
 
   def process_attendance
     puts "Starting to process attendance records"
-
-    # Obtener solo eventos NO procesados, ordenados por empleado y fecha/hora DESC (por default_scope)
+  
     events = Event.where(processed: false)
-                  .where(in_out: "IN") # Solo trabajamos con eventos IN
+                  .where(in_out: "IN")
                   .order(:employee_id, :date, :time)
-
-    # Agrupar eventos por empleado y fecha
-    events.group_by { |e| [ e.employee_id, e.date ] }.each do |(employee_id, date), employee_events|
-      puts "Processing events for employee #{employee_id} on date #{date}"
-
-      first_entry = employee_events.last  # ⬅️ Primer IN del día (último en la lista por el orden DESC)
-      last_entry = employee_events.first  # ⬅️ Último IN del día (primero en la lista por el orden DESC)
-
-      entry_datetime = DateTime.parse("#{first_entry.date} #{first_entry.time}")
-      exit_datetime = DateTime.parse("#{last_entry.date} #{last_entry.time}")
-
-      # Solo asignamos una salida si hay una diferencia de al menos 5 horas
-      if (exit_datetime - entry_datetime) * 24 >= MIN_HOURS_FOR_EXIT
-        save_attendance_record(employee_id, entry_datetime, exit_datetime)
-      else
-        save_attendance_record(employee_id, entry_datetime, nil)
+  
+    events.group_by(&:employee_id).each do |employee_id, employee_events|
+      grouped_by_day = employee_events.group_by(&:date)
+  
+      grouped_by_day.each do |date, events_on_date|
+        entry = events_on_date.last
+        entry_datetime = DateTime.parse("#{entry.date} #{entry.time}")
+  
+        # Buscar una posible salida después de la medianoche hasta NIGHT_SHIFT_CUTOFF
+        possible_next_day_events = grouped_by_day[date + 1]
+        exit_event = nil
+  
+        if possible_next_day_events.present?
+          exit_event = possible_next_day_events.find do |e|
+            e.time.hour <= NIGHT_SHIFT_CUTOFF
+          end
+        end
+  
+        if exit_event
+          exit_datetime = DateTime.parse("#{exit_event.date} #{exit_event.time}")
+          if (exit_datetime - entry_datetime) * 24 >= MIN_HOURS_FOR_EXIT
+            save_attendance_record(employee_id, entry_datetime, exit_datetime)
+            (events_on_date + [exit_event]).each { |e| e.update(processed: true) }
+            next
+          end
+        end
+  
+        # Caso alternativo: verificar si hay otra entrada el mismo día con 5h de diferencia
+        fallback_exit = events_on_date.first
+        fallback_exit_datetime = DateTime.parse("#{fallback_exit.date} #{fallback_exit.time}")
+        if (fallback_exit_datetime - entry_datetime) * 24 >= MIN_HOURS_FOR_EXIT
+          save_attendance_record(employee_id, entry_datetime, fallback_exit_datetime)
+        else
+          save_attendance_record(employee_id, entry_datetime, nil)
+        end
+  
+        events_on_date.each { |e| e.update(processed: true) }
       end
-
-      # Marcar eventos como procesados
-      employee_events.each { |event| event.update(processed: true) }
     end
+  end
+  
+  def valid_exit?(entry_datetime, exit_datetime)
+    return false if exit_datetime <= entry_datetime
+
+    hours_diff = (exit_datetime - entry_datetime) * 24
+
+    # Caso 1: diferencia suficiente
+    return true if hours_diff >= MIN_HOURS_FOR_EXIT
+
+    # Caso 2: turno nocturno
+    entry_datetime.hour >= 20 && exit_datetime.hour <= NIGHT_SHIFT_CUTOFF
   end
 
   def save_attendance_record(employee_id, entry_datetime, exit_datetime)
