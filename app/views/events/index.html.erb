@@ -7,13 +7,13 @@
     
     <!-- Action buttons in top right -->
     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-      <button type="button" onclick="toggleFilters()" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 mr-2">
+      <button id="filter-button" type="button" onclick="toggleFilters()" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 mr-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
         </svg>
         Filtros
       </button>
-      <button type="button" onclick="toggleImport()" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+      <button id="import-button" type="button" onclick="toggleImport()" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
         </svg>
@@ -181,26 +181,52 @@
 </div>
 
 <script>
+  // Show filter panel by default when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('filter-panel').classList.remove('hidden');
+    document.getElementById('filter-button').classList.add('bg-gray-100', 'ring-2', 'ring-indigo-500');
+  });
+  
   function toggleFilters() {
     const filterPanel = document.getElementById('filter-panel');
     const importPanel = document.getElementById('import-panel');
+    const filterButton = document.getElementById('filter-button');
+    const importButton = document.getElementById('import-button');
     
     if (importPanel.classList.contains('hidden') === false) {
       importPanel.classList.add('hidden');
+      importButton.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-500');
     }
     
     filterPanel.classList.toggle('hidden');
+    
+    // Toggle active state for filter button
+    if (filterPanel.classList.contains('hidden')) {
+      filterButton.classList.remove('bg-gray-100', 'ring-2', 'ring-indigo-500');
+    } else {
+      filterButton.classList.add('bg-gray-100', 'ring-2', 'ring-indigo-500');
+    }
   }
   
   function toggleImport() {
     const importPanel = document.getElementById('import-panel');
     const filterPanel = document.getElementById('filter-panel');
+    const filterButton = document.getElementById('filter-button');
+    const importButton = document.getElementById('import-button');
     
     if (filterPanel.classList.contains('hidden') === false) {
       filterPanel.classList.add('hidden');
+      filterButton.classList.remove('bg-gray-100', 'ring-2', 'ring-indigo-500');
     }
     
     importPanel.classList.toggle('hidden');
+    
+    // Toggle active state for import button
+    if (importPanel.classList.contains('hidden')) {
+      importButton.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-500');
+    } else {
+      importButton.classList.add('bg-indigo-700', 'ring-2', 'ring-indigo-500');
+    }
   }
   
   function showLoading() {
