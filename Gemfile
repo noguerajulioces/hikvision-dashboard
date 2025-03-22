@@ -77,3 +77,6 @@ gem "rails-settings-cached", "~> 2.9"
 gem "csv"
 gem "base64"
 gem "ransack"
+gem "paranoia"
+
+gem 'rdoc', '6.12.0', require: false

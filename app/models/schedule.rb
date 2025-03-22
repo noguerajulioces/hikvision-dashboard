@@ -65,4 +65,8 @@ class Schedule < ApplicationRecord
   def crosses_midnight?
     expected_entry_time > expected_exit_time
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "date", "expected_entry_time", "expected_exit_time", "group_id", "id", "include_lunch", "updated_at"]
+  end
 end

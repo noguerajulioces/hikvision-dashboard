@@ -3,6 +3,7 @@
 # Table name: employees
 #
 #  id               :bigint           not null, primary key
+#  deleted_at       :datetime
 #  document_number  :string
 #  email            :string
 #  first_name       :string
@@ -14,7 +15,13 @@
 #  updated_at       :datetime         not null
 #  group_id         :integer
 #
+# Indexes
+#
+#  index_employees_on_deleted_at  (deleted_at)
+#
 class Employee < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :group, optional: true
   has_many :attendance_records, dependent: :destroy
   has_many :overtime_records, dependent: :destroy
@@ -31,7 +38,7 @@ class Employee < ApplicationRecord
   scope :active, -> { where.not(hire_date: nil).or(where.not(termination_date: nil)) }
 
   def self.margin_of_tolerance
-    Setting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
+    AppSetting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
   end
 
   # Verificar si el empleado tiene una licencia en una fecha específica
@@ -76,5 +83,13 @@ class Employee < ApplicationRecord
 
   def status
     active? ? "Activo" : "Inactivo"
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    [ "absences", "attendance_records", "events", "group", "incidents", "overtime_records" ]
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    [ "first_name", "last_name", "document_number", "status", "created_at", "updated_at", "id" ]
   end
 end

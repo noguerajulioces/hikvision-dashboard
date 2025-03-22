@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: app_settings
+#
+#  id         :bigint           not null, primary key
+#  key        :string
+#  value      :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+one:
+  key: MyString
+  value: MyText
+
+two:
+  key: MyString
+  value: MyText

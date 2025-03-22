@@ -8,6 +8,33 @@
       <a href="<%= new_employee_path %>" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Nuevo Empleado</a>
     </div>
   </div>
+  
+  <!-- Formulario de búsqueda con Ransack -->
+  <div class="mt-4">
+    <%= search_form_for @q, url: employees_path, class: "flex flex-wrap gap-3 items-end" do |f| %>
+      <div>
+        <%= f.label :first_name_or_last_name_cont, "Nombre", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.search_field :first_name_or_last_name_cont, class: "mt-1 px-3 py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :document_number_cont, "Identificación", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.search_field :document_number_cont, class: "mt-1 px-3 py-1.5  block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :group_name_cont, "Función", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.search_field :group_name_cont, class: "mt-1 px-3 py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :status_eq, "Estado", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :status_eq, [['Activo', 'active'], ['Inactivo', 'inactive']], { include_blank: 'Todos' }, class: "mt-1 px-3 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.submit "Buscar", class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+        <%= link_to "Limpiar", employees_path, class: "ml-2 inline-flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-300" %>
+      </div>
+    <% end %>
+  </div>
+  
   <div class="mt-8 flow-root">
     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -60,4 +87,6 @@
   </div>
 </div>
 
-<%= will_paginate @employees %>
+<div class="mt-4 justify-center flex">
+  <%= will_paginate @employees, renderer: TailwindPaginateRenderer %>
+</div>

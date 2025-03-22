@@ -43,7 +43,7 @@ class Payroll < ApplicationRecord
       if record.exit_time
         hours = (record.exit_time - record.entry_time) / 3600.0
         # Subtract lunch hour if worked more than 4 hours and include_lunch is true
-        include_lunch && hours > 4 ? hours - Setting&.lunch_hours : hours
+        include_lunch && hours > 4 ? hours - AppSetting&.lunch_hours : hours
       else
         0
       end
@@ -66,10 +66,14 @@ class Payroll < ApplicationRecord
   end
 
   def hourly_rate
-    Setting.hourly_rate
+    AppSetting&.hourly_rate
   end
 
   def overtime_rate
-    Setting.overtime_rate
+    AppSetting&.overtime_rate
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["comments", "created_at", "employee_id", "end_date", "id", "start_date", "total_hours_worked", "total_incidents", "total_overtime_hours", "total_payment", "updated_at"]
   end
 end

@@ -5,6 +5,7 @@
 # Table name: employees
 #
 #  id               :bigint           not null, primary key
+#  deleted_at       :datetime
 #  document_number  :string
 #  email            :string
 #  first_name       :string
@@ -15,6 +16,10 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  group_id         :integer
+#
+# Indexes
+#
+#  index_employees_on_deleted_at  (deleted_at)
 #
 one:
   first_name: MyString

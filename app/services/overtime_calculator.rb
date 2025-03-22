@@ -8,7 +8,7 @@ class OvertimeCalculator
 
   def calculate_overtime_hours
     # Definir el tiempo de tolerancia (5 minutos)
-    tolerance = Setting&.margin_of_tolerance&.to_i || 5
+    tolerance = AppSetting&.margin_of_tolerance&.to_i || 5
 
     # Calcular llegada tardía (si la hay)
     late_minutes = [ (@record.entry_time - @schedule.expected_entry_time) / 60.0, 0 ].max
@@ -45,10 +45,10 @@ class OvertimeCalculator
   private
 
   def lunch_hours
-    Setting&.lunch_hours&.to_i || 1
+    AppSetting&.lunch_hours&.to_i || 1
   end
 
   def overtime_rate
-    Setting.overtime_rate
+    AppSetting.overtime_rate
   end
 end

@@ -34,13 +34,13 @@ class AttendanceRecord < ApplicationRecord
   after_find :check_and_assign_schedule
 
   def hours_worked
-    return "-" unless exit_time
+    return 0 unless exit_time
 
     total_hours = ((exit_time - entry_time) / 3600.0)
 
     # Subtract lunch hour if schedule has lunch time
     if schedule&.include_lunch
-      total_hours -= Setting&.lunch_hours
+      total_hours -= AppSetting&.lunch_hours
     end
 
     total_hours.round(2)
@@ -67,5 +67,14 @@ class AttendanceRecord < ApplicationRecord
 
   def set_defaults
     self.processed ||= false
+  end
+
+  # Add these methods at the end of your model, before the final 'end'
+  def self.ransackable_attributes(auth_object = nil)
+    ["entry_time", "exit_time", "processed", "employee_id", "device_id", "schedule_id", "created_at", "updated_at", "id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["employee", "device", "schedule"]
   end
 end

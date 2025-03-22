@@ -2,7 +2,8 @@ class PayrollsController < ApplicationController
   before_action :set_payroll, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @payrolls = Payroll.paginate(page: params[:page])
+    @q = Payroll.ransack(params[:q])
+    @payrolls = @q.result.includes(:employee).paginate(page: params[:page])
   end
 
   def show
@@ -39,7 +40,7 @@ class PayrollsController < ApplicationController
 
       @payroll = service.process_overtime
 
-      @payroll.calculate_totals(Setting&.lunch_hours)
+      @payroll.calculate_totals(AppSetting&.lunch_hours)
 
       if @payroll.save
         redirect_to @payroll, notice: "Reporte de nómina creado exitosamente."

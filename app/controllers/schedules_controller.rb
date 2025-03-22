@@ -2,7 +2,8 @@ class SchedulesController < ApplicationController
   before_action :set_schedule, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @schedules = Schedule.page(params[:page])
+    @q = Schedule.ransack(params[:q])
+    @schedules = @q.result.paginate(page: params[:page])
   end
 
   def show
