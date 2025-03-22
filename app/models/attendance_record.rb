@@ -68,4 +68,13 @@ class AttendanceRecord < ApplicationRecord
   def set_defaults
     self.processed ||= false
   end
+
+  # Add these methods at the end of your model, before the final 'end'
+  def self.ransackable_attributes(auth_object = nil)
+    ["entry_time", "exit_time", "processed", "employee_id", "device_id", "schedule_id", "created_at", "updated_at", "id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["employee", "device", "schedule"]
+  end
 end

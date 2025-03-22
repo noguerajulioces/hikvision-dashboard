@@ -2,7 +2,8 @@ class AttendanceRecordsController < ApplicationController
   before_action :set_attendance_record, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @attendance_records = AttendanceRecord.paginate(page: params[:page])
+    @q = AttendanceRecord.ransack(params[:q])
+    @attendance_records = @q.result.includes(:employee).paginate(page: params[:page])
   end
 
   def show
