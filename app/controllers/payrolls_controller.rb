@@ -2,7 +2,8 @@ class PayrollsController < ApplicationController
   before_action :set_payroll, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @payrolls = Payroll.paginate(page: params[:page])
+    @q = Payroll.ransack(params[:q])
+    @payrolls = @q.result.includes(:employee).paginate(page: params[:page])
   end
 
   def show

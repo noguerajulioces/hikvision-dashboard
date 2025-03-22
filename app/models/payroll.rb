@@ -66,10 +66,14 @@ class Payroll < ApplicationRecord
   end
 
   def hourly_rate
-    AppSetting.hourly_rate
+    AppSetting&.hourly_rate
   end
 
   def overtime_rate
-    AppSetting.overtime_rate
+    AppSetting&.overtime_rate
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["comments", "created_at", "employee_id", "end_date", "id", "start_date", "total_hours_worked", "total_incidents", "total_overtime_hours", "total_payment", "updated_at"]
   end
 end
