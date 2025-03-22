@@ -1,75 +1,75 @@
 <div class="bg-white shadow-lg rounded-lg p-8 max-w-5xl mx-auto my-6">
-  <h1 class="text-3xl font-bold text-gray-800 mb-8 border-b pb-4">Configuración del Sistema</h1>
+  <h1 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">Configuración del Sistema</h1>
   
   <%= form_with url: admin_settings_path, method: :put, local: true do %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
       <div class="bg-gray-50 p-6 rounded-md shadow-sm border border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-700 mb-6 border-b border-gray-200 pb-3">Configuración de Tarifas</h2>
+        <h2 class="text-lg font-semibold text-gray-700 mb-6 border-b border-gray-200 pb-3">Configuración de Tarifas</h2>
         
         <div class="mb-6">
-          <%= label_tag :hourly_rate, "Tarifa por hora (Gs.)", class: "block font-medium text-gray-700 mb-2" %>
+          <%= label_tag :hourly_rate, "Tarifa por hora (Gs.)", class: "block font-medium text-gray-700 mb-2 text-sm" %>
           <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">Gs.</span>
-            <%= text_field_tag "settings[hourly_rate]", number_with_delimiter(@settings[:hourly_rate], delimiter: "."), class: "w-full rounded-md border-2 border-gray-300 pl-10 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm" %>
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">Gs.</span>
+            <%= text_field_tag "settings[hourly_rate]", number_with_delimiter(@settings[:hourly_rate], delimiter: "."), class: "w-full rounded-md border-2 border-gray-300 pl-10 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm text-sm" %>
           </div>
         </div>
 
         <div class="mb-6">
-          <%= label_tag :overtime_rate, "Tarifa por hora extra (Gs.)", class: "block font-medium text-gray-700 mb-2" %>
+          <%= label_tag :overtime_rate, "Tarifa por hora extra (Gs.)", class: "block font-medium text-gray-700 mb-2 text-sm" %>
           <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">Gs.</span>
-            <%= text_field_tag "settings[overtime_rate]", number_with_delimiter(@settings[:overtime_rate], delimiter: "."), class: "w-full rounded-md border-2 border-gray-300 pl-10 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm" %>
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">Gs.</span>
+            <%= text_field_tag "settings[overtime_rate]", number_with_delimiter(@settings[:overtime_rate], delimiter: "."), class: "w-full rounded-md border-2 border-gray-300 pl-10 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm text-sm" %>
           </div>
         </div>
       </div>
 
       <div class="bg-gray-50 p-6 rounded-md shadow-sm border border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-700 mb-6 border-b border-gray-200 pb-3">Configuración de Horarios</h2>
+        <h2 class="text-lg font-semibold text-gray-700 mb-6 border-b border-gray-200 pb-3">Configuración de Horarios</h2>
         
         <div class="mb-6">
-          <%= label_tag :margin_of_tolerance, "Margen de Tolerancia", class: "block font-medium text-gray-700 mb-2" %>
+          <%= label_tag :margin_of_tolerance, "Margen de Tolerancia", class: "block font-medium text-gray-700 mb-2 text-sm" %>
           <div class="relative">
-            <%= text_field_tag "settings[margin_of_tolerance]", @settings[:margin_of_tolerance], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm" %>
-            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">minutos</span>
+            <%= text_field_tag "settings[margin_of_tolerance]", @settings[:margin_of_tolerance], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm text-sm" %>
+            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 text-sm">minutos</span>
           </div>
         </div>
 
         <div class="mb-6">
-          <%= label_tag :lunch_hours, "Horas de almuerzo", class: "block font-medium text-gray-700 mb-2" %>
+          <%= label_tag :lunch_hours, "Horas de almuerzo", class: "block font-medium text-gray-700 mb-2 text-sm" %>
           <div class="relative">
-            <%= text_field_tag "settings[lunch_hours]", @settings[:lunch_hours], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm" %>
-            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">horas</span>
+            <%= text_field_tag "settings[lunch_hours]", @settings[:lunch_hours], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm text-sm" %>
+            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 text-sm">horas</span>
           </div>
         </div>
       </div>
       
       <div class="bg-gray-50 p-6 rounded-md shadow-sm border border-gray-200 md:col-span-2 mt-4">
-        <h2 class="text-xl font-semibold text-gray-700 mb-6 border-b border-gray-200 pb-3">Información de Encargados</h2>
+        <h2 class="text-lg font-semibold text-gray-700 mb-6 border-b border-gray-200 pb-3">Información de Encargados</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="bg-white p-4 rounded-md shadow-sm">
-            <h3 class="font-medium text-gray-700 mb-4 text-lg border-b pb-2">Encargado de Personal</h3>
+            <h3 class="font-medium text-gray-700 mb-4 text-base border-b pb-2">Encargado de Personal</h3>
             <div class="mb-5">
-              <%= label_tag :hr_manager_name, "Nombre", class: "block font-medium text-gray-700 mb-2" %>
-              <%= text_field_tag "settings[hr_manager_name]", @settings[:hr_manager_name], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+              <%= label_tag :hr_manager_name, "Nombre", class: "block font-medium text-gray-700 mb-2 text-sm" %>
+              <%= text_field_tag "settings[hr_manager_name]", @settings[:hr_manager_name], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-sm" %>
             </div>
 
             <div class="mb-5">
-              <%= label_tag :hr_manager_title, "Cargo", class: "block font-medium text-gray-700 mb-2" %>
-              <%= text_field_tag "settings[hr_manager_title]", @settings[:hr_manager_title], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+              <%= label_tag :hr_manager_title, "Cargo", class: "block font-medium text-gray-700 mb-2 text-sm" %>
+              <%= text_field_tag "settings[hr_manager_title]", @settings[:hr_manager_title], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-sm" %>
             </div>
           </div>
 
           <div class="bg-white p-4 rounded-md shadow-sm">
-            <h3 class="font-medium text-gray-700 mb-4 text-lg border-b pb-2">Encargado Administrativo</h3>
+            <h3 class="font-medium text-gray-700 mb-4 text-base border-b pb-2">Encargado Administrativo</h3>
             <div class="mb-5">
-              <%= label_tag :admin_manager_name, "Nombre", class: "block font-medium text-gray-700 mb-2" %>
-              <%= text_field_tag "settings[admin_manager_name]", @settings[:admin_manager_name], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+              <%= label_tag :admin_manager_name, "Nombre", class: "block font-medium text-gray-700 mb-2 text-sm" %>
+              <%= text_field_tag "settings[admin_manager_name]", @settings[:admin_manager_name], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-sm" %>
             </div>
 
             <div class="mb-5">
-              <%= label_tag :admin_manager_title, "Cargo", class: "block font-medium text-gray-700 mb-2" %>
-              <%= text_field_tag "settings[admin_manager_title]", @settings[:admin_manager_title], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2.5 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" %>
+              <%= label_tag :admin_manager_title, "Cargo", class: "block font-medium text-gray-700 mb-2 text-sm" %>
+              <%= text_field_tag "settings[admin_manager_title]", @settings[:admin_manager_title], class: "w-full rounded-md border-2 border-gray-300 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-sm" %>
             </div>
           </div>
         </div>
@@ -77,8 +77,8 @@
     </div>
 
     <div class="mt-10 flex justify-end gap-6">
-      <%= link_to "Cancelar", root_path, class: "px-6 py-3 border-2 border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors font-medium" %>
-      <%= submit_tag "Guardar cambios", class: "bg-indigo-600 text-white px-8 py-3 rounded-md hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-medium" %>
+      <%= link_to "Cancelar", root_path, class: "px-5 py-2.5 border-2 border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm" %>
+      <%= submit_tag "Guardar cambios", class: "bg-indigo-600 text-white px-6 py-2.5 rounded-md hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-medium text-sm" %>
     </div>
   <% end %>
 </div>
