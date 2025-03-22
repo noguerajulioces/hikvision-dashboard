@@ -2,42 +2,42 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
       <%= label_tag :hourly_rate, "Tarifa por hora (Gs.)", class: "block font-medium" %>
-      <%= text_field_tag "settings[hourly_rate]", number_with_delimiter(@settings[:hourly_rate], delimiter: "."), class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[hourly_rate]", number_with_delimiter(@settings[:hourly_rate], delimiter: "."), class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
 
     <div>
       <%= label_tag :overtime_rate, "Tarifa por hora extra (Gs.)", class: "block font-medium" %>
-      <%= text_field_tag "settings[overtime_rate]", number_with_delimiter(@settings[:overtime_rate], delimiter: "."), class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[overtime_rate]", number_with_delimiter(@settings[:overtime_rate], delimiter: "."), class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
 
     <div>
       <%= label_tag :margin_of_tolerance, "Margen de Tolerancia (minutos)", class: "block font-medium" %>
-      <%= text_field_tag "settings[margin_of_tolerance]", @settings[:margin_of_tolerance], class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[margin_of_tolerance]", @settings[:margin_of_tolerance], class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
 
     <div>
       <%= label_tag :lunch_hours, "Horas de almuerzo", class: "block font-medium" %>
-      <%= text_field_tag "settings[lunch_hours]", @settings[:lunch_hours], class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[lunch_hours]", @settings[:lunch_hours], class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
 
     <div>
       <%= label_tag :hr_manager_name, "Nombre del Encargado de Personal", class: "block font-medium" %>
-      <%= text_field_tag "settings[hr_manager_name]", @settings[:hr_manager_name], class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[hr_manager_name]", @settings[:hr_manager_name], class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
 
     <div>
       <%= label_tag :hr_manager_title, "Cargo del Encargado de Personal", class: "block font-medium" %>
-      <%= text_field_tag "settings[hr_manager_title]", @settings[:hr_manager_title], class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[hr_manager_title]", @settings[:hr_manager_title], class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
 
     <div>
       <%= label_tag :admin_manager_name, "Nombre del Encargado Administrativo", class: "block font-medium" %>
-      <%= text_field_tag "settings[admin_manager_name]", @settings[:admin_manager_name], class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[admin_manager_name]", @settings[:admin_manager_name], class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
 
     <div>
       <%= label_tag :admin_manager_title, "Cargo del Encargado Administrativo", class: "block font-medium" %>
-      <%= text_field_tag "settings[admin_manager_title]", @settings[:admin_manager_title], class: "w-full rounded-md border-gray-300" %>
+      <%= text_field_tag "settings[admin_manager_title]", @settings[:admin_manager_title], class: "w-full rounded-md border-gray-300 px-3 py-1.5" %>
     </div>
   </div>
 
