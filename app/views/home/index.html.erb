@@ -1,96 +1,378 @@
-<main>
-  <div class="relative isolate overflow-hidden">
-    <!-- Secondary navigation -->
-    <header class="pb-4 pt-6 sm:pb-6">
-      <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
-        <h1 class="text-base/7 font-semibold text-gray-900">Dashboard</h1>
-        <div class="order-last flex w-full gap-x-8 text-sm/6 font-semibold sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:text-sm/7">
-          <%= link_to "Ayer", root_path(filter: "yesterday"), class: "text-gray-700 hover:text-indigo-600 #{'text-indigo-600 font-bold' if params[:filter].nil? || params[:filter] == 'yesterday'}" %>
-          <%= link_to "Esta semana", root_path(filter: "week"), class: "text-gray-700 hover:text-indigo-600 #{'text-indigo-600 font-bold' if params[:filter] == 'week'}" %>
-          <%= link_to "Este mes", root_path(filter: "month"), class: "text-gray-700 hover:text-indigo-600 #{'text-indigo-600 font-bold' if params[:filter] == 'month'}" %>
-          <%= link_to "Este año", root_path(filter: "year"), class: "text-gray-700 hover:text-indigo-600 #{'text-indigo-600 font-bold' if params[:filter] == 'year'}" %>
-        </div>
+<main class="bg-gray-50 min-h-screen py-6">
+  <!-- Header con filtros de tiempo -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Panel de Control</h1>
+      
+      <div class="flex items-center space-x-1 bg-white rounded-lg shadow-sm p-1">
+        <%= link_to "Hoy", root_path(filter: "today"), 
+            class: "px-3 py-1.5 text-sm font-medium rounded-md #{params[:filter].nil? || params[:filter] == 'today' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600'}" %>
+        
+        <%= link_to "Semana", root_path(filter: "week"), 
+            class: "px-3 py-1.5 text-sm font-medium rounded-md #{params[:filter] == 'week' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600'}" %>
+        
+        <%= link_to "Mes", root_path(filter: "month"), 
+            class: "px-3 py-1.5 text-sm font-medium rounded-md #{params[:filter] == 'month' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600'}" %>
       </div>
-    </header>
-
-    <!-- Stats -->
-    <div class="border-b border-b-gray-900/10 lg:border-t lg:border-t-gray-900/5">
-      <dl class="mx-auto grid max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:px-2 xl:px-0">
-        <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8">
-          <dt class="text-sm/6 font-medium text-gray-500">Empleados Activos</dt>
-          <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900"><%= @employees %></dd>
-        </div>
-        <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-gray-900/5 px-4 py-10 sm:border-l sm:px-6 lg:border-t-0 xl:px-8">
-          <dt class="text-sm/6 font-medium text-gray-500">Asistencias Hoy</dt>
-          <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900"><%= @attendance_records_count %></dd>
-        </div>
-        <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-gray-900/5 px-4 py-10 sm:border-l sm:px-6 lg:border-t-0 xl:px-8">
-          <dt class="text-sm/6 font-medium text-gray-500">Horas Extras Registradas</dt>
-          <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">
-            <%= @overtime_records_count %></dd> 
-          </div>
-        <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-gray-900/5 px-4 py-10 sm:border-l sm:px-6 lg:border-t-0 xl:px-8">
-          <dt class="text-sm/6 font-medium text-gray-500">Incidentes Reportados</dt> 
-          <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900"><%= @incidents_count %></dd> 
-        </div> 
-      </dl>
     </div>
   </div>
 
-  <div class="space-y-16 py-16 xl:space-y-20">
-    <!-- Recent activity table -->
-    <div>
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 class="text-base font-semibold text-gray-900">Últimos registros de asistencia</h2>
+  <!-- Tarjetas de estadísticas principales -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <!-- Empleados -->
+      <div class="bg-white overflow-hidden rounded-lg shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 rounded-md bg-indigo-100 p-2">
+              <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-500">Empleados</p>
+              <p class="text-xl font-semibold text-gray-900"><%= @employees %></p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mt-6 overflow-hidden border-t border-gray-100">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
-            <table class="w-full text-left">
-              <thead>
-                <tr class="text-sm/6 text-gray-900 font-semibold">
-                  <th class="py-3">Empleado</th>
-                  <th class="hidden sm:table-cell py-3">Hora de Entrada</th>
-                  <th class="hidden sm:table-cell py-3">Hora de Salida</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @attendance_records.each do |record| %>
-                  <tr class="border-t border-gray-200">
-                    <td class="py-5 pr-6">
-                      <div class="flex gap-x-6">
-                        <div class="flex-auto">
-                          <div class="text-sm/6 font-medium text-gray-900">
-                            <%= record.employee&.full_name || "Empleado Desconocido" %>
-                          </div>
-                          <div class="mt-1 text-xs/5 text-gray-500">
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="hidden py-5 pr-6 sm:table-cell">
-                      <div class="text-sm/6 text-gray-900">
-                        <%= record.entry_time&.strftime("%H:%M") || "N/A" %>
-                      </div>
-                    </td>
-                    <td class="hidden py-5 pr-6 sm:table-cell">
-                      <div class="text-sm/6 text-gray-900">
-                        <%= record.exit_time&.strftime("%H:%M") || "N/A" %>
-                      </div>
-                    </td>
-                  </tr>
-                <% end %>
-                
-                <% if @attendance_records.empty? %>
-                  <tr>
-                    <td colspan="4" class="py-5 text-center text-gray-500">
-                      No hay registros de asistencia para ayer.
-                    </td>
-                  </tr>
-                <% end %>
 
-              </tbody>
-            </table>
+      <!-- Asistencias -->
+      <div class="bg-white overflow-hidden rounded-lg shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 rounded-md bg-green-100 p-2">
+              <svg class="h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-500">Asistencias</p>
+              <p class="text-xl font-semibold text-gray-900"><%= @attendance_records_count %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasa de Asistencia -->
+      <div class="bg-white overflow-hidden rounded-lg shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 rounded-md bg-blue-100 p-2">
+              <svg class="h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-500">Tasa de Asistencia</p>
+              <p class="text-xl font-semibold text-gray-900">92%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Incidentes -->
+      <div class="bg-white overflow-hidden rounded-lg shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 rounded-md bg-yellow-100 p-2">
+              <svg class="h-5 w-5 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-500">Incidentes</p>
+              <p class="text-xl font-semibold text-gray-900"><%= @incidents_count %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos y Registros -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <!-- Horas Trabajadas por Período -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-200">
+      <h3 class="text-base font-semibold text-gray-900">Horas Trabajadas</h3>
+    </div>
+    <div class="p-5">
+      <% 
+        # Calcular horas trabajadas por período
+        today_hours = AttendanceRecord.where(entry_time: Date.today.beginning_of_day..Date.today.end_of_day)
+                      .sum { |r| r.hours_worked }
+        
+        week_hours = AttendanceRecord.where(entry_time: 1.week.ago..Date.today.end_of_day)
+                      .sum { |r| r.hours_worked }
+        
+        month_hours = AttendanceRecord.where(entry_time: 1.month.ago..Date.today.end_of_day)
+                      .sum { |r| r.hours_worked }
+        
+        # Calcular máximo para escalar las barras
+        max_hours = [today_hours, week_hours/7, month_hours/30].max
+        max_hours = max_hours > 0 ? max_hours : 1
+      %>
+      
+      <div class="space-y-4">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-gray-700">Hoy</span>
+            <span class="text-gray-700 font-medium"><%= today_hours.round(1) %> hrs</span>
+          </div>
+          <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+            <div style="width: <%= (today_hours / max_hours * 100).to_i %>%" class="bg-indigo-500"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-gray-700">Promedio diario (semana)</span>
+            <span class="text-gray-700 font-medium"><%= (week_hours / 7).round(1) %> hrs</span>
+          </div>
+          <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+            <div style="width: <%= ((week_hours/7) / max_hours * 100).to_i %>%" class="bg-indigo-500"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-gray-700">Promedio diario (mes)</span>
+            <span class="text-gray-700 font-medium"><%= (month_hours / 30).round(1) %> hrs</span>
+          </div>
+          <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+            <div style="width: <%= ((month_hours/30) / max_hours * 100).to_i %>%" class="bg-indigo-500"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Distribución por Turnos -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-200">
+      <h3 class="text-base font-semibold text-gray-900">Distribución por Turnos</h3>
+    </div>
+    <div class="p-5">
+      <% 
+        # Obtener horarios agrupados por hora de entrada
+        morning_schedules = Schedule.where("extract(hour from expected_entry_time) BETWEEN 5 AND 11")
+                            .joins(:group).count
+        
+        afternoon_schedules = Schedule.where("extract(hour from expected_entry_time) BETWEEN 12 AND 17")
+                              .joins(:group).count
+        
+        night_schedules = Schedule.where("extract(hour from expected_entry_time) BETWEEN 18 AND 23 OR extract(hour from expected_entry_time) BETWEEN 0 AND 4")
+                          .joins(:group).count
+        
+        total_schedules = morning_schedules + afternoon_schedules + night_schedules
+        total_schedules = total_schedules > 0 ? total_schedules : 1
+        
+        morning_percent = (morning_schedules.to_f / total_schedules * 100).round
+        afternoon_percent = (afternoon_schedules.to_f / total_schedules * 100).round
+        night_percent = (night_schedules.to_f / total_schedules * 100).round
+      %>
+      
+      <div class="space-y-4">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-gray-700">Turno Mañana (5:00-11:59)</span>
+            <span class="text-gray-700 font-medium"><%= morning_percent %>%</span>
+          </div>
+          <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+            <div style="width: <%= morning_percent %>%" class="bg-yellow-500"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-gray-700">Turno Tarde (12:00-17:59)</span>
+            <span class="text-gray-700 font-medium"><%= afternoon_percent %>%</span>
+          </div>
+          <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+            <div style="width: <%= afternoon_percent %>%" class="bg-orange-500"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-gray-700">Turno Noche (18:00-4:59)</span>
+            <span class="text-gray-700 font-medium"><%= night_percent %>%</span>
+          </div>
+          <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+            <div style="width: <%= night_percent %>%" class="bg-purple-500"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      <!-- Métricas de Tiempo -->
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-200">
+          <h3 class="text-base font-semibold text-gray-900">Métricas de Tiempo</h3>
+        </div>
+        <div class="p-5">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-gray-50 rounded p-3 text-center">
+              <p class="text-xs text-gray-500 mb-1">Tiempo Promedio</p>
+              <p class="text-lg font-semibold text-gray-900">8h 12m</p>
+            </div>
+            <div class="bg-gray-50 rounded p-3 text-center">
+              <p class="text-xs text-gray-500 mb-1">Puntualidad</p>
+              <p class="text-lg font-semibold text-gray-900">92%</p>
+            </div>
+            <div class="bg-gray-50 rounded p-3 text-center">
+              <p class="text-xs text-gray-500 mb-1">Tardanzas</p>
+              <p class="text-lg font-semibold text-gray-900">8%</p>
+            </div>
+            <div class="bg-gray-50 rounded p-3 text-center">
+              <p class="text-xs text-gray-500 mb-1">Ausencias</p>
+              <p class="text-lg font-semibold text-gray-900">3%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Registros Recientes -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 class="text-base font-semibold text-gray-900">Registros Recientes</h3>
+        <%= link_to "Ver todos", attendance_records_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empleado</th>
+              <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrada</th>
+              <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salida</th>
+              <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if @attendance_records.present? %>
+              <% @attendance_records.each do |record| %>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <span class="text-xs font-medium text-indigo-700"><%= record&.employee&.full_name&.first || "?" %></span>
+                      </div>
+                      <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900"><%= record&.employee&.full_name || "Empleado Desconocido" %></p>
+                        <p class="text-xs text-gray-500"><%= record&.employee || "Sin departamento" %></p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= record.entry_time&.strftime("%H:%M") || "N/A" %>
+                  </td>
+                  <td class="px-5 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= record.exit_time&.strftime("%H:%M") || "N/A" %>
+                  </td>
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <% if record.entry_time && record.exit_time %>
+                      <span class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Completo</span>
+                    <% elsif record.entry_time && !record.exit_time %>
+                      <span class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-800">En curso</span>
+                    <% else %>
+                      <span class="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">Pendiente</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="4" class="px-5 py-8 text-center text-sm text-gray-500">
+                  No hay registros de asistencia para el período seleccionado.
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de Actividad Reciente -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6 mb-8">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-200">
+        <h3 class="text-base font-semibold text-gray-900">Resumen de Actividad</h3>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+              <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-900">Resumen del día</p>
+              <p class="text-xs text-gray-500"><%= Date.today.strftime("%d/%m/%Y") %></p>
+            </div>
+          </div>
+          <button type="button" class="inline-flex items-center rounded-md bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100">
+            <svg class="-ml-0.5 mr-1.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            Exportar
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm font-medium text-gray-500">Total Entradas</p>
+              <span class="text-green-500">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+              </span>
+            </div>
+            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @attendance_records_count %></p>
+          </div>
+          
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm font-medium text-gray-500">Salidas</p>
+              <span class="text-red-500">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </span>
+            </div>
+            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @exit_records_count || 0 %></p>
+          </div>
+          
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm font-medium text-gray-500">Horas Trabajadas</p>
+              <span class="text-blue-500">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </span>
+            </div>
+            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @total_hours || "0" %></p>
+          </div>
+          
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm font-medium text-gray-500">Alertas</p>
+              <span class="text-yellow-500">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </span>
+            </div>
+            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @alerts_count || 0 %></p>
           </div>
         </div>
       </div>
