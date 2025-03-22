@@ -1,4 +1,3 @@
-# RailsSettings Model
 # == Schema Information
 #
 # Table name: settings
@@ -13,24 +12,28 @@
 #
 #  index_settings_on_var  (var) UNIQUE
 #
-class Setting < RailsSettings::Base
-  cache_prefix { "v1" }
+# app/models/setting.rb
+class Setting < ApplicationRecord
+  validates :key, presence: true, uniqueness: true
 
-  # Define your fields
-  field :margin_of_tolerance, type: :string, default: "5"
-  field :hourly_rate, type: :integer, default: 10_000
-  field :overtime_rate, type: :integer, default: 15_000
-  field :lunch_hours, type: :integer, default: 1
+  # Métodos de clase
+  def self.[](key)
+    find_by(key: key.to_s)&.value
+  end
 
-  # New fields
-  field :hr_manager_name, type: :string, default: "Guillermo Godoy" # Encargado Personal
-  field :hr_manager_title, type: :string, default: "Encargado Personal"
+  def self.[]=(key, value)
+    record = find_or_initialize_by(key: key.to_s)
+    record.value = value
+    record.save!
+  end
 
-  field :admin_manager_name, type: :string, default: "Anabella Oviedo" # Encargado Administrativo
-  field :admin_manager_title, type: :string, default: "Encargado Administrativo"
-  # field :default_locale, default: "en", type: :string
-  # field :confirmable_enable, default: "0", type: :boolean
-  # field :admin_emails, default: "admin@rubyonrails.org", type: :array
-  # field :omniauth_google_client_id, default: (ENV["OMNIAUTH_GOOGLE_CLIENT_ID"] || ""), type: :string, readonly: true
-  # field :omniauth_google_client_secret, default: (ENV["OMNIAUTH_GOOGLE_CLIENT_SECRET"] || ""), type: :string, readonly: true
+  # Opcional: métodos con tipos convertidos
+  def self.fetch_int(key, default = 0)
+    self[key].to_i.presence || default
+  end
+
+  def self.fetch_bool(key, default = false)
+    ActiveModel::Type::Boolean.new.cast(self[key]) || default
+  end
 end
+

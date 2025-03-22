@@ -12,7 +12,7 @@ module Admin
         admin_manager_title
       ]
 
-      @settings = @keys.index_with { |key| AppSetting[key] }
+      @settings = @keys.index_with { |key| Setting[key] }
     end
 
     def update
@@ -21,7 +21,7 @@ module Admin
       @keys.each do |key|
         value = setting_params[key]
         value = value.gsub(".", "") if %w[hourly_rate overtime_rate].include?(key.to_s)
-        AppSetting[key] = value
+        Setting[key] = value
       end
 
       redirect_to admin_settings_path, notice: "Configuraciones actualizadas correctamente."
