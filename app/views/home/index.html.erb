@@ -216,19 +216,19 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="bg-gray-50 rounded p-3 text-center">
               <p class="text-xs text-gray-500 mb-1">Tiempo Promedio</p>
-              <p class="text-lg font-semibold text-gray-900">8h 12m</p>
+              <p class="text-lg font-semibold text-gray-900"><%= @time_metrics[:average_time] %></p>
             </div>
             <div class="bg-gray-50 rounded p-3 text-center">
               <p class="text-xs text-gray-500 mb-1">Puntualidad</p>
-              <p class="text-lg font-semibold text-gray-900">92%</p>
+              <p class="text-lg font-semibold text-gray-900"><%= @time_metrics[:punctuality_rate] %>%</p>
             </div>
             <div class="bg-gray-50 rounded p-3 text-center">
               <p class="text-xs text-gray-500 mb-1">Tardanzas</p>
-              <p class="text-lg font-semibold text-gray-900">8%</p>
+              <p class="text-lg font-semibold text-gray-900"><%= @time_metrics[:late_rate] %>%</p>
             </div>
             <div class="bg-gray-50 rounded p-3 text-center">
               <p class="text-xs text-gray-500 mb-1">Ausencias</p>
-              <p class="text-lg font-semibold text-gray-900">3%</p>
+              <p class="text-lg font-semibold text-gray-900"><%= @time_metrics[:absence_rate] %>%</p>
             </div>
           </div>
         </div>
@@ -265,7 +265,7 @@
                       </div>
                       <div class="ml-3">
                         <p class="text-sm font-medium text-gray-900"><%= record&.employee&.full_name || "Empleado Desconocido" %></p>
-                        <p class="text-xs text-gray-500"><%= record&.employee || "Sin departamento" %></p>
+                        <p class="text-xs text-gray-500"><%= record&.employee&.group&.name || "Sin grupo" %></p>
                       </div>
                     </div>
                   </td>
@@ -295,86 +295,6 @@
             <% end %>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Resumen de Actividad Reciente -->
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6 mb-8">
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-      <div class="px-5 py-4 border-b border-gray-200">
-        <h3 class="text-base font-semibold text-gray-900">Resumen de Actividad</h3>
-      </div>
-      <div class="p-5">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-              <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
-            <div class="ml-3">
-              <p class="text-sm font-medium text-gray-900">Resumen del día</p>
-              <p class="text-xs text-gray-500"><%= Date.today.strftime("%d/%m/%Y") %></p>
-            </div>
-          </div>
-          <button type="button" class="inline-flex items-center rounded-md bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100">
-            <svg class="-ml-0.5 mr-1.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-            </svg>
-            Exportar
-          </button>
-        </div>
-        
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div class="border border-gray-200 rounded-lg p-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm font-medium text-gray-500">Total Entradas</p>
-              <span class="text-green-500">
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                </svg>
-              </span>
-            </div>
-            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @attendance_records_count %></p>
-          </div>
-          
-          <div class="border border-gray-200 rounded-lg p-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm font-medium text-gray-500">Salidas</p>
-              <span class="text-red-500">
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-              </span>
-            </div>
-            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @exit_records_count || 0 %></p>
-          </div>
-          
-          <div class="border border-gray-200 rounded-lg p-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm font-medium text-gray-500">Horas Trabajadas</p>
-              <span class="text-blue-500">
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </span>
-            </div>
-            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @total_hours || "0" %></p>
-          </div>
-          
-          <div class="border border-gray-200 rounded-lg p-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm font-medium text-gray-500">Alertas</p>
-              <span class="text-yellow-500">
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </span>
-            </div>
-            <p class="mt-1 text-2xl font-semibold text-gray-900"><%= @alerts_count || 0 %></p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
