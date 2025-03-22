@@ -27,6 +27,19 @@ class Setting < ApplicationRecord
     record.save!
   end
 
+  # Support for dot notation access (Setting.lunch_hours)
+  def self.method_missing(method_name, *arguments, &block)
+    if method_name.to_s =~ /^(\w+)=$/
+      self[$1] = arguments.first
+    else
+      self[method_name]
+    end
+  end
+
+  def self.respond_to_missing?(method_name, include_private = false)
+    true
+  end
+
   # Opcional: métodos con tipos convertidos
   def self.fetch_int(key, default = 0)
     self[key].to_i.presence || default
