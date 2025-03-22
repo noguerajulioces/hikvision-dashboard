@@ -42,6 +42,6 @@ class AttendanceProcessor
   end
 
   def margin_of_tolerance
-    Setting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
+    AppSetting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
   end
 end

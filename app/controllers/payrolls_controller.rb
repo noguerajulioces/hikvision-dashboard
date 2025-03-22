@@ -39,7 +39,7 @@ class PayrollsController < ApplicationController
 
       @payroll = service.process_overtime
 
-      @payroll.calculate_totals(Setting&.lunch_hours)
+      @payroll.calculate_totals(AppSetting&.lunch_hours)
 
       if @payroll.save
         redirect_to @payroll, notice: "Reporte de nómina creado exitosamente."

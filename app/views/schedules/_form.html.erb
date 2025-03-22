@@ -52,7 +52,7 @@
         <%= form.label :include_lunch, "Incluir Almuerzo", class: "block text-sm/6 font-medium text-gray-900" %>
         <div class="mt-2 flex items-center">
           <%= form.check_box :include_lunch, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" %>
-          <span class="ml-2 text-sm text-gray-500">Descontar <%= Setting&.lunch_hours %> hora de almuerzo</span>
+          <span class="ml-2 text-sm text-gray-500">Descontar <%= AppSetting&.lunch_hours %> hora de almuerzo</span>
         </div>
       </div>
     </div>

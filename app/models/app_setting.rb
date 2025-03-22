@@ -12,13 +12,14 @@
 #
 #  index_settings_on_var  (var) UNIQUE
 #
-# app/models/setting.rb
-class Setting < ApplicationRecord
+# app/models/AppSetting.rb
+class AppSetting < ApplicationRecord
   validates :key, presence: true, uniqueness: true
 
   # Métodos de clase
   def self.[](key)
-    find_by(key: key.to_s)&.value
+    value = find_by(key: key.to_s)&.value
+    auto_convert_value(key, value)
   end
 
   def self.[]=(key, value)
@@ -27,7 +28,7 @@ class Setting < ApplicationRecord
     record.save!
   end
 
-  # Support for dot notation access (Setting.lunch_hours)
+  # Support for dot notation access (AppSetting.lunch_hours)
   def self.method_missing(method_name, *arguments, &block)
     if method_name.to_s =~ /^(\w+)=$/
       self[$1] = arguments.first
@@ -38,6 +39,30 @@ class Setting < ApplicationRecord
 
   def self.respond_to_missing?(method_name, include_private = false)
     true
+  end
+
+  # Automatically convert values to appropriate types
+  def self.auto_convert_value(key, value)
+    return value if value.nil?
+    
+    # List of keys that should be treated as numeric
+    numeric_keys = %w[hourly_rate overtime_rate margin_of_tolerance lunch_hours]
+    
+    if numeric_keys.include?(key.to_s)
+      # Try to convert to integer first
+      int_val = value.to_i
+      float_val = value.to_f
+      
+      # If it looks like a float (has decimal part)
+      if float_val != int_val
+        return float_val
+      else
+        return int_val
+      end
+    end
+    
+    # Return original value for non-numeric keys
+    value
   end
 
   # Opcional: métodos con tipos convertidos

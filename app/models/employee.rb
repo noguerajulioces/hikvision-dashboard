@@ -38,7 +38,7 @@ class Employee < ApplicationRecord
   scope :active, -> { where.not(hire_date: nil).or(where.not(termination_date: nil)) }
 
   def self.margin_of_tolerance
-    Setting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
+    AppSetting&.margin_of_tolerance&.to_i&.minutes || 5.minutes
   end
 
   # Verificar si el empleado tiene una licencia en una fecha específica

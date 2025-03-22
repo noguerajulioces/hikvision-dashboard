@@ -40,7 +40,7 @@ class AttendanceRecord < ApplicationRecord
 
     # Subtract lunch hour if schedule has lunch time
     if schedule&.include_lunch
-      total_hours -= Setting&.lunch_hours
+      total_hours -= AppSetting&.lunch_hours
     end
 
     total_hours.round(2)
