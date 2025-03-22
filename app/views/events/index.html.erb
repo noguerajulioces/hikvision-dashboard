@@ -73,25 +73,25 @@
   <!-- Collapsible import panel -->
   <div id="import-panel" class="mt-4 bg-gray-50 p-5 rounded-lg shadow-sm border border-gray-200 hidden">
     <%= form_tag import_events_path, multipart: true, data: { turbo: false } do %>
-      <div class="flex flex-col items-center">
-        <div class="w-full max-w-md">
-          <div class="mb-4 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="flex flex-col items-center justify-center">
+        <div class="w-full max-w-md flex flex-col items-center">
+          <div class="mb-6 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
             </svg>
-            <h3 class="mt-2 text-sm font-semibold text-gray-900">Importar archivo de eventos</h3>
-            <p class="mt-1 text-sm text-gray-500">Seleccione un archivo CSV o Excel para importar</p>
+            <h3 class="mt-4 text-lg font-semibold text-gray-900">Importar archivo de eventos</h3>
+            <p class="mt-2 text-sm text-gray-500">Seleccione un archivo CSV o Excel para importar</p>
           </div>
           
-          <div class="mt-2">
+          <div class="mt-4 w-full max-w-sm">
             <%= file_field_tag :file, class: "block w-full text-sm text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
           </div>
           
-          <div class="mt-4 flex justify-end">
-            <button type="button" onclick="toggleImport()" class="mr-2 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+          <div class="mt-8 flex space-x-4">
+            <button type="button" onclick="toggleImport()" class="inline-flex items-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
               Cancelar
             </button>
-            <%= submit_tag "Importar archivo", onclick: "showLoading()", class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+            <%= submit_tag "Importar archivo", onclick: "showLoading()", class: "inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@
               <tr>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">#</th>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Nombre</th>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">No. Trabajo</th>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">No. Trabajador</th>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Tarjeta</th>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Fecha</th>
                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Hora</th>
