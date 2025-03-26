@@ -1,0 +1,35 @@
+<div class="nested-form-wrapper bg-gray-50 p-4 rounded-lg relative mb-4">
+  <button type="button" 
+          data-action="nested-form#remove" 
+          class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
+    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+    </svg>
+  </button>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+    <div>
+      <%= form.label :expected_entry_time, "Hora de Entrada", class: "block text-sm/6 font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= form.datetime_field :expected_entry_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+    </div>
+
+    <div>
+      <%= form.label :expected_exit_time, "Hora de Salida", class: "block text-sm/6 font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= form.datetime_field :expected_exit_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+    </div>
+
+    <div>
+      <%= form.label :include_lunch, "Incluir Almuerzo", class: "block text-sm/6 font-medium text-gray-900" %>
+      <div class="mt-2 flex items-center">
+        <%= form.check_box :include_lunch, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" %>
+        <span class="ml-2 text-sm text-gray-500">Descontar <%= AppSetting&.lunch_hours %> hora de almuerzo</span>
+      </div>
+    </div>
+    
+    <%= form.hidden_field :_destroy %>
+  </div>
+</div>

@@ -10,17 +10,18 @@ class SchedulesController < ApplicationController
   end
 
   def new
-    @schedule = Schedule.new
+    @group = Group.new
+    @group.schedules.build
   end
 
   def edit
   end
 
   def create
-    @schedule = Schedule.new(schedule_params)
-
-    if @schedule.save
-      redirect_to schedules_path, notice: "El horario fue creado exitosamente."
+    @group = Group.new(group_params)
+    
+    if @group.save
+      redirect_to groups_path, notice: 'Grupo con horarios creado exitosamente.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -71,5 +72,19 @@ class SchedulesController < ApplicationController
 
     def schedule_params
       params.require(:schedule).permit(:date, :expected_entry_time, :expected_exit_time, :group_id, :include_lunch)
+    end
+
+    def group_params
+      params.require(:group).permit(
+        :name, 
+        schedules_attributes: [
+          :id, 
+          :expected_entry_time, 
+          :expected_exit_time, 
+          :include_lunch, 
+          { workday: [] }, 
+          :_destroy
+        ]
+      )
     end
 end
