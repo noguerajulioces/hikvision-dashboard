@@ -1,6 +1,6 @@
 import { Application } from "@hotwired/stimulus"
 import PasswordVisibility from "stimulus-password-visibility";
-import { NestedForm } from "stimulus-rails-nested-form"
+import { NestedForm } from "@stimulus-components/nested-form"
 
 const application = Application.start()
 

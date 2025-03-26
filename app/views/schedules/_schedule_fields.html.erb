@@ -1,6 +1,8 @@
 <div class="nested-form-wrapper bg-gray-50 p-4 rounded-lg relative mb-4">
+  <!-- Remove button -->
   <button type="button" 
           data-action="nested-form#remove" 
+          data-nested-form-target="remove"
           class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
@@ -26,10 +28,11 @@
       <%= form.label :include_lunch, "Incluir Almuerzo", class: "block text-sm/6 font-medium text-gray-900" %>
       <div class="mt-2 flex items-center">
         <%= form.check_box :include_lunch, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" %>
-        <span class="ml-2 text-sm text-gray-500">Descontar <%= AppSetting&.lunch_hours %> hora de almuerzo</span>
+        <span class="ml-2 text-sm text-gray-500">Descontar hora de almuerzo</span>
       </div>
     </div>
     
-    <%= form.hidden_field :_destroy %>
+    <!-- Important: This is needed for the nested form to work -->
+    <%= form.hidden_field :_destroy, data: { nested_form_target: "destroy" } %>
   </div>
 </div>
