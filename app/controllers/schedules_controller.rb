@@ -11,7 +11,7 @@ class SchedulesController < ApplicationController
 
   def new
     @group = Group.new
-    @group.schedules.build
+    @group.schedules.build if params[:group].blank?
   end
 
   def edit
