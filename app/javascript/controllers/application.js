@@ -8,4 +8,5 @@ application.debug = false
 window.Stimulus   = application
 
 application.register("password-visibility", PasswordVisibility)
+
 export { application }
