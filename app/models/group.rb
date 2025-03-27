@@ -11,6 +11,8 @@ class Group < ApplicationRecord
   has_many :employees, dependent: :nullify
   has_many :schedules, dependent: :destroy
 
+  accepts_nested_attributes_for :schedules, allow_destroy: true
+
   validates :name, presence: true
 
   def self.ransackable_attributes(auth_object = nil)

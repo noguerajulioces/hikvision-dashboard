@@ -1,4 +1,4 @@
-<%= form_with(model: @group, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-3") do |form| %>
+<%= form_with(model: @group, url: schedules_path, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-3") do |form| %>
   <% if @group.errors.any? %>
     <div class="rounded-md bg-red-50 p-4 mb-6">
       <div class="flex">
@@ -43,19 +43,19 @@
       
       <!-- Fix the nested form controller setup -->
       <div data-controller="nested-form">
+              <!-- Container for existing items -->
+        <div data-nested-form-target="target">
+          <%= form.fields_for :schedules do |schedule_form| %>
+            <%= render "schedule_fields", form: schedule_form %>
+          <% end %>
+        </div>
+        
         <!-- Template for new items - make sure this target is named "template" -->
         <template data-nested-form-target="template">
           <%= form.fields_for :schedules, Schedule.new, child_index: 'NEW_RECORD' do |schedule_form| %>
             <%= render "schedule_fields", form: schedule_form %>
           <% end %>
         </template>
-        
-        <!-- Container for existing items -->
-        <div data-nested-form-target="target">
-          <%= form.fields_for :schedules do |schedule_form| %>
-            <%= render "schedule_fields", form: schedule_form %>
-          <% end %>
-        </div>
         
         <!-- Add button -->
         <div class="mt-4">

@@ -17,15 +17,44 @@ class SchedulesController < ApplicationController
   def edit
   end
 
+
   def create
-    @group = Group.new(group_params)
-    
-    if @group.save
-      redirect_to groups_path, notice: 'Grupo con horarios creado exitosamente.'
-    else
-      render :new, status: :unprocessable_entity
+    @group = Group.find(params[:group][:group_id])
+    has_errors = false
+  
+    params[:group][:schedules_attributes].each do |_key, schedule_params|
+      next if schedule_params["_destroy"] == "1"
+  
+      entry_time = schedule_params[:expected_entry_time]
+      exit_time  = schedule_params[:expected_exit_time]
+      date       = entry_time.to_date rescue nil
+  
+      if Schedule.exists?(group_id: @group.id, date: date)
+        has_errors = true
+        @group.errors.add(:base, "Ya existe un horario para la fecha #{date.strftime('%d/%m/%Y')} en esta función.")
+        next
+      end
+  
+      schedule = Schedule.new(
+        group_id: @group.id,
+        date: date,
+        expected_entry_time: entry_time,
+        expected_exit_time: exit_time,
+        include_lunch: schedule_params[:include_lunch]
+      )
+  
+      unless schedule.save
+        has_errors = true
+        @group.errors.add(:base, schedule.errors.full_messages.to_sentence)
+      end
     end
-  end
+  
+    if has_errors
+      render :new, status: :unprocessable_entity
+    else
+      redirect_to schedules_path, notice: "Horarios guardados exitosamente."
+    end
+  end  
 
   def update
     if @schedule.update(schedule_params)
@@ -71,18 +100,12 @@ class SchedulesController < ApplicationController
     end
 
     def schedule_params
-      params.require(:schedule).permit(:date, :expected_entry_time, :expected_exit_time, :group_id, :include_lunch)
-    end
-
-    def group_params
       params.require(:group).permit(
-        :name, 
+        :group_id,
         schedules_attributes: [
-          :id, 
-          :expected_entry_time, 
-          :expected_exit_time, 
-          :include_lunch, 
-          { workday: [] }, 
+          :expected_entry_time,
+          :expected_exit_time,
+          :include_lunch,
           :_destroy
         ]
       )
