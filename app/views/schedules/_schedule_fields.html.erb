@@ -1,4 +1,4 @@
-<div class="nested-form-wrapper bg-gray-50 p-4 rounded-lg relative mb-4">
+<div class="nested-form-wrapper bg-gray-50 p-4 rounded-lg relative mb-4" data-controller="schedule-time">
   <!-- Remove button -->
   <button type="button" 
           data-action="nested-form#remove" 
@@ -13,14 +13,21 @@
     <div>
       <%= form.label :expected_entry_time, "Hora de Entrada", class: "block text-sm/6 font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= form.datetime_field :expected_entry_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        <%= form.datetime_field :expected_entry_time, 
+                               class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
+                               data: { 
+                                 action: "change->schedule-time#updateExitTime",
+                                 schedule_time_target: "entryTime" 
+                               } %>
       </div>
     </div>
 
     <div>
       <%= form.label :expected_exit_time, "Hora de Salida", class: "block text-sm/6 font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= form.datetime_field :expected_exit_time, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        <%= form.datetime_field :expected_exit_time, 
+                               class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
+                               data: { schedule_time_target: "exitTime" } %>
       </div>
     </div>
 
