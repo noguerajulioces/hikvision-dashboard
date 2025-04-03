@@ -1,105 +1,54 @@
 class AttendanceProcessorService
-  MIN_HOURS_FOR_EXIT = 5
-  NIGHT_SHIFT_CUTOFF = 6
-
   def initialize
-    puts "Initializing AttendanceProcessorService"
     @processed_count = 0
   end
 
   def call
-    puts "Starting attendance processing"
-    process_attendance
-    puts "✅ Procesamiento completado. Registros procesados: #{@processed_count}"
+    puts "🔄 Iniciando procesamiento de eventos..."
+    process_events
+    puts "✅ Procesamiento completo. Registros creados: #{@processed_count}"
   end
 
   private
 
-  def process_attendance
-    grouped_events = fetch_and_group_events
-    raw_events = fetch_raw_events_grouped_by_employee
-
-    grouped_events.each do |employee_id, events_by_day|
-      all_employee_events = raw_events[employee_id]
-
-      events_by_day.each do |date, events_on_date|
-        entry = events_on_date.last
-        entry_datetime = datetime_from_event(entry)
-
-        remaining_events = all_employee_events - events_on_date
-
-        exit_event = find_fallback_exit_globally(entry_datetime, remaining_events)
-
-        if exit_event
-          exit_datetime = datetime_from_event(exit_event)
-
-          if valid_exit?(entry_datetime, exit_datetime)
-            save_attendance_record(employee_id, entry_datetime, exit_datetime)
-            mark_events_as_processed(events_on_date + [exit_event])
-            next
-          end
-        end
-
-        save_attendance_record(employee_id, entry_datetime, nil)
-        mark_events_as_processed(events_on_date)
-      end
+  def process_events
+    Event.find_each do |event|
+      create_attendance_from_event(event)
     end
   end
 
-  def fetch_and_group_events
-    Event.where(processed: false, in_out: "IN")
-         .order(:employee_id, :date, :time)
-         .group_by(&:employee_id)
-         .transform_values { |events| events.group_by(&:date) }
-  end
-
-  def fetch_raw_events_grouped_by_employee
-    Event.where(processed: false, in_out: "IN")
-         .order(:employee_id, :date, :time)
-         .group_by(&:employee_id)
-  end
-
-  def find_fallback_exit_globally(entry_datetime, remaining_events)
-    remaining_events.find do |event|
-      datetime = datetime_from_event(event)
-      (datetime - entry_datetime) * 24 >= MIN_HOURS_FOR_EXIT
-    end
-  end
-
-  def datetime_from_event(event)
-    DateTime.parse("#{event.date} #{event.time}")
-  end
-
-  def valid_exit?(entry_datetime, exit_datetime)
-    return false if exit_datetime <= entry_datetime
-
-    hours_diff = (exit_datetime - entry_datetime) * 24
-    return true if hours_diff >= MIN_HOURS_FOR_EXIT
-
-    # turno nocturno
-    entry_datetime.hour >= 20 && exit_datetime.hour <= NIGHT_SHIFT_CUTOFF
-  end
-
-  def save_attendance_record(employee_id, entry_datetime, exit_datetime)
-    puts "Attempting to save attendance record for employee #{employee_id}"
-
-    attendance = AttendanceRecord.find_or_initialize_by(
-      employee_id: employee_id,
-      entry_time: entry_datetime
-    )
-
-    attendance.device_id = Device.first.id
-    attendance.exit_time = exit_datetime
+  def create_attendance_from_event(event)
+    attendance = find_or_initialize_attendance(event)
+    attendance.device_id = first_device_id
 
     if attendance.save
       @processed_count += 1
-      puts "✅ Registro de asistencia guardado para empleado #{employee_id}: Entrada #{entry_datetime}, Salida #{exit_datetime || 'N/A'}"
+      log_success(event, attendance)
     else
-      puts "⚠️ Error guardando `AttendanceRecord`: #{attendance.errors.full_messages.join(', ')}"
+      log_error(event, attendance)
     end
   end
 
-  def mark_events_as_processed(events)
-    events.each { |e| e.update(processed: true) }
+  def find_or_initialize_attendance(event)
+    AttendanceRecord.find_or_initialize_by(
+      employee_id: event.employee_id,
+      entry_time: build_datetime(event)
+    )
+  end
+
+  def build_datetime(event)
+    DateTime.parse("#{event.date} #{event.time}")
+  end
+
+  def first_device_id
+    Device.first&.id
+  end
+
+  def log_success(event, attendance)
+    puts "✅ Creado para empleado #{event.employee_id}: #{attendance.entry_time}"
+  end
+
+  def log_error(event, attendance)
+    puts "⚠️ Error para #{event.employee_id}: #{attendance.errors.full_messages.join(', ')}"
   end
 end
