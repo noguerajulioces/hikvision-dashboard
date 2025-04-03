@@ -38,22 +38,59 @@ class AttendanceProcessorService
   # @param events [Array<Event>] The events for the employee on the day
   # @return [void]
   def create_attendance_for_day(employee_id, events)
-    sorted_events = events.sort_by { |e| e.time }
+    employee = Employee.find(employee_id)
+  
+    if sereno?(employee)
+      handle_sereno_attendance(employee, events)
+    else
+      handle_standard_attendance(employee, events)
+    end
+  end
 
+  def sereno?(employee)
+    employee.group&.name == "Sereno"
+  end
+  
+  def handle_sereno_attendance(employee, events)
+    sorted_events = events.sort_by(&:time)
+    entry_time = build_datetime(sorted_events.last)
+    exit_event = find_next_day_first_event(employee.id, sorted_events.last.date)
+    exit_time = exit_event ? build_datetime(exit_event) : nil
+  
+    create_attendance_record(employee.id, entry_time, exit_time, events, exit_event)
+  end
+  
+  def handle_standard_attendance(employee, events)
+    sorted_events = events.sort_by(&:time)
     entry_time = build_datetime(sorted_events.first)
     exit_time = sorted_events.size > 1 ? build_datetime(sorted_events.last) : nil
+  
+    create_attendance_record(employee.id, entry_time, exit_time, events)
+  end
+  
+  def find_next_day_first_event(employee_id, current_date)
+    new_date = current_date + 1.day
 
+    Event.where(
+      employee_id: employee_id,
+      date: new_date,
+      processed: false
+    ).order(:time).first
+  end
+  
+  def create_attendance_record(employee_id, entry_time, exit_time, events, extra_event = nil)
     attendance = AttendanceRecord.find_or_initialize_by(
       employee_id: employee_id,
       entry_time: entry_time
     )
-
+  
     attendance.exit_time = exit_time
     attendance.device_id = first_device_id
-
+  
     if attendance.save
       @processed_count += 1
       mark_events_as_processed(events)
+      mark_events_as_processed([extra_event]) if extra_event
       log_success(employee_id, entry_time, exit_time)
     else
       log_error(employee_id, attendance)
