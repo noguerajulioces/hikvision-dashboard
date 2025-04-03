@@ -17,13 +17,18 @@ class AttendanceProcessorService
 
   def process_attendance
     grouped_events = fetch_and_group_events
+    raw_events = fetch_raw_events_grouped_by_employee
 
     grouped_events.each do |employee_id, events_by_day|
+      all_employee_events = raw_events[employee_id]
+
       events_by_day.each do |date, events_on_date|
         entry = events_on_date.last
         entry_datetime = datetime_from_event(entry)
 
-        exit_event = find_next_day_exit(events_by_day, date)
+        remaining_events = all_employee_events - events_on_date
+
+        exit_event = find_fallback_exit_globally(entry_datetime, remaining_events)
 
         if exit_event
           exit_datetime = datetime_from_event(exit_event)
@@ -35,15 +40,7 @@ class AttendanceProcessorService
           end
         end
 
-        fallback_exit = events_on_date.first
-        fallback_exit_datetime = datetime_from_event(fallback_exit)
-
-        if valid_exit?(entry_datetime, fallback_exit_datetime)
-          save_attendance_record(employee_id, entry_datetime, fallback_exit_datetime)
-        else
-          save_attendance_record(employee_id, entry_datetime, nil)
-        end
-
+        save_attendance_record(employee_id, entry_datetime, nil)
         mark_events_as_processed(events_on_date)
       end
     end
@@ -56,15 +53,21 @@ class AttendanceProcessorService
          .transform_values { |events| events.group_by(&:date) }
   end
 
-  def datetime_from_event(event)
-    DateTime.parse("#{event.date} #{event.time}")
+  def fetch_raw_events_grouped_by_employee
+    Event.where(processed: false, in_out: "IN")
+         .order(:employee_id, :date, :time)
+         .group_by(&:employee_id)
   end
 
-  def find_next_day_exit(events_by_day, date)
-    next_day_events = events_by_day[date + 1]
-    return nil unless next_day_events.present?
+  def find_fallback_exit_globally(entry_datetime, remaining_events)
+    remaining_events.find do |event|
+      datetime = datetime_from_event(event)
+      (datetime - entry_datetime) * 24 >= MIN_HOURS_FOR_EXIT
+    end
+  end
 
-    next_day_events.find { |e| e.time.hour <= NIGHT_SHIFT_CUTOFF }
+  def datetime_from_event(event)
+    DateTime.parse("#{event.date} #{event.time}")
   end
 
   def valid_exit?(entry_datetime, exit_datetime)
