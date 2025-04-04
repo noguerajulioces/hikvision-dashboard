@@ -29,15 +29,21 @@
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-semibold text-gray-500">Función</dt>
-            <dd class="mt-1 text-sm text-gray-900">
-              <% if @employee.group %>
-                <%= link_to @employee.group.name, group_path(@employee.group), class: "text-indigo-600 hover:text-indigo-900" %>
-              <% else %>
-                -
-              <% end %>
-            </dd>
-          </div>
+          <dt class="text-sm font-semibold text-gray-500">Funciones</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <% if @employee.groups.any? %>
+              <ul class="list-disc pl-5 space-y-1">
+                <% @employee.groups.each do |group| %>
+                  <li>
+                    <%= link_to group.name, group_path(group), class: "text-indigo-600 hover:text-indigo-900" %>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              -
+            <% end %>
+          </dd>
+        </div>
 
           <div class="sm:col-span-1">
             <dt class="text-sm font-semibold text-gray-500">Fecha de Registro</dt>

@@ -1,96 +1,119 @@
 class AttendanceProcessorService
-  MIN_HOURS_FOR_EXIT = 5 # Diferencia mínima para considerar una salida
-  NIGHT_SHIFT_CUTOFF = 6 # Consideramos que un turno nocturno puede terminar hasta las 6 AM
-
   def initialize
-    puts "Initializing AttendanceProcessorService"
     @processed_count = 0
   end
 
   def call
-    puts "Starting attendance processing"
-    process_attendance
-    puts "✅ Procesamiento completado. Registros procesados: #{@processed_count}"
+    puts "🔄 Iniciando procesamiento de eventos..."
+    process_all_employees
+    puts "✅ Procesamiento completo. Registros creados: #{@processed_count}"
   end
 
   private
 
-  def process_attendance
-    puts "Starting to process attendance records"
-  
-    events = Event.where(processed: false)
-                  .where(in_out: "IN")
-                  .order(:employee_id, :date, :time)
-  
-    events.group_by(&:employee_id).each do |employee_id, employee_events|
-      grouped_by_day = employee_events.group_by(&:date)
-  
-      grouped_by_day.each do |date, events_on_date|
-        entry = events_on_date.last
-        entry_datetime = DateTime.parse("#{entry.date} #{entry.time}")
-  
-        # Buscar una posible salida después de la medianoche hasta NIGHT_SHIFT_CUTOFF
-        possible_next_day_events = grouped_by_day[date + 1]
-        exit_event = nil
-  
-        if possible_next_day_events.present?
-          exit_event = possible_next_day_events.find do |e|
-            e.time.hour <= NIGHT_SHIFT_CUTOFF
-          end
-        end
-  
-        if exit_event
-          exit_datetime = DateTime.parse("#{exit_event.date} #{exit_event.time}")
-          if (exit_datetime - entry_datetime) * 24 >= MIN_HOURS_FOR_EXIT
-            save_attendance_record(employee_id, entry_datetime, exit_datetime)
-            (events_on_date + [exit_event]).each { |e| e.update(processed: true) }
-            next
-          end
-        end
-  
-        # Caso alternativo: verificar si hay otra entrada el mismo día con 5h de diferencia
-        fallback_exit = events_on_date.first
-        fallback_exit_datetime = DateTime.parse("#{fallback_exit.date} #{fallback_exit.time}")
-        if (fallback_exit_datetime - entry_datetime) * 24 >= MIN_HOURS_FOR_EXIT
-          save_attendance_record(employee_id, entry_datetime, fallback_exit_datetime)
-        else
-          save_attendance_record(employee_id, entry_datetime, nil)
-        end
-  
-        events_on_date.each { |e| e.update(processed: true) }
+  def process_all_employees
+    grouped_events = Event
+                      .where(processed: false)
+                      .order(:employee_id, :date, :time)
+                      .group_by(&:employee_id)
+
+    grouped_events.each do |employee_id, events|
+      create_attendance_for_employee(employee_id, events)
+    end
+  end
+
+  def create_attendance_for_employee(employee_id, events)
+    employee = Employee.find(employee_id)
+    sorted_events = valid_events(events).sort_by { |e| [ e.date, e.time ] }
+
+    if sereno?(employee)
+      process_sereno_events(employee, sorted_events)
+    else
+      sorted_events.group_by(&:date).each_value do |daily_events|
+        handle_standard_attendance(employee, daily_events)
       end
     end
   end
-  
-  def valid_exit?(entry_datetime, exit_datetime)
-    return false if exit_datetime <= entry_datetime
 
-    hours_diff = (exit_datetime - entry_datetime) * 24
-
-    # Caso 1: diferencia suficiente
-    return true if hours_diff >= MIN_HOURS_FOR_EXIT
-
-    # Caso 2: turno nocturno
-    entry_datetime.hour >= 20 && exit_datetime.hour <= NIGHT_SHIFT_CUTOFF
+  def sereno?(employee)
+    employee.groups.where('LOWER(name) = ?', 'sereno').exists?
   end
 
-  def save_attendance_record(employee_id, entry_datetime, exit_datetime)
-    puts "Attempting to save attendance record for employee #{employee_id}"
+  def process_sereno_events(employee, events)
+    used_event_ids = []
+    events_by_date = events.group_by(&:date).sort.to_h
 
+    events_by_date.each_with_index do |(date, day_events), idx|
+      entry_event = day_events.reject { |e| used_event_ids.include?(e.id) }.last
+      next unless entry_event
+
+      next_date = events_by_date.keys[idx + 1]
+      next_events = events_by_date[next_date]
+
+      next unless next_events&.any?
+      exit_event = next_events.reject { |e| used_event_ids.include?(e.id) }.first
+      next unless exit_event
+
+      entry_time = build_datetime(entry_event)
+      exit_time = build_datetime(exit_event)
+
+      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ])
+
+      used_event_ids << entry_event.id
+      used_event_ids << exit_event.id
+    end
+  end
+
+  def handle_standard_attendance(employee, events)
+    sorted_events = events.sort_by(&:time)
+    return if sorted_events.empty?
+
+    entry_time = build_datetime(sorted_events.first)
+    exit_time = sorted_events.size > 1 ? build_datetime(sorted_events.last) : nil
+
+    create_attendance_record(employee.id, entry_time, exit_time, sorted_events)
+  end
+
+  def valid_events(events)
+    # Ajustá esto si tenés un campo como `valid: boolean`
+    events.reject { |e| e.try(:valid) == false }
+  end
+
+  def create_attendance_record(employee_id, entry_time, exit_time, events)
     attendance = AttendanceRecord.find_or_initialize_by(
       employee_id: employee_id,
-      entry_time: entry_datetime
+      entry_time: entry_time
     )
 
-    puts "Setting device ID and exit time"
-    attendance.device_id = Device.first.id
-    attendance.exit_time = exit_datetime
+    attendance.exit_time = exit_time
+    attendance.device_id = first_device_id
 
     if attendance.save
       @processed_count += 1
-      puts "✅ Registro de asistencia guardado para empleado #{employee_id}: Entrada #{entry_datetime}, Salida #{exit_datetime || 'N/A'}"
+      mark_events_as_processed(events)
+      log_success(employee_id, entry_time, exit_time)
     else
-      puts "⚠️ Error guardando `AttendanceRecord`: #{attendance.errors.full_messages.join(', ')}"
+      log_error(employee_id, attendance)
     end
+  end
+
+  def build_datetime(event)
+    DateTime.parse("#{event.date} #{event.time}")
+  end
+
+  def first_device_id
+    Device.first&.id
+  end
+
+  def mark_events_as_processed(events)
+    events.each { |e| e.update(processed: true) }
+  end
+
+  def log_success(employee_id, entry_time, exit_time)
+    puts "✅ Guardado: #{employee_id} - Entrada: #{entry_time}, Salida: #{exit_time}"
+  end
+
+  def log_error(employee_id, attendance)
+    puts "⚠️ Error para #{employee_id}: #{attendance.errors.full_messages.join(', ')}"
   end
 end

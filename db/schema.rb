@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_22_140817) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_04_133844) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -65,6 +65,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_140817) do
     t.string "document_number"
     t.datetime "deleted_at"
     t.index ["deleted_at"], name: "index_employees_on_deleted_at"
+  end
+
+  create_table "employees_groups", id: false, force: :cascade do |t|
+    t.bigint "employee_id", null: false
+    t.bigint "group_id", null: false
+    t.index ["employee_id", "group_id"], name: "index_employees_groups_on_employee_id_and_group_id", unique: true
+    t.index ["group_id", "employee_id"], name: "index_employees_groups_on_group_id_and_employee_id"
   end
 
   create_table "events", force: :cascade do |t|
