@@ -24,12 +24,14 @@ class AttendanceProcessorService
 
   def create_attendance_for_employee(employee_id, events)
     employee = Employee.find(employee_id)
-    sorted_events = valid_events(events).sort_by { |e| [e.date, e.time] }
+    sorted_events = valid_events(events).sort_by { |e| [ e.date, e.time ] }
 
     if sereno?(employee)
       process_sereno_events(employee, sorted_events)
     else
-      process_dynamic_shifts(employee, sorted_events)
+      sorted_events.group_by(&:date).each_value do |daily_events|
+        handle_standard_attendance(employee, daily_events)
+      end
     end
   end
 
@@ -47,69 +49,33 @@ class AttendanceProcessorService
 
       next_date = events_by_date.keys[idx + 1]
       next_events = events_by_date[next_date]
-      next unless next_events&.any?
 
+      next unless next_events&.any?
       exit_event = next_events.reject { |e| used_event_ids.include?(e.id) }.first
       next unless exit_event
 
       entry_time = build_datetime(entry_event)
       exit_time = build_datetime(exit_event)
 
-      create_attendance_record(employee.id, entry_time, exit_time, [entry_event, exit_event])
+      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ])
 
       used_event_ids << entry_event.id
       used_event_ids << exit_event.id
     end
   end
 
-  def process_dynamic_shifts(employee, events)
-    used_event_ids = []
-    i = 0
+  def handle_standard_attendance(employee, events)
+    sorted_events = events.sort_by(&:time)
+    return if sorted_events.empty?
 
-    while i < events.length - 1
-      entry_event = events[i]
-      exit_event  = events[i + 1]
+    entry_time = build_datetime(sorted_events.first)
+    exit_time = sorted_events.size > 1 ? build_datetime(sorted_events.last) : nil
 
-      # Saltar eventos ya usados
-      if used_event_ids.include?(entry_event.id) || used_event_ids.include?(exit_event.id)
-        i += 1
-        next
-      end
-
-      entry_time = build_datetime(entry_event)
-      exit_time = build_datetime(exit_event)
-
-      # Si el turno parece cruzar medianoche
-      if is_night_shift?(entry_time, exit_time)
-        create_attendance_record(employee.id, entry_time, exit_time, [entry_event, exit_event])
-        used_event_ids << entry_event.id
-        used_event_ids << exit_event.id
-        i += 2
-      else
-        # Si es un turno normal, lo emparejamos si el exit es el último evento del día
-        same_day = entry_time.to_date == exit_time.to_date
-        if same_day
-          create_attendance_record(employee.id, entry_time, exit_time, [entry_event, exit_event])
-          used_event_ids << entry_event.id
-          used_event_ids << exit_event.id
-          i += 2
-        else
-          i += 1
-        end
-      end
-    end
-  end
-
-  def is_night_shift?(entry_time, exit_time)
-    entry_hour = entry_time.hour
-    exit_hour = exit_time.hour
-
-    # Consideramos turno nocturno si comienza >= 21 y termina <= 6 del día siguiente
-    entry_hour >= 21 && exit_time > entry_time && (exit_hour <= 6 || exit_time.to_date > entry_time.to_date)
+    create_attendance_record(employee.id, entry_time, exit_time, sorted_events)
   end
 
   def valid_events(events)
-    # Ajustá si tenés un campo tipo `valid: boolean`
+    # Ajustá esto si tenés un campo como `valid: boolean`
     events.reject { |e| e.try(:valid) == false }
   end
 
