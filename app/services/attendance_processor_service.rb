@@ -25,13 +25,11 @@ class AttendanceProcessorService
   def create_attendance_for_employee(employee_id, events)
     employee = Employee.find(employee_id)
     sorted_events = valid_events(events).sort_by { |e| [ e.date, e.time ] }
-
+  
     if sereno?(employee)
       process_sereno_events(employee, sorted_events)
     else
-      sorted_events.group_by(&:date).each_value do |daily_events|
-        handle_standard_attendance(employee, daily_events)
-      end
+      handle_standard_attendance(employee, sorted_events)
     end
   end
 
@@ -65,13 +63,30 @@ class AttendanceProcessorService
   end
 
   def handle_standard_attendance(employee, events)
-    sorted_events = events.sort_by(&:time)
-    return if sorted_events.empty?
-
-    entry_time = build_datetime(sorted_events.first)
-    exit_time = sorted_events.size > 1 ? build_datetime(sorted_events.last) : nil
-
-    create_attendance_record(employee.id, entry_time, exit_time, sorted_events)
+    return if events.empty?
+  
+    events_by_date = events.group_by(&:date).sort.to_h
+    used_event_ids = []
+  
+    events_by_date.each do |_date, day_events|
+      sorted_day_events = day_events.reject { |e| used_event_ids.include?(e.id) }.sort_by(&:time)
+      next if sorted_day_events.empty?
+  
+      entry_event = sorted_day_events.first
+      exit_event  = sorted_day_events.last
+  
+      entry_time = build_datetime(entry_event)
+      exit_time  = build_datetime(exit_event)
+  
+      # Verificamos si la diferencia es al menos 5 horas
+      hours_diff = ((exit_time - entry_time) * 24).to_f
+      exit_time = nil if hours_diff < 5
+  
+      create_attendance_record(employee.id, entry_time, exit_time, [entry_event, exit_event].uniq)
+  
+      used_event_ids << entry_event.id
+      used_event_ids << exit_event.id if exit_time
+    end
   end
 
   def valid_events(events)
