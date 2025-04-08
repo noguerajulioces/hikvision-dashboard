@@ -38,27 +38,36 @@ class AttendanceProcessorService
   end
 
   def process_sereno_events(employee, events)
-    used_event_ids = []
+    used_entry_ids = []
+    used_exit_ids = []
     events_by_date = events.group_by(&:date).sort.to_h
 
     events_by_date.each_with_index do |(date, day_events), idx|
-      entry_event = day_events.reject { |e| used_event_ids.include?(e.id) }.last
+      entry_event = day_events.reject { |e| used_entry_ids.include?(e.id) }.last
       next unless entry_event
 
       next_date = events_by_date.keys[idx + 1]
       next_events = events_by_date[next_date]
-
       next unless next_events&.any?
-      exit_event = next_events.reject { |e| used_event_ids.include?(e.id) }.first
+
+      exit_event = next_events.reject { |e| used_exit_ids.include?(e.id) }.first
       next unless exit_event
 
       entry_time = build_datetime(entry_event)
       exit_time = build_datetime(exit_event)
 
-      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ])
+      hours_diff = ((exit_time - entry_time) * 24).to_f
 
-      used_event_ids << entry_event.id
-      used_event_ids << exit_event.id
+      if hours_diff > 14
+        # si se pasa de las 14 horas, lo marcamos como sin salida, pero NO usamos el exit_event
+        create_attendance_record(employee.id, entry_time, nil, [ entry_event ])
+        used_entry_ids << entry_event.id
+        next
+      end
+
+      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ])
+      used_entry_ids << entry_event.id
+      used_exit_ids << exit_event.id
     end
   end
 
