@@ -34,7 +34,7 @@ class AttendanceProcessorService
   end
 
   def sereno?(employee)
-    employee.groups.where('LOWER(name) = ?', 'sereno').exists?
+    employee.group&.name&.downcase == 'sereno'
   end
 
   def process_sereno_events(employee, events)

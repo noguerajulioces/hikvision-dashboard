@@ -22,7 +22,7 @@
 class Employee < ApplicationRecord
   acts_as_paranoid
 
-  has_and_belongs_to_many :groups, optional: true
+  belongs_to :group, optional: true
   has_many :attendance_records, dependent: :destroy
   has_many :overtime_records, dependent: :destroy
   has_many :incidents, dependent: :destroy
@@ -86,7 +86,7 @@ class Employee < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "absences", "attendance_records", "events", "groups", "incidents", "overtime_records" ]
+    [ "absences", "attendance_records", "events", "group", "incidents", "overtime_records" ]
   end
 
   def self.ransackable_attributes(auth_object = nil)

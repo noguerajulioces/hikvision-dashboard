@@ -31,17 +31,7 @@
           <div class="sm:col-span-1">
           <dt class="text-sm font-semibold text-gray-500">Funciones</dt>
           <dd class="mt-1 text-sm text-gray-900">
-            <% if @employee.groups.any? %>
-              <ul class="list-disc pl-5 space-y-1">
-                <% @employee.groups.each do |group| %>
-                  <li>
-                    <%= link_to group.name, group_path(group), class: "text-indigo-600 hover:text-indigo-900" %>
-                  </li>
-                <% end %>
-              </ul>
-            <% else %>
-              -
-            <% end %>
+            <%= @employee.group&.name %>
           </dd>
         </div>
 

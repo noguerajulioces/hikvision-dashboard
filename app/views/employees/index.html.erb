@@ -21,8 +21,8 @@
         <%= f.search_field :document_number_cont, class: "mt-1 px-3 py-1.5  block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
       </div>
       <div>
-        <%= f.label :groups_name_cont, "Función", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.search_field :groups_name_cont, class: "mt-1 px-3 py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+        <%= f.label :group_name_cont, "Función", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.search_field :group_name_cont, class: "mt-1 px-3 py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
       </div>
       <div>
         <%= f.label :status_eq, "Estado", class: "block text-sm font-medium text-gray-700" %>
@@ -61,7 +61,7 @@
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= number_with_delimiter(employee&.document_number, delimiter: '.') %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= employee&.hire_date&.strftime("%d/%m/%Y") %></td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    <%= employee.groups.any? ? employee.groups.map(&:name).join(", ") : '-' %>
+                    <%= employee&.group&.name %>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
                     <% if employee.active? %>

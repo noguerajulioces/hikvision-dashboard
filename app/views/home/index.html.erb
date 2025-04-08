@@ -266,8 +266,8 @@
                       <div class="ml-3">
                         <p class="text-sm font-medium text-gray-900"><%= record&.employee&.full_name || "Empleado Desconocido" %></p>
                         <p class="text-xs text-gray-500">
-                          <% if record&.employee&.groups.present? %>
-                            <%= record.employee.groups.map(&:name).join(", ") %>
+                          <% if record&.employee&.group.present? %>
+                            <%= record.employee.group&.name %>
                           <% else %>
                             Sin grupos
                           <% end %>
