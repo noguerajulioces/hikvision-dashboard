@@ -77,13 +77,13 @@ class AttendanceProcessorService
   
       entry_time = build_datetime(entry_event)
       exit_time  = build_datetime(exit_event)
-  
+
       # Verificamos si la diferencia es al menos 5 horas
       hours_diff = ((exit_time - entry_time) * 24).to_f
       exit_time = nil if hours_diff < 5
-  
+
       create_attendance_record(employee.id, entry_time, exit_time, [entry_event, exit_event].uniq)
-  
+
       used_event_ids << entry_event.id
       used_event_ids << exit_event.id if exit_time
     end
