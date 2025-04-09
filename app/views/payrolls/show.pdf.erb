@@ -105,8 +105,15 @@
               <span style="font-size: 0.85em; color: #9CA3AF;">(<%= record.schedule.expected_exit_time.strftime("%H:%M") %>)</span>
             </td>
             <td>
-              <% if overtime = @payroll.overtime_records.find_by(date: record.entry_time.to_date) %>
-                <%= sprintf("%02d:%02d", overtime.hours_worked.to_i, ((overtime.hours_worked % 1) * 60).to_i) %>
+              <% 
+                date_overtimes = @payroll.overtime_records.select { |ot| ot.date == record.entry_time.to_date }
+                total_overtime_hours = date_overtimes.sum(&:hours_worked)
+                
+                if total_overtime_hours > 0
+                  hours = total_overtime_hours.to_i
+                  minutes = ((total_overtime_hours % 1) * 60).to_i
+              %>
+                <%= sprintf("%02d:%02d", hours, minutes) %>
               <% else %>
                 -
               <% end %>
