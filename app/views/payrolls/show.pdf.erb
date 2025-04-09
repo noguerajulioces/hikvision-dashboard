@@ -118,7 +118,8 @@
     
     <div>
       <br>
-      <p class="highlight">Horas Trabajados: <%= @payroll&.total_hours_worked + @payroll&.total_overtime_hours %> horas</p>
+      <p class="highlight">Horas Trabajados: <%= @payroll&.total_hours_worked %> horas</p>
+      <p class="highlight">Horas Extras: <%= @payroll&.total_overtime_hours %> horas</p>
       <p class="highlight">Días no Trabajados: <%= @not_worked_days %></p>
       <p class="highlight">Llegadas Tardías: <%= @payroll&.incidents&.late_arrivals&.count %></p>
     </div>
