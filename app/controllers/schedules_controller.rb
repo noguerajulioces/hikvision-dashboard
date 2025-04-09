@@ -15,6 +15,7 @@ class SchedulesController < ApplicationController
   end
 
   def edit
+    @group = @schedule.group
   end
 
 
