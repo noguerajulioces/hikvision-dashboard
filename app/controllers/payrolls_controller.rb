@@ -17,7 +17,15 @@ class PayrollsController < ApplicationController
         render pdf: "tarjeta_de_horario",
                template: "payrolls/show",
                layout: "pdf",
-               disposition: "inline"
+               disposition: "inline",
+               page_width: '216mm',
+               page_height: '178mm',
+               margin: {
+                 top: '5mm',
+                 bottom: '5mm',
+                 left: '10mm',
+                 right: '10mm'
+               }
       end
     end
   end
