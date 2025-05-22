@@ -1,12 +1,69 @@
-<div class="px-4 sm:px-6 lg:px-8">
-  <div class="sm:flex sm:items-center">
-    <div class="sm:flex-auto">
-      <h1 class="text-base font-semibold text-gray-900">Editar Horarios</h1>
-      <p class="mt-2 text-sm text-gray-700">Modifica los detalles del horario seleccionado, incluyendo la fecha, hora de entrada, hora de salida y función asignada.</p>
-    </div>
-  </div>
-</div>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-3xl">
+    <h1 class="text-2xl font-bold leading-tight text-gray-900 mb-6">Editar Horario</h1>
 
-<div class="mt-4">
-  <%= render "form", schedule: @schedule %>
+    <%= form_with(model: @schedule) do |form| %>
+      <% if @schedule.errors.any? %>
+        <div id="error_explanation" class="bg-red-50 p-4 rounded-md mb-6">
+          <h2 class="text-red-800 font-medium"><%= pluralize(@schedule.errors.count, "error") %> impidieron guardar este horario:</h2>
+          <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+            <% @schedule.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="bg-gray-50 p-4 rounded-lg relative mb-4" data-controller="schedule-time">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+          <div>
+            <%= form.label :expected_entry_time, "Hora de Entrada", class: "block text-sm/6 font-medium text-gray-900" %>
+            <div class="mt-2">
+              <%= form.datetime_field :expected_entry_time, 
+                                    class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
+                                    data: { 
+                                      action: "change->schedule-time#updateExitTime",
+                                      schedule_time_target: "entryTime" 
+                                    } %>
+            </div>
+          </div>
+
+          <div>
+            <%= form.label :expected_exit_time, "Hora de Salida", class: "block text-sm/6 font-medium text-gray-900" %>
+            <div class="mt-2">
+              <%= form.datetime_field :expected_exit_time, 
+                                    class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
+                                    data: { schedule_time_target: "exitTime" } %>
+            </div>
+          </div>
+
+          <div>
+            <%= form.label :include_lunch, "Incluir Almuerzo", class: "block text-sm/6 font-medium text-gray-900" %>
+            <div class="mt-2 flex items-center">
+              <%= form.check_box :include_lunch, 
+                                class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600",
+                                data: { action: "change->schedule-time#toggleLunch" } %>
+              <span class="ml-2 text-sm text-gray-500">Descontar hora de almuerzo</span>
+            </div>
+          </div>
+
+          <div>
+            <%= form.label :group_id, "Grupo", class: "block text-sm/6 font-medium text-gray-900" %>
+            <div class="mt-2">
+              <%= form.collection_select :group_id, Group.all, :id, :name, {}, 
+                                      class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-6">
+        <div class="flex space-x-2">
+          <%= link_to 'Volver', schedules_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+          <%= link_to 'Ver', @schedule, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+        </div>
+        <%= form.submit "Actualizar Horario", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      </div>
+    <% end %>
+  </div>
 </div>

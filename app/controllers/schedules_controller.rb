@@ -58,7 +58,7 @@ class SchedulesController < ApplicationController
   end
 
   def update
-    if @schedule.update(schedule_params)
+    if @schedule.update(schedule_direct_params)
       redirect_to schedules_path, notice: "El horario fue actualizado exitosamente."
     else
       render :edit, status: :unprocessable_entity
@@ -109,6 +109,15 @@ class SchedulesController < ApplicationController
           :include_lunch,
           :_destroy
         ]
+      )
+    end
+
+    def schedule_direct_params
+      params.require(:schedule).permit(
+        :expected_entry_time,
+        :expected_exit_time,
+        :include_lunch,
+        :group_id
       )
     end
 end
