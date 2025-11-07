@@ -14,6 +14,7 @@ class AttendanceProcessorService
   def process_all_employees
     grouped_events = Event
                       .where(processed: false)
+                      .where.not(employee_id: nil)
                       .order(:employee_id, :date, :time)
                       .group_by(&:employee_id)
 
@@ -23,9 +24,16 @@ class AttendanceProcessorService
   end
 
   def create_attendance_for_employee(employee_id, events)
-    employee = Employee.find(employee_id)
+    employee = Employee.find_by(id: employee_id)
+
+    unless employee
+      log_missing_employee(employee_id, events)
+      mark_events_as_processed(events)
+      return
+    end
+
     sorted_events = valid_events(events).sort_by { |e| [ e.date, e.time ] }
-  
+
     if sereno?(employee)
       process_sereno_events(employee, sorted_events)
     else
@@ -34,7 +42,7 @@ class AttendanceProcessorService
   end
 
   def sereno?(employee)
-    employee.group&.name&.downcase == 'sereno'
+    employee.group&.name&.downcase == "sereno"
   end
 
   def process_sereno_events(employee, events)
@@ -73,17 +81,17 @@ class AttendanceProcessorService
 
   def handle_standard_attendance(employee, events)
     return if events.empty?
-  
+
     events_by_date = events.group_by(&:date).sort.to_h
     used_event_ids = []
-  
+
     events_by_date.each do |_date, day_events|
       sorted_day_events = day_events.reject { |e| used_event_ids.include?(e.id) }.sort_by(&:time)
       next if sorted_day_events.empty?
-  
+
       entry_event = sorted_day_events.first
       exit_event  = sorted_day_events.last
-  
+
       entry_time = build_datetime(entry_event)
       exit_time  = build_datetime(exit_event)
 
@@ -91,7 +99,7 @@ class AttendanceProcessorService
       hours_diff = ((exit_time - entry_time) * 24).to_f
       exit_time = nil if hours_diff < 5
 
-      create_attendance_record(employee.id, entry_time, exit_time, [entry_event, exit_event].uniq)
+      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ].uniq)
 
       used_event_ids << entry_event.id
       used_event_ids << exit_event.id if exit_time
@@ -139,5 +147,9 @@ class AttendanceProcessorService
 
   def log_error(employee_id, attendance)
     puts "⚠️ Error para #{employee_id}: #{attendance.errors.full_messages.join(', ')}"
+  end
+
+  def log_missing_employee(employee_id, events)
+    puts "⚠️ Empleado con ID #{employee_id} no encontrado o eliminado. Se omitirán #{events.count} eventos."
   end
 end
