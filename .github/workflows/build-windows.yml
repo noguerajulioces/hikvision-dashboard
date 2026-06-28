@@ -103,16 +103,29 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $url = 'https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.msvc2015-win64.exe'
-          Invoke-WebRequest -Uri $url -OutFile wkhtmltox.exe
-          # The installer is an NSIS package; 7-Zip (preinstalled) extracts it.
-          & 7z x wkhtmltox.exe -owkhtmltox -y | Out-Null
-          $exe = Get-ChildItem -Path wkhtmltox -Recurse -Filter wkhtmltopdf.exe | Select-Object -First 1
-          if (-not $exe) { throw "wkhtmltopdf.exe not found after extraction" }
+          # Use the .7z build (clean wkhtmltox/bin layout) instead of the NSIS .exe.
+          $url = 'https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.mxe-cross-win64.7z'
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile wk.7z
+          $size = (Get-Item wk.7z).Length
+          Write-Host "Downloaded wk.7z: $size bytes"
+          if ($size -lt 1MB) { throw "Download too small ($size bytes); not the expected archive" }
+
+          $sevenzip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path $sevenzip)) { $sevenzip = '7z' }
+          & $sevenzip x wk.7z -owk -y
+          if ($LASTEXITCODE -ne 0) { throw "7z extraction failed ($LASTEXITCODE)" }
+
+          $exe = Get-ChildItem -Path wk -Recurse -Filter wkhtmltopdf.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $exe) {
+            Write-Host "Extracted tree:"; Get-ChildItem -Path wk -Recurse | Select-Object -ExpandProperty FullName
+            throw "wkhtmltopdf.exe not found after extraction"
+          }
           $dest = "build\app\vendor\wkhtmltopdf\bin"
           New-Item -ItemType Directory -Force -Path $dest | Out-Null
           Copy-Item (Join-Path $exe.Directory.FullName '*') $dest -Recurse -Force
-          Write-Host "Bundled wkhtmltopdf from $($exe.Directory.FullName)"
+          Write-Host "Bundled wkhtmltopdf from $($exe.Directory.FullName):"
+          Get-ChildItem $dest | Select-Object Name, Length | Format-Table -AutoSize | Out-String | Write-Host
 
       - name: Install Inno Setup
         shell: pwsh
