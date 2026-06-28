@@ -10,6 +10,10 @@ on:
         required: false
         default: "1.0.0"
   push:
+    # NOTE: the desktop-sqlite entry is temporary, to validate the pipeline
+    # before merging. Remove it once this is on main (dispatch/tags are enough).
+    branches:
+      - desktop-sqlite
     tags:
       - "v*"
 
