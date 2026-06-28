@@ -52,6 +52,9 @@ group :development, :test do
   # via `bundle install --without development test`, so no libpq is needed there.
   gem "pg", "~> 1.1"
 
+  # Test/dev-only data generation (not used by the app at runtime).
+  gem "faker"
+
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
 
@@ -62,6 +65,15 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Dev-only tooling, excluded from the packaged Windows build.
+  gem "annotaterb"  # model schema annotations (rake task)
+  gem "rails-erd"   # ER diagrams (rake task)
+
+  # Provides a wkhtmltopdf binary for local PDF testing only. The packaged
+  # Windows build ships the real wkhtmltopdf.exe separately (see WKHTMLTOPDF_PATH),
+  # so this ~420 MB multi-platform gem is kept out of production.
+  gem "wkhtmltopdf-binary"
 end
 
 group :test do
@@ -72,12 +84,8 @@ end
 
 gem "devise"
 gem "rolify"
-gem "annotaterb"
-gem "rails-erd"
-gem "faker"
 gem "will_paginate"
 gem "wicked_pdf"
-gem "wkhtmltopdf-binary"
 gem "rails-settings-cached", "~> 2.9"
 gem "csv"
 gem "base64"
