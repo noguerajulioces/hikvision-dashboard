@@ -78,10 +78,13 @@ jobs:
           if ($LASTEXITCODE -ge 8) { throw "robocopy app failed ($LASTEXITCODE)" }
           $global:LASTEXITCODE = 0
 
-          # 2) Portable Ruby runtime (RubyInstaller is relocatable).
+          # 2) Portable Ruby runtime (RubyInstaller is relocatable). Exclude the
+          #    bundled MSYS2/MinGW toolchain (msys64) - it is only needed to COMPILE
+          #    native gems, not to run them. The mingw runtime DLLs the compiled
+          #    extensions need live in ruby\bin\ruby_builtin_dlls, not in msys64.
           $prefix = (& ruby -e "print RbConfig::CONFIG['prefix']")
           Write-Host "Ruby prefix: $prefix"
-          robocopy "$prefix" build\ruby /E /NFL /NDL /NJH /NJS /NP
+          robocopy "$prefix" build\ruby /E /XD "$prefix\msys64" /NFL /NDL /NJH /NJS /NP
           if ($LASTEXITCODE -ge 8) { throw "robocopy ruby failed ($LASTEXITCODE)" }
           $global:LASTEXITCODE = 0
 
@@ -156,6 +159,14 @@ jobs:
           Get-ChildItem build -Recurse -Include *.o, *.obj -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
 
           Write-Host "AFTER   total=$(Size build)  ruby=$(Size build\ruby)  bundle=$(Size build\app\vendor\bundle)"
+
+      - name: Verify staged runtime (native gems load without msys64)
+        shell: pwsh
+        run: |
+          $env:BUNDLE_GEMFILE = "$PWD\build\app\Gemfile"
+          $ruby = "$PWD\build\ruby\bin\ruby.exe"
+          & $ruby -C build\app -e "require 'bundler/setup'; require 'sqlite3'; require 'puma'; puts 'native gems OK: sqlite3=' + SQLite3::VERSION + ' puma=' + Puma::Const::VERSION"
+          if ($LASTEXITCODE -ne 0) { throw "Staged runtime failed to load native gems ($LASTEXITCODE)" }
 
       - name: Install Inno Setup
         shell: pwsh
