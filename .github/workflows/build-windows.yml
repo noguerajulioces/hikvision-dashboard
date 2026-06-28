@@ -10,10 +10,8 @@ on:
         required: false
         default: "1.0.0"
   push:
-    # NOTE: the desktop-sqlite entry is temporary, to validate the pipeline
-    # before merging. Remove it once this is on main (dispatch/tags are enough).
-    branches:
-      - desktop-sqlite
+    # Only build on an explicit release tag. Day-to-day builds are manual
+    # (Actions tab -> Run workflow), so the build never runs on its own.
     tags:
       - "v*"
 
