@@ -19,12 +19,12 @@
 #
 one:
   group_id: 1
-  day_of_week: MyString
+  date: 2025-01-15
   expected_entry_time: 2025-01-15 11:24:59
-  expected_exit_time: 2025-01-15 11:24:59
+  expected_exit_time: 2025-01-15 19:24:59
 
 two:
   group_id: 1
-  day_of_week: MyString
-  expected_entry_time: 2025-01-15 11:24:59
-  expected_exit_time: 2025-01-15 11:24:59
+  date: 2025-01-16
+  expected_entry_time: 2025-01-16 11:24:59
+  expected_exit_time: 2025-01-16 19:24:59

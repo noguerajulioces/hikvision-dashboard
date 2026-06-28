@@ -4,10 +4,14 @@
 # Any of the configuration options shown here can also be applied to single
 # controller by copying the appropriate line in a before_action.
 
-WickedPdf.config = {
+WickedPdf.configure do |config|
   # Path to the wkhtmltopdf executable: This will work on macOS with Homebrew or on Ubuntu
-  exe_path: (
-    if Gem.win_platform?
+  config.exe_path = (
+    # Desktop build: the launcher points WKHTMLTOPDF_PATH at the wkhtmltopdf.exe
+    # bundled inside the app, so no system-wide install is required.
+    if ENV["WKHTMLTOPDF_PATH"].present? && File.exist?(ENV["WKHTMLTOPDF_PATH"])
+      ENV["WKHTMLTOPDF_PATH"]
+    elsif Gem.win_platform?
       # Windows
       "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
     elsif File.exist?("/usr/local/bin/wkhtmltopdf")
@@ -21,4 +25,4 @@ WickedPdf.config = {
       Gem.win_platform? ? "wkhtmltopdf.exe" : "wkhtmltopdf"
     end
   )
-}
+end

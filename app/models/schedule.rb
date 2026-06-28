@@ -27,8 +27,11 @@ class Schedule < ApplicationRecord
   # Scopes
   default_scope -> { order(date: :desc) }
   scope :by_group, ->(group_id) { where(group_id: group_id) }
+  # A UNIQUE index on (group_id, date) already guarantees a single row per pair,
+  # so we only need deterministic ordering here. (Replaces Postgres-only
+  # "DISTINCT ON", which SQLite does not support.)
   scope :latest_by_function, -> {
-    select("DISTINCT ON (group_id, date) *").order("group_id, date DESC, created_at DESC")
+    order(:group_id, date: :desc, created_at: :desc)
   }
 
   # Métodos de instancia

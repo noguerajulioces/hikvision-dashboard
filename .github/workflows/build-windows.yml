@@ -1,0 +1,195 @@
+name: Build Windows Desktop Installer
+
+# Builds the self-contained Windows .exe installer (Ruby + app + wkhtmltopdf +
+# SQLite) on a Windows runner. Trigger manually, or push a tag like v1.0.0.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "App version (e.g. 1.0.0)"
+        required: false
+        default: "1.0.0"
+  push:
+    # Only build on an explicit release tag. Day-to-day builds are manual
+    # (Actions tab -> Run workflow), so the build never runs on its own.
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby (+ MSYS2 toolchain for native gems)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: false
+
+      - name: Resolve version
+        id: ver
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -like 'refs/tags/v*') {
+            $v = $env:GITHUB_REF -replace 'refs/tags/v',''
+          } elseif ('${{ github.event.inputs.version }}') {
+            $v = '${{ github.event.inputs.version }}'
+          } else {
+            $v = '1.0.0'
+          }
+          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "Building version $v"
+
+      - name: Configure Bundler (production, vendored)
+        shell: pwsh
+        run: |
+          bundle config set --local without 'development test'
+          bundle config set --local path 'vendor/bundle'
+
+      - name: Bundle install (compiles sqlite3/puma/nio4r/bootsnap)
+        shell: pwsh
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Precompile assets
+        shell: pwsh
+        env:
+          RAILS_ENV: production
+          SECRET_KEY_BASE_DUMMY: "1"
+        run: bundle exec rails assets:precompile
+
+      - name: Stage build folder
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force -Path build\app, build\ruby, build\launcher, build\seed | Out-Null
+
+          # 1) Rails app (with vendor\bundle + public\assets), excluding VCS/CI/dev artifacts.
+          robocopy . build\app /E `
+            /XD ".git" ".github" "build" "installer" "launcher" "tmp" "log" "node_modules" `
+            /XF "*.sqlite3" /NFL /NDL /NJH /NJS /NP
+          if ($LASTEXITCODE -ge 8) { throw "robocopy app failed ($LASTEXITCODE)" }
+          $global:LASTEXITCODE = 0
+
+          # 2) Portable Ruby runtime (RubyInstaller is relocatable). Exclude the
+          #    bundled MSYS2/MinGW toolchain (msys64) - it is only needed to COMPILE
+          #    native gems, not to run them. The mingw runtime DLLs the compiled
+          #    extensions need live in ruby\bin\ruby_builtin_dlls, not in msys64.
+          $prefix = (& ruby -e "print RbConfig::CONFIG['prefix']")
+          Write-Host "Ruby prefix: $prefix"
+          robocopy "$prefix" build\ruby /E /XD msys64 /NFL /NDL /NJH /NJS /NP
+          if ($LASTEXITCODE -ge 8) { throw "robocopy ruby failed ($LASTEXITCODE)" }
+          $global:LASTEXITCODE = 0
+
+          # 3) Launcher scripts.
+          Copy-Item launcher\* build\launcher\ -Recurse -Force
+
+          # 4) Application icon: use a committed one if present, else derive a
+          #    placeholder from ruby.exe so the installer always has an icon.
+          if (Test-Path installer\Multicarnes.ico) {
+            Copy-Item installer\Multicarnes.ico build\Multicarnes.ico -Force
+          } else {
+            Add-Type -AssemblyName System.Drawing
+            $ico = [System.Drawing.Icon]::ExtractAssociatedIcon("$prefix\bin\ruby.exe")
+            $fs = [System.IO.File]::Create("$PWD\build\Multicarnes.ico")
+            $ico.Save($fs); $fs.Dispose()
+          }
+
+      - name: Bundle wkhtmltopdf (Windows binary, for PDF generation)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # Use the .7z build (clean wkhtmltox/bin layout) instead of the NSIS .exe.
+          $url = 'https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.mxe-cross-win64.7z'
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile wk.7z
+          $size = (Get-Item wk.7z).Length
+          Write-Host "Downloaded wk.7z: $size bytes"
+          if ($size -lt 1MB) { throw "Download too small ($size bytes); not the expected archive" }
+
+          $sevenzip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path $sevenzip)) { $sevenzip = '7z' }
+          & $sevenzip x wk.7z -owk -y
+          if ($LASTEXITCODE -ne 0) { throw "7z extraction failed ($LASTEXITCODE)" }
+
+          $exe = Get-ChildItem -Path wk -Recurse -Filter wkhtmltopdf.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $exe) {
+            Write-Host "Extracted tree:"; Get-ChildItem -Path wk -Recurse | Select-Object -ExpandProperty FullName
+            throw "wkhtmltopdf.exe not found after extraction"
+          }
+          $dest = "build\app\vendor\wkhtmltopdf\bin"
+          New-Item -ItemType Directory -Force -Path $dest | Out-Null
+          Copy-Item (Join-Path $exe.Directory.FullName '*') $dest -Recurse -Force
+          Write-Host "Bundled wkhtmltopdf from $($exe.Directory.FullName):"
+          Get-ChildItem $dest | Select-Object Name, Length | Format-Table -AutoSize | Out-String | Write-Host
+
+      - name: Slim staging (drop runtime-unnecessary files)
+        shell: pwsh
+        run: |
+          function Size($p) {
+            if (Test-Path $p) { "{0:N0} MB" -f ((Get-ChildItem $p -Recurse -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum / 1MB) } else { "n/a" }
+          }
+          Write-Host "BEFORE  total=$(Size build)  ruby=$(Size build\ruby)  bundle=$(Size build\app\vendor\bundle)"
+
+          # 0) MSYS2/MinGW toolchain: compile-only, never needed at runtime. Belt-and-suspenders
+          #    in case the robocopy /XD exclusion is bypassed.
+          if (Test-Path build\ruby\msys64) { Remove-Item build\ruby\msys64 -Recurse -Force -ErrorAction SilentlyContinue }
+
+          # 1) Cached .gem packages: a full duplicate of every installed gem, never used at runtime.
+          Get-ChildItem build -Recurse -Directory -Filter cache -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -match '\\(gems|bundle)\\' } |
+            ForEach-Object { Get-ChildItem $_.FullName -Filter *.gem -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue }
+
+          # 2) Ruby docs / RI / man / C headers: only needed to read docs or compile, not to run.
+          foreach ($d in 'share\doc', 'share\ri', 'share\man', 'include') {
+            $p = Join-Path 'build\ruby' $d
+            if (Test-Path $p) { Remove-Item $p -Recurse -Force -ErrorAction SilentlyContinue }
+          }
+
+          # 3) App dirs not needed in production.
+          foreach ($p in 'build\app\test', 'build\app\.git', 'build\app\tmp', 'build\app\log') {
+            if (Test-Path $p) { Remove-Item $p -Recurse -Force -ErrorAction SilentlyContinue }
+          }
+
+          # 4) Gem doc dirs and leftover native-build intermediates.
+          Get-ChildItem build\app\vendor\bundle -Recurse -Directory -Filter doc -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          Get-ChildItem build -Recurse -Include *.o, *.obj -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+
+          Write-Host "AFTER   total=$(Size build)  ruby=$(Size build\ruby)  bundle=$(Size build\app\vendor\bundle)"
+
+      - name: Verify staged runtime (native gems load without msys64)
+        shell: pwsh
+        run: |
+          $env:BUNDLE_GEMFILE = "$PWD\build\app\Gemfile"
+          $ruby = "$PWD\build\ruby\bin\ruby.exe"
+          & $ruby -C build\app -e "require 'bundler/setup'; require 'sqlite3'; require 'puma'; puts 'native gems OK: sqlite3=' + SQLite3::VERSION + ' puma=' + Puma::Const::VERSION"
+          if ($LASTEXITCODE -ne 0) { throw "Staged runtime failed to load native gems ($LASTEXITCODE)" }
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+
+      - name: Compile installer
+        shell: pwsh
+        run: |
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          & $iscc "/DBuildDir=$PWD\build" "/DMyAppVersion=${{ steps.ver.outputs.version }}" installer\installer.iss
+          if ($LASTEXITCODE -ne 0) { throw "ISCC failed ($LASTEXITCODE)" }
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MulticarnesSetup-${{ steps.ver.outputs.version }}
+          path: installer/Output/MulticarnesSetup.exe
+          if-no-files-found: error
+
+      - name: Attach installer to GitHub Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: installer/Output/MulticarnesSetup.exe

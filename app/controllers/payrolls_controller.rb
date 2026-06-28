@@ -18,13 +18,13 @@ class PayrollsController < ApplicationController
                template: "payrolls/show",
                layout: "pdf",
                disposition: "Portrait",
-               page_width: '216mm',
-               page_height: '330mm',
+               page_width: "216mm",
+               page_height: "330mm",
                margin: {
-                 top: '5mm',
-                 bottom: '5mm',
-                 left: '5mm',
-                 right: '5mm'
+                 top: "5mm",
+                 bottom: "5mm",
+                 left: "5mm",
+                 right: "5mm"
                }
       end
     end

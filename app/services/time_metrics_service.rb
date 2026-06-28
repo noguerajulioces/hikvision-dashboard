@@ -51,10 +51,10 @@ class TimeMetricsService
 
     return 0 if total_records.zero?
 
-    # Fix the interval syntax to be database-agnostic
+    # SQLite datetime arithmetic (the Postgres "+ interval '15 minute'" is not portable).
     on_time_records = AttendanceRecord.joins(:schedule)
                                      .where(entry_time: date_range)
-                                     .where("entry_time <= schedules.expected_entry_time + interval '15 minute'")
+                                     .where("entry_time <= datetime(schedules.expected_entry_time, '+15 minutes')")
                                      .count
 
     ((on_time_records.to_f / total_records) * 100).round

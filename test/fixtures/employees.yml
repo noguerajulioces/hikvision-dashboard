@@ -25,10 +25,8 @@ one:
   first_name: MyString
   last_name: MyString
   group_id: 1
-  role: MyString
 
 two:
   first_name: MyString
   last_name: MyString
   group_id: 1
-  role: MyString

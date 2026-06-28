@@ -20,7 +20,11 @@ jobs:
           bundler-cache: true
 
       - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
+        # Use bundle exec (not bin/brakeman) so the run is not gated on having the
+        # absolute latest brakeman gem (bin/brakeman forces --ensure-latest, which
+        # exits 5 when a newer version exists). The scan itself still fails CI on
+        # real warnings.
+        run: bundle exec brakeman --no-pager
 
   scan_js:
     runs-on: ubuntu-latest

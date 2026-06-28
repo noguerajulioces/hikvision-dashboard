@@ -13,3 +13,8 @@ module ActiveSupport
     # Add more helper methods to be used by all tests here...
   end
 end
+
+class ActionDispatch::IntegrationTest
+  # Provides the `sign_in` / `sign_out` helpers for controller/integration tests.
+  include Devise::Test::IntegrationHelpers
+end

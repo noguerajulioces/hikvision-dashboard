@@ -157,13 +157,14 @@
     <div class="p-5">
       <% 
         # Obtener horarios agrupados por hora de entrada
-        morning_schedules = Schedule.where("extract(hour from expected_entry_time) BETWEEN 5 AND 11")
+        # SQLite: cast(strftime('%H', ...) as integer) replaces Postgres "extract(hour from ...)"
+        morning_schedules = Schedule.where("cast(strftime('%H', expected_entry_time) as integer) BETWEEN 5 AND 11")
                             .joins(:group).count
-        
-        afternoon_schedules = Schedule.where("extract(hour from expected_entry_time) BETWEEN 12 AND 17")
+
+        afternoon_schedules = Schedule.where("cast(strftime('%H', expected_entry_time) as integer) BETWEEN 12 AND 17")
                               .joins(:group).count
-        
-        night_schedules = Schedule.where("extract(hour from expected_entry_time) BETWEEN 18 AND 23 OR extract(hour from expected_entry_time) BETWEEN 0 AND 4")
+
+        night_schedules = Schedule.where("cast(strftime('%H', expected_entry_time) as integer) BETWEEN 18 AND 23 OR cast(strftime('%H', expected_entry_time) as integer) BETWEEN 0 AND 4")
                           .joins(:group).count
         
         total_schedules = morning_schedules + afternoon_schedules + night_schedules
