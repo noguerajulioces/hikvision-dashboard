@@ -127,6 +127,36 @@ jobs:
           Write-Host "Bundled wkhtmltopdf from $($exe.Directory.FullName):"
           Get-ChildItem $dest | Select-Object Name, Length | Format-Table -AutoSize | Out-String | Write-Host
 
+      - name: Slim staging (drop runtime-unnecessary files)
+        shell: pwsh
+        run: |
+          function Size($p) {
+            if (Test-Path $p) { "{0:N0} MB" -f ((Get-ChildItem $p -Recurse -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum / 1MB) } else { "n/a" }
+          }
+          Write-Host "BEFORE  total=$(Size build)  ruby=$(Size build\ruby)  bundle=$(Size build\app\vendor\bundle)"
+
+          # 1) Cached .gem packages: a full duplicate of every installed gem, never used at runtime.
+          Get-ChildItem build -Recurse -Directory -Filter cache -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -match '\\(gems|bundle)\\' } |
+            ForEach-Object { Get-ChildItem $_.FullName -Filter *.gem -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue }
+
+          # 2) Ruby docs / RI / man / C headers: only needed to read docs or compile, not to run.
+          foreach ($d in 'share\doc', 'share\ri', 'share\man', 'include') {
+            $p = Join-Path 'build\ruby' $d
+            if (Test-Path $p) { Remove-Item $p -Recurse -Force -ErrorAction SilentlyContinue }
+          }
+
+          # 3) App dirs not needed in production.
+          foreach ($p in 'build\app\test', 'build\app\.git', 'build\app\tmp', 'build\app\log') {
+            if (Test-Path $p) { Remove-Item $p -Recurse -Force -ErrorAction SilentlyContinue }
+          }
+
+          # 4) Gem doc dirs and leftover native-build intermediates.
+          Get-ChildItem build\app\vendor\bundle -Recurse -Directory -Filter doc -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          Get-ChildItem build -Recurse -Include *.o, *.obj -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+
+          Write-Host "AFTER   total=$(Size build)  ruby=$(Size build\ruby)  bundle=$(Size build\app\vendor\bundle)"
+
       - name: Install Inno Setup
         shell: pwsh
         run: choco install innosetup --no-progress -y
