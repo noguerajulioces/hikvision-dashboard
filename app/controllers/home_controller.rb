@@ -19,10 +19,12 @@ class HomeController < ApplicationController
     @incidents_count = Incident.where(created_at: @date_range).count
     @exit_records_count = AttendanceRecord.where(exit_time: @date_range).count
 
-    # Calculate total hours worked
+    # Calculate total hours worked. Computed in Ruby so it is database-agnostic
+    # (the previous EXTRACT(EPOCH FROM ...) is Postgres-only and breaks on SQLite).
+    # The range is a single day/week/month for one company, so the row count is small.
     @total_hours = AttendanceRecord.where(entry_time: @date_range)
                                   .where.not(exit_time: nil)
-                                  .sum("EXTRACT(EPOCH FROM (exit_time - entry_time))/3600")
+                                  .sum { |record| (record.exit_time - record.entry_time) / 3600.0 }
                                   .round(1)
 
     # Calculate attendance rate

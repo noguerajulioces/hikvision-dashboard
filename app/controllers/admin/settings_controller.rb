@@ -24,17 +24,18 @@ module Admin
           # Clean numeric values
           value = value.gsub(".", "") if %w[hourly_rate overtime_rate].include?(key.to_s)
 
-          # Use raw SQL to bypass the Paranoia gem's conditions
-          setting = AppSetting.unscoped.find_by(key: key.to_s)
-
+          # Upsert WITHOUT running model validations, matching the original intent.
+          # AppSetting defines a class-level method_missing + respond_to_missing?
+          # that returns true for everything, which corrupts ActiveRecord's
+          # validation introspection (the uniqueness check builds an invalid query).
+          # update_column / insert both skip validations and callbacks, and are
+          # database-agnostic (the previous raw INSERT used NOW(), unsupported by SQLite).
+          setting = AppSetting.find_by(key: key.to_s)
           if setting
-            # Update existing setting
             setting.update_column(:value, value)
           else
-            # Create new setting with direct SQL to avoid Paranoia
-            AppSetting.connection.execute(
-              "INSERT INTO app_settings (key, value, created_at, updated_at) VALUES ('#{key}', '#{value}', NOW(), NOW())"
-            )
+            now = Time.current
+            AppSetting.insert({ key: key.to_s, value: value, created_at: now, updated_at: now })
           end
         end
       end
