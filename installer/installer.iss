@@ -19,8 +19,10 @@
 #ifndef BuildDir
   #define BuildDir "build"
 #endif
+#ifndef MyAppVersion
+  #define MyAppVersion "1.0.0"
+#endif
 #define MyAppName "Multicarnes"
-#define MyAppVersion "1.0.0"
 #define MyAppPublisher "Multicarnes"
 
 [Setup]
@@ -61,8 +63,10 @@ Source: "{#BuildDir}\app\*";      DestDir: "{app}\app";      Flags: recursesubdi
 Source: "{#BuildDir}\launcher\*"; DestDir: "{app}\launcher"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "{#BuildDir}\Multicarnes.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; Ship the migrated database ONLY on a clean install; never overwrite the
-; client's live data on reinstall/upgrade.
-Source: "{#BuildDir}\seed\production.sqlite3"; DestDir: "{localappdata}\{#MyAppName}\data"; Flags: onlyifdoesntexist external skipifsourcedoesntexist
+; client's live data on reinstall/upgrade. The file is packaged into the setup
+; when present at build time; skipifsourcedoesntexist lets CI builds compile
+; without it (the app then creates an empty seeded DB on first run).
+Source: "{#BuildDir}\seed\production.sqlite3"; DestDir: "{localappdata}\{#MyAppName}\data"; Flags: onlyifdoesntexist skipifsourcedoesntexist
 
 [Icons]
 Name: "{group}\{#MyAppName}";          Filename: "{app}\launcher\Multicarnes.vbs"; IconFilename: "{app}\Multicarnes.ico"
