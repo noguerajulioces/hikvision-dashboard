@@ -92,4 +92,4 @@ gem "base64"
 gem "ransack"
 gem "paranoia"
 
-gem "rdoc", "6.12.0", require: false
+gem "rdoc", "8.0.0", require: false
