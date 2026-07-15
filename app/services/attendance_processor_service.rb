@@ -1,6 +1,7 @@
 class AttendanceProcessorService
   def initialize
     @processed_count = 0
+    @first_device_id = Device.first&.id
   end
 
   def call
@@ -133,12 +134,13 @@ class AttendanceProcessorService
     DateTime.parse("#{event.date} #{event.time}")
   end
 
-  def first_device_id
-    Device.first&.id
-  end
+  attr_reader :first_device_id
 
   def mark_events_as_processed(events)
-    events.each { |e| e.update(processed: true) }
+    ids = events.map(&:id)
+    return if ids.empty?
+
+    Event.where(id: ids).update_all(processed: true, updated_at: Time.current)
   end
 
   def log_success(employee_id, entry_time, exit_time)

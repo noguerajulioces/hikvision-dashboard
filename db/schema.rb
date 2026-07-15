@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_08_121214) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_15_120000) do
   create_table "absences", force: :cascade do |t|
     t.bigint "employee_id", null: false
     t.date "start_date"
@@ -19,6 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_121214) do
     t.string "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["employee_id", "start_date", "end_date"], name: "index_absences_on_employee_id_and_start_date_and_end_date"
     t.index ["employee_id"], name: "index_absences_on_employee_id"
   end
 
@@ -38,6 +39,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_121214) do
     t.datetime "updated_at", null: false
     t.boolean "processed"
     t.bigint "schedule_id"
+    t.index ["device_id"], name: "index_attendance_records_on_device_id"
+    t.index ["employee_id", "entry_time"], name: "index_attendance_records_on_employee_id_and_entry_time"
+    t.index ["processed"], name: "index_attendance_records_on_processed"
     t.index ["schedule_id"], name: "index_attendance_records_on_schedule_id"
   end
 
@@ -62,6 +66,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_121214) do
     t.string "document_number"
     t.datetime "deleted_at"
     t.index ["deleted_at"], name: "index_employees_on_deleted_at"
+    t.index ["group_id"], name: "index_employees_on_group_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -82,6 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_121214) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "processed", default: false
+    t.index ["date", "time"], name: "index_events_on_date_and_time"
     t.index ["device_id"], name: "index_events_on_device_id"
     t.index ["employee_id"], name: "index_events_on_employee_id"
   end
@@ -99,6 +105,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_121214) do
     t.boolean "resolved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["employee_id", "date"], name: "index_incidents_on_employee_id_and_date"
   end
 
   create_table "overtime_records", force: :cascade do |t|
@@ -108,6 +115,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_121214) do
     t.decimal "compensation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["employee_id", "date"], name: "index_overtime_records_on_employee_id_and_date"
   end
 
   create_table "payroll_entries", force: :cascade do |t|

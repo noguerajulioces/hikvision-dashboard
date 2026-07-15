@@ -3,7 +3,7 @@ class EmployeesController < ApplicationController
 
   def index
     @q = Employee.ransack(params[:q])
-    @employees = @q.result.paginate(page: params[:page], per_page: 10)
+    @employees = @q.result.includes(:group).paginate(page: params[:page], per_page: 10)
   end
 
   def show

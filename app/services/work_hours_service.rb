@@ -31,20 +31,24 @@ class WorkHoursService
   def verify_missing_attendance
     # Obtiene todos los schedules para el grupo del empleado en el rango de fechas
     schedules = Schedule.where(group_id: @employee.group_id, date: @start_date..@end_date)
+    return if schedules.empty?
+
+    # Cargamos las fechas con asistencia del rango en una sola consulta, en lugar
+    # de ejecutar un `exists?` por cada schedule.
+    attended_dates = @employee.attendance_records
+                              .where(entry_time: @start_date.beginning_of_day..@end_date.end_of_day)
+                              .pluck(:entry_time)
+                              .map(&:to_date)
+                              .to_set
 
     schedules.each do |schedule|
-      # Revisa si hay algún registro de asistencia para ese día
-      attendance_exists = @employee.attendance_records.where(
-        entry_time: schedule.date.beginning_of_day..schedule.date.end_of_day
-      ).exists?
+      next if attended_dates.include?(schedule.date)
 
-      unless attendance_exists
-        # Si no se encontró ningún registro, se crea el incidente correspondiente.
-        IncidentManager.new(@employee).create_incident(
-          schedule,
-          "No se presentó para el horario del #{schedule.date} a las #{schedule.expected_entry_time.strftime('%H:%M')}"
-        )
-      end
+      # Si no se encontró ningún registro, se crea el incidente correspondiente.
+      IncidentManager.new(@employee).create_incident(
+        schedule,
+        "No se presentó para el horario del #{schedule.date} a las #{schedule.expected_entry_time.strftime('%H:%M')}"
+      )
     end
   end
 end

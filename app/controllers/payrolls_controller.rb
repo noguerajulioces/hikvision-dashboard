@@ -3,10 +3,12 @@ class PayrollsController < ApplicationController
 
   def index
     @q = Payroll.ransack(params[:q])
-    @payrolls = @q.result.includes(:employee).paginate(page: params[:page])
+    @payrolls = @q.result.includes(:employee, :incidents).paginate(page: params[:page])
   end
 
   def show
+    @attendance_records = @payroll.attendance_records.includes(:schedule)
+
     @not_worked_days = @payroll.incidents
                          .where("issue LIKE ?", "%No se presentó%")
                          .count

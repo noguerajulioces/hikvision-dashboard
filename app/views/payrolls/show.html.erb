@@ -180,7 +180,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
-            <% @payroll.attendance_records.each do |record| %>
+            <% @attendance_records.each do |record| %>
               <tr>
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900">
                   <%= record.entry_time.strftime("%d/%m/%Y") %>
