@@ -1,6 +1,18 @@
 class ReportsController < ApplicationController
+  # Feed de actividad combinado. Antes cargaba las 4 tablas COMPLETAS en memoria
+  # (AttendanceRecord.all + ...), lo que crece sin cota. Ahora tomamos solo las
+  # más recientes de cada tipo y las mezclamos ordenadas por fecha.
+  RECENT_ACTIVITY_LIMIT = 200
+
   def index
-    @reports = AttendanceRecord.all + OvertimeRecord.all + Incident.all + Absence.all
+    recent = [
+      AttendanceRecord.reorder(created_at: :desc).limit(RECENT_ACTIVITY_LIMIT),
+      OvertimeRecord.reorder(created_at: :desc).limit(RECENT_ACTIVITY_LIMIT),
+      Incident.reorder(created_at: :desc).limit(RECENT_ACTIVITY_LIMIT),
+      Absence.reorder(created_at: :desc).limit(RECENT_ACTIVITY_LIMIT)
+    ].flat_map(&:to_a)
+
+    @reports = recent.sort_by(&:created_at).reverse.first(RECENT_ACTIVITY_LIMIT)
   end
 
   def show

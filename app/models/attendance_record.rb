@@ -58,11 +58,12 @@ class AttendanceRecord < ApplicationRecord
     )
   end
 
+  # Asigna el horario en memoria si falta, pero NO persiste durante la lectura.
+  # Escribir dentro de after_find provoca UPDATEs en cada carga de registro
+  # (writes-on-read + N+1). El horario ya se asigna al crear vía before_validation;
+  # el backfill de registros antiguos debe hacerse con una tarea explícita.
   def check_and_assign_schedule
-    if schedule.nil?
-      assign_schedule
-      save if schedule.present?
-    end
+    assign_schedule if schedule.nil?
   end
 
   def set_defaults

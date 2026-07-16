@@ -38,12 +38,16 @@ class Payroll < ApplicationRecord
 
   # Método principal para calcular los totales
   def calculate_totals(include_lunch)
+    # Leemos el ajuste una sola vez; AppSetting.lunch_hours hace un SELECT por llamada
+    # y antes se ejecutaba una vez por cada registro dentro del bloque sum.
+    lunch_hours = AppSetting.lunch_hours
+
     # Calcular totales en base al rango de fechas
     self.total_hours_worked = attendance_records.where(entry_time: start_date.beginning_of_day..end_date.end_of_day).sum do |record|
       if record.exit_time
         hours = (record.exit_time - record.entry_time) / 3600.0
         # Subtract lunch hour if worked more than 4 hours and include_lunch is true
-        include_lunch && hours > 4 ? hours - AppSetting&.lunch_hours : hours
+        include_lunch && hours > 4 ? hours - lunch_hours : hours
       else
         0
       end

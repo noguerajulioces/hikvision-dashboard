@@ -53,8 +53,17 @@ class Employee < ApplicationRecord
 
   # Obtener registros de asistencia no procesados en un rango de fechas
   def unprocessed_attendance_records(start_date, end_date)
-    attendance_records.where(processed: false, entry_time: start_date.beginning_of_day..end_date.end_of_day)
-                      .reject { |record| on_leave?(record.entry_time.to_date) }
+    records = attendance_records.where(processed: false, entry_time: start_date.beginning_of_day..end_date.end_of_day)
+
+    # Cargamos las ausencias que solapan el rango una sola vez (antes se hacía un
+    # `absences.exists?` por cada registro). El WHERE descarta filas con fechas nulas,
+    # así que la comparación en memoria es segura.
+    leave_ranges = absences.where("start_date <= ? AND end_date >= ?", end_date, start_date).to_a
+
+    records.reject do |record|
+      date = record.entry_time.to_date
+      leave_ranges.any? { |absence| absence.start_date <= date && absence.end_date >= date }
+    end
   end
 
   # Calcular las horas trabajadas excluyendo almuerzo

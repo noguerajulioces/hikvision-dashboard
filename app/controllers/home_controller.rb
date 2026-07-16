@@ -13,7 +13,9 @@ class HomeController < ApplicationController
     end
 
     # Query attendance records directly with date range
-    @attendance_records = AttendanceRecord.where(entry_time: @date_range).order(entry_time: :desc).limit(10)
+    @attendance_records = AttendanceRecord.where(entry_time: @date_range)
+                                          .includes(employee: :group)
+                                          .order(entry_time: :desc).limit(10)
     @attendance_records_count = AttendanceRecord.where(entry_time: @date_range).count
     @employees = Employee.count
     @incidents_count = Incident.where(created_at: @date_range).count
