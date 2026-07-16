@@ -204,7 +204,13 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
-    pg (1.5.9)
+    pg (1.6.3)
+    pg (1.6.3-aarch64-linux)
+    pg (1.6.3-aarch64-linux-musl)
+    pg (1.6.3-arm64-darwin)
+    pg (1.6.3-x64-mingw-ucrt)
+    pg (1.6.3-x86_64-linux)
+    pg (1.6.3-x86_64-linux-musl)
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -426,7 +432,7 @@ DEPENDENCIES
   jbuilder
   kamal
   paranoia
-  pg (~> 1.1)
+  pg (~> 1.6)
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.1)

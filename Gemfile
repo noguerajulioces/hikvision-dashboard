@@ -50,7 +50,7 @@ group :development, :test do
   # Only used for the one-time data migration from the EC2 Postgres to SQLite
   # (lib/tasks/migrate_to_sqlite.rake). Excluded from the packaged Windows build
   # via `bundle install --without development test`, so no libpq is needed there.
-  gem "pg", "~> 1.1"
+  gem "pg", "~> 1.6"
 
   # Test/dev-only data generation (not used by the app at runtime).
   gem "faker"
