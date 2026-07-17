@@ -155,24 +155,13 @@
       <h3 class="text-base font-semibold text-gray-900">Distribución por Turnos</h3>
     </div>
     <div class="p-5">
-      <% 
-        # Obtener horarios agrupados por hora de entrada
-        # SQLite: cast(strftime('%H', ...) as integer) replaces Postgres "extract(hour from ...)"
-        morning_schedules = Schedule.where("cast(strftime('%H', expected_entry_time) as integer) BETWEEN 5 AND 11")
-                            .joins(:group).count
+      <%
+        shifts = schedule_shift_distribution
+        total_schedules = [ shifts.values.sum, 1 ].max
 
-        afternoon_schedules = Schedule.where("cast(strftime('%H', expected_entry_time) as integer) BETWEEN 12 AND 17")
-                              .joins(:group).count
-
-        night_schedules = Schedule.where("cast(strftime('%H', expected_entry_time) as integer) BETWEEN 18 AND 23 OR cast(strftime('%H', expected_entry_time) as integer) BETWEEN 0 AND 4")
-                          .joins(:group).count
-        
-        total_schedules = morning_schedules + afternoon_schedules + night_schedules
-        total_schedules = total_schedules > 0 ? total_schedules : 1
-        
-        morning_percent = (morning_schedules.to_f / total_schedules * 100).round
-        afternoon_percent = (afternoon_schedules.to_f / total_schedules * 100).round
-        night_percent = (night_schedules.to_f / total_schedules * 100).round
+        morning_percent = (shifts[:morning].to_f / total_schedules * 100).round
+        afternoon_percent = (shifts[:afternoon].to_f / total_schedules * 100).round
+        night_percent = (shifts[:night].to_f / total_schedules * 100).round
       %>
       
       <div class="space-y-4">

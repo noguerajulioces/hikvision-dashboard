@@ -45,19 +45,20 @@ class TimeMetricsService
   end
 
   def calculate_punctuality_rate
-    total_records = AttendanceRecord.joins(:schedule)
-                                   .where(entry_time: date_range)
-                                   .count
+    # Comparado en Ruby para ser portable: el datetime(..., '+15 minutes') era
+    # SQLite-only y el "+ interval" anterior era Postgres-only. El rango es corto
+    # (día/semana/mes de una sola empresa), así que la carga en memoria es chica.
+    records = AttendanceRecord.includes(:schedule)
+                              .where(entry_time: date_range)
+                              .select(&:schedule)
 
-    return 0 if total_records.zero?
+    return 0 if records.empty?
 
-    # SQLite datetime arithmetic (the Postgres "+ interval '15 minute'" is not portable).
-    on_time_records = AttendanceRecord.joins(:schedule)
-                                     .where(entry_time: date_range)
-                                     .where("entry_time <= datetime(schedules.expected_entry_time, '+15 minutes')")
-                                     .count
+    on_time = records.count do |record|
+      record.entry_time <= record.schedule.expected_entry_time + 15.minutes
+    end
 
-    ((on_time_records.to_f / total_records) * 100).round
+    ((on_time.to_f / records.size) * 100).round
   end
 
   def calculate_late_rate
@@ -66,32 +67,24 @@ class TimeMetricsService
   end
 
   def calculate_absence_rate
-    # Fix the association - Employee likely has a schedule (singular) association
-    # or we need to join through another model
-    total_expected = Employee.joins(:schedule)
-                            .where("schedules.workday && ARRAY[?]::integer[]", workdays_in_range)
-                            .count
+    # Asistencias esperadas = por cada horario del rango (grupo + fecha), la
+    # cantidad de empleados de ese grupo. Reemplaza la consulta rota sobre
+    # "schedules.workday && ARRAY[...]" (Postgres-only y sobre una columna que
+    # ya no existe), que siempre fallaba y devolvía un 3% inventado.
+    schedules_per_group = Schedule.where(date: scheduled_dates).group(:group_id).count
+    return 0 if schedules_per_group.empty?
 
+    employees_per_group = Employee.where(group_id: schedules_per_group.keys).group(:group_id).count
+    total_expected = schedules_per_group.sum { |group_id, days| days * employees_per_group.fetch(group_id, 0) }
     return 0 if total_expected.zero?
 
     actual_attendance = AttendanceRecord.where(entry_time: date_range).count
 
     absence_count = [ total_expected - actual_attendance, 0 ].max
     ((absence_count.to_f / total_expected) * 100).round
-  rescue ActiveRecord::ConfigurationError
-    # Fallback if the association is still incorrect
-    # This is a temporary solution until we can fix the model associations
-    3 # Return a default value for now
   end
 
-  def workdays_in_range
-    case filter
-    when "week"
-      (Date.today.beginning_of_week..Date.today).map(&:wday)
-    when "month"
-      (Date.today.beginning_of_month..Date.today).map(&:wday).uniq
-    else
-      [ Date.today.wday ]
-    end
+  def scheduled_dates
+    date_range.first.to_date..date_range.last.to_date
   end
 end
