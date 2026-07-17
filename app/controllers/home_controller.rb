@@ -39,10 +39,14 @@ class HomeController < ApplicationController
   private
 
   def calculate_attendance_rate
-    # Get unique employees who were scheduled during this period
-    scheduled_employees = Employee.joins(:schedule)
-                                 .where("schedules.workday && ARRAY[?]::integer[]", workdays_in_range)
-                                 .distinct.count
+    # Empleados con horario en el período: los de grupos que tienen un Schedule
+    # fechado dentro del rango. Reemplaza la consulta rota sobre
+    # "schedules.workday && ARRAY[...]" (Postgres-only y sobre una columna que ya
+    # no existe), que siempre fallaba y dejaba la tasa en 0.
+    scheduled_dates = @date_range.first.to_date..@date_range.last.to_date
+    scheduled_employees = Employee.where(
+      group_id: Schedule.where(date: scheduled_dates).select(:group_id)
+    ).count
 
     # Get unique employees who actually attended
     attending_employees = Employee.joins(:attendance_records)
@@ -57,16 +61,5 @@ class HomeController < ApplicationController
     # Fallback if there's an error
     @attendance_rate = 0
     Rails.logger.error("Error calculating attendance rate: #{e.message}")
-  end
-
-  def workdays_in_range
-    case @filter
-    when "week"
-      (Date.today.beginning_of_week..Date.today).map(&:wday)
-    when "month"
-      (Date.today.beginning_of_month..Date.today).map(&:wday).uniq
-    else
-      [ Date.today.wday ]
-    end
   end
 end
