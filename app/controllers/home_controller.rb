@@ -45,7 +45,7 @@ class HomeController < ApplicationController
     # no existe), que siempre fallaba y dejaba la tasa en 0.
     scheduled_dates = @date_range.first.to_date..@date_range.last.to_date
     scheduled_employees = Employee.where(
-      group_id: Schedule.where(date: scheduled_dates).select(:group_id)
+      group_id: Schedule.where(date: scheduled_dates).reorder(nil).select(:group_id)
     ).count
 
     # Get unique employees who actually attended
