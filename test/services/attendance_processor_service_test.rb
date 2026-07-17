@@ -116,6 +116,24 @@ class AttendanceProcessorServiceTest < ActiveSupport::TestCase
     assert_equal at("2026-06-19 16:00:00"), record.exit_time
   end
 
+  test "mid-day re-punches are consumed by the day's record and never resurface" do
+    # Caso real: entrada 04:02 y dos golpes al salir (14:25 y 14:30). El golpe
+    # intermedio quedaba pendiente y la siguiente corrida lo convertía en un
+    # registro basura "14:25 sin salida".
+    worker = Employee.create!(document_number: "7138042", group: Group.create!(name: "Ventas"))
+    punch "2026-06-24", "04:02:08", employee: worker
+    punch "2026-06-24", "14:25:17", employee: worker
+    punch "2026-06-24", "14:30:52", employee: worker
+
+    process
+    assert_equal 0, Event.where(processed: false).count
+
+    process
+    record = worker.attendance_records.reload.sole
+    assert_equal at("2026-06-24 04:02:08"), record.entry_time
+    assert_equal at("2026-06-24 14:30:52"), record.exit_time
+  end
+
   test "standard employees get no exit when the day spans less than 5 hours" do
     worker = Employee.create!(document_number: "5058650", group: Group.create!(name: "Ventas"))
     punch "2026-06-19", "07:00:00", employee: worker

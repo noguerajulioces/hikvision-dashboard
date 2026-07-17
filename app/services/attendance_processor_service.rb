@@ -90,27 +90,20 @@ class AttendanceProcessorService
   def handle_standard_attendance(employee, events)
     return if events.empty?
 
-    events_by_date = events.group_by(&:date).sort.to_h
-    used_event_ids = []
+    events.group_by(&:date).sort.each do |_date, day_events|
+      sorted_day_events = day_events.sort_by(&:time)
 
-    events_by_date.each do |_date, day_events|
-      sorted_day_events = day_events.reject { |e| used_event_ids.include?(e.id) }.sort_by(&:time)
-      next if sorted_day_events.empty?
-
-      entry_event = sorted_day_events.first
-      exit_event  = sorted_day_events.last
-
-      entry_time = build_datetime(entry_event)
-      exit_time  = build_datetime(exit_event)
+      entry_time = build_datetime(sorted_day_events.first)
+      exit_time  = build_datetime(sorted_day_events.last)
 
       # Verificamos si la diferencia es al menos 5 horas
       hours_diff = ((exit_time - entry_time) * 24).to_f
       exit_time = nil if hours_diff < 5
 
-      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ].uniq)
-
-      used_event_ids << entry_event.id
-      used_event_ids << exit_event.id if exit_time
+      # El registro consume TODOS los golpes del día: los intermedios son
+      # re-marcaciones de la misma jornada y, si quedaran pendientes, la próxima
+      # corrida los convertiría en registros basura "sin salida".
+      create_attendance_record(employee.id, entry_time, exit_time, sorted_day_events)
     end
   end
 
