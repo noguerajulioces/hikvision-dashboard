@@ -1,0 +1,5 @@
+sName,sJobNo,sCard,Date,Time,IN/OUT,ReadID,EventMainCode,EventSubCode,AttendanceStatus,WearMask,SerialNo
+DIOSNEL VILLAR,'3489327,'0055012470,2026-06-19,19:54:34,IN,1,5,1,undefined,invalid,51925
+DIOSNEL VILLAR,'3489327,'0055012470,2026-06-20,03:59:15,IN,1,5,1,undefined,invalid,51938
+MIGUEL LEGUIZAMON,'7138042,'0121963449,2026-06-19,13:43:52,IN,1,5,38,undefined,invalid,51794
+,',',2026-06-19,13:44:53,IN,1,5,39,undefined,invalid,51804

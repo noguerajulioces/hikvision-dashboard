@@ -53,9 +53,11 @@ class EventImportService
   end
 
   def find_or_create_employee(document_number)
-    return nil unless document_number.present?
+    # Las lecturas fallidas del dispositivo vienen con sJobNo = "'" (solo el prefijo
+    # de Excel): sin documento real no hay empleado que crear ni asistencia que generar.
+    cleaned_document = document_number.to_s.delete_prefix("'")
+    return nil if cleaned_document.blank?
 
-    cleaned_document = document_number.delete_prefix("'")
     Employee.find_or_create_by!(document_number: cleaned_document)
   rescue ActiveRecord::RecordInvalid => e
     @errors << "⚠️ Error al crear empleado con documento #{document_number}: #{e.message}"
