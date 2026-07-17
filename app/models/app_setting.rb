@@ -1,16 +1,12 @@
 # == Schema Information
 #
-# Table name: settings
+# Table name: app_settings
 #
-#  id         :bigint           not null, primary key
+#  id         :integer          not null, primary key
+#  key        :string
 #  value      :text
-#  var        :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_settings_on_var  (var) UNIQUE
 #
 # app/models/AppSetting.rb
 class AppSetting < ApplicationRecord
@@ -37,8 +33,13 @@ class AppSetting < ApplicationRecord
     end
   end
 
+  # No declarar respond_to? true para cualquier método: gemas que hacen sondeo
+  # (annotaterb pregunta respond_to?(:translation_class) y luego llama al método,
+  # que devuelve nil → rompía db:migrate) y la introspección de validaciones de
+  # ActiveRecord se confunden. La notación por punto (AppSetting.lunch_hours)
+  # sigue funcionando vía method_missing, que no consulta respond_to?.
   def self.respond_to_missing?(method_name, include_private = false)
-    true
+    super
   end
 
   # Automatically convert values to appropriate types
