@@ -35,11 +35,18 @@ class WorkHoursService
 
     # Cargamos las fechas con asistencia del rango en una sola consulta, en lugar
     # de ejecutar un `exists?` por cada schedule.
-    attended_dates = @employee.attendance_records
-                              .where(entry_time: @start_date.beginning_of_day..@end_date.end_of_day)
-                              .pluck(:entry_time)
-                              .map(&:to_date)
-                              .to_set
+    punches = @employee.attendance_records
+                       .where(entry_time: @start_date.beginning_of_day..@end_date.end_of_day)
+                       .pluck(:entry_time, :exit_time)
+
+    attended_dates = punches.map { |entry_time, _| entry_time.to_date }.to_set
+
+    # El turno del sereno cruza la medianoche: la mañana en que sale también cuenta
+    # como fecha asistida, para no marcar "No se presentó" el día posterior a su
+    # última noche trabajada cuando hay horarios cargados en bloque.
+    if @employee.sereno?
+      attended_dates.merge(punches.filter_map { |_, exit_time| exit_time&.to_date })
+    end
 
     schedules.each do |schedule|
       next if attended_dates.include?(schedule.date)

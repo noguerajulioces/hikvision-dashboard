@@ -36,9 +36,21 @@ class Schedule < ApplicationRecord
 
   # Métodos de instancia
   def formatted_duration
-    total_seconds = expected_exit_time - expected_entry_time
+    total_seconds = effective_expected_exit_time - expected_entry_time
     total_seconds -= 1.hour if include_lunch? && total_seconds > 4.hours
     Time.at(total_seconds).utc.strftime("%H:%M horas")
+  end
+
+  # Determina si el horario cruza la medianoche (turno nocturno: entrada 20:00, salida 04:00).
+  # Ambos datetimes se guardan sobre la fecha de entrada, por eso entrada > salida.
+  def crosses_midnight?
+    expected_entry_time > expected_exit_time
+  end
+
+  # La salida esperada real: si el turno cruza la medianoche, cae al día siguiente.
+  # Usar siempre esta versión para comparar contra horas de salida reales.
+  def effective_expected_exit_time
+    crosses_midnight? ? expected_exit_time + 1.day : expected_exit_time
   end
 
   def day_of_week
@@ -62,11 +74,6 @@ class Schedule < ApplicationRecord
     if expected_entry_time >= expected_exit_time && !crosses_midnight?
       errors.add(:expected_exit_time, "debe ser posterior a la hora de entrada")
     end
-  end
-
-  # Determina si el horario cruza la medianoche
-  def crosses_midnight?
-    expected_entry_time > expected_exit_time
   end
 
   def self.ransackable_attributes(auth_object = nil)
