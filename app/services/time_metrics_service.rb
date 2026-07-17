@@ -71,7 +71,9 @@ class TimeMetricsService
     # cantidad de empleados de ese grupo. Reemplaza la consulta rota sobre
     # "schedules.workday && ARRAY[...]" (Postgres-only y sobre una columna que
     # ya no existe), que siempre fallaba y devolvía un 3% inventado.
-    schedules_per_group = Schedule.where(date: scheduled_dates).group(:group_id).count
+    # reorder(nil) quita el ORDER BY date del default_scope: Postgres rechaza
+    # ordenar por una columna no agrupada (SQLite lo tolera y no lo detecta).
+    schedules_per_group = Schedule.where(date: scheduled_dates).reorder(nil).group(:group_id).count
     return 0 if schedules_per_group.empty?
 
     employees_per_group = Employee.where(group_id: schedules_per_group.keys).group(:group_id).count
