@@ -16,11 +16,14 @@ class OvertimeCalculator
     # Si la llegada tardía está dentro del tiempo de tolerancia, se ignora
     late_minutes = 0 if late_minutes <= (tolerance / 60.0)
 
-    # Verificar si hay horas extra (salida después de la hora esperada)
-    return 0 unless @record.exit_time > @schedule.expected_exit_time
+    # Verificar si hay horas extra (salida después de la hora esperada).
+    # effective_expected_exit_time corre la salida al día siguiente cuando el
+    # horario cruza la medianoche; comparar contra expected_exit_time directo
+    # inflaba ~24h de extras por noche para el sereno.
+    return 0 unless @record.exit_time > @schedule.effective_expected_exit_time
 
     # Calcular horas trabajadas después de la salida esperada
-    extra_hours = (@record.exit_time - @schedule.expected_exit_time) / 3600.0
+    extra_hours = (@record.exit_time - @schedule.effective_expected_exit_time) / 3600.0
 
     # Restar el tiempo de llegada tardía (convertido a horas)
     overtime_hours = extra_hours - (late_minutes / 60.0)

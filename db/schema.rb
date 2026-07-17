@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_15_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_16_090000) do
   create_table "absences", force: :cascade do |t|
     t.bigint "employee_id", null: false
     t.date "start_date"
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_15_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "processed", default: false
+    t.index ["date", "time", "s_job_no", "event_sub_code"], name: "index_events_on_unique_punch", unique: true
     t.index ["date", "time"], name: "index_events_on_date_and_time"
     t.index ["device_id"], name: "index_events_on_device_id"
     t.index ["employee_id"], name: "index_events_on_employee_id"

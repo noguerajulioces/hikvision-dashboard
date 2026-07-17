@@ -34,8 +34,14 @@ class EventsController < ApplicationController
   # POST /events/import
   def import
     if params[:file].present?
-      EventImportService.new(params[:file].path).call
-      redirect_to events_path, notice: "Eventos importados exitosamente."
+      result = EventImportService.new(params[:file].path).call
+      message = "Importación: #{result[:total_imported]} eventos nuevos, #{result[:skipped_duplicates]} duplicados omitidos."
+
+      if result[:errors].any?
+        redirect_to events_path, alert: "#{message} Errores (#{result[:errors].size}): #{result[:errors].first(3).join(' — ')}"
+      else
+        redirect_to events_path, notice: message
+      end
     else
       redirect_to events_path, alert: "Por favor seleccione un archivo para importar."
     end

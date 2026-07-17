@@ -51,6 +51,13 @@ class Employee < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  # El sereno (vigilante nocturno) tiene turnos que cruzan la medianoche y se
+  # procesa con una lógica de asistencia propia. Se detecta por inclusión porque
+  # en producción el grupo se llama "Sereno - Diosnel", no "Sereno" a secas.
+  def sereno?
+    group&.name&.downcase&.include?("sereno") || false
+  end
+
   # Obtener registros de asistencia no procesados en un rango de fechas
   def unprocessed_attendance_records(start_date, end_date)
     records = attendance_records.where(processed: false, entry_time: start_date.beginning_of_day..end_date.end_of_day)

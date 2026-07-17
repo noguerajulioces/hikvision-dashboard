@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full">
+<html class="h-full bg-gray-50">
   <head>
     <title><%= content_for(:title) || "Multicarnes" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -23,12 +23,10 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-200">
-    <main class="mt-28">
+  <body class="h-full">
+    <main class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <%= render "layouts/shared/notice" %>
-      <div class="shadow rounded-[4vw] bg-white mx-48 pb-4">
-        <%= yield %>
-      </div>
+      <%= yield %>
     </main>
   </body>
 </html>

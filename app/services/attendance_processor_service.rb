@@ -1,4 +1,9 @@
 class AttendanceProcessorService
+  # Un turno real dura ~8h (19:50 → 04:00); pasada esta ventana la salida se da por perdida.
+  SERENO_MAX_SHIFT_HOURS = 14
+  # Golpes más cercanos que esto son re-marcaciones del mismo ingreso, no un turno.
+  SERENO_MIN_SHIFT_HOURS = 4
+
   def initialize
     @processed_count = 0
     @first_device_id = Device.first&.id
@@ -16,7 +21,7 @@ class AttendanceProcessorService
     grouped_events = Event
                       .where(processed: false)
                       .where.not(employee_id: nil)
-                      .order(:employee_id, :date, :time)
+                      .reorder(:employee_id, :date, :time)
                       .group_by(&:employee_id)
 
     grouped_events.each do |employee_id, events|
@@ -35,75 +40,70 @@ class AttendanceProcessorService
 
     sorted_events = valid_events(events).sort_by { |e| [ e.date, e.time ] }
 
-    if sereno?(employee)
+    if employee.sereno?
       process_sereno_events(employee, sorted_events)
     else
       handle_standard_attendance(employee, sorted_events)
     end
   end
 
-  def sereno?(employee)
-    employee.group&.name&.downcase == "sereno"
-  end
-
+  # El sereno marca al entrar (~20:00) y al salir (~04:00 del día siguiente), a veces
+  # con re-marcaciones. Recorremos sus eventos como un stream cronológico: el primer
+  # evento no consumido abre un turno y el último golpe dentro de la ventana de
+  # SERENO_MAX_SHIFT_HOURS lo cierra; los golpes intermedios son re-marcaciones.
+  # Así una salida matinal nunca puede volver a usarse como entrada del día siguiente.
   def process_sereno_events(employee, events)
-    used_entry_ids = []
-    used_exit_ids = []
-    events_by_date = events.group_by(&:date).sort.to_h
+    index = 0
 
-    events_by_date.each_with_index do |(date, day_events), idx|
-      entry_event = day_events.reject { |e| used_entry_ids.include?(e.id) }.last
-      next unless entry_event
-
-      next_date = events_by_date.keys[idx + 1]
-      next_events = events_by_date[next_date]
-      next unless next_events&.any?
-
-      exit_event = next_events.reject { |e| used_exit_ids.include?(e.id) }.first
-      next unless exit_event
-
+    while index < events.length
+      entry_event = events[index]
       entry_time = build_datetime(entry_event)
-      exit_time = build_datetime(exit_event)
 
-      hours_diff = ((exit_time - entry_time) * 24).to_f
+      window = shift_window(events, index, entry_time)
+      exit_event = window.last
 
-      if hours_diff > 14
-        # si se pasa de las 14 horas, lo marcamos como sin salida, pero NO usamos el exit_event
-        create_attendance_record(employee.id, entry_time, nil, [ entry_event ])
-        used_entry_ids << entry_event.id
-        next
+      if exit_event && hours_between(entry_time, build_datetime(exit_event)) >= SERENO_MIN_SHIFT_HOURS
+        create_attendance_record(employee.id, entry_time, build_datetime(exit_event), [ entry_event, *window ])
+      elsif index + window.length + 1 >= events.length
+        # La entrada (y sus re-marcaciones) son la cola del stream: la salida puede
+        # llegar en la próxima importación, así que quedan pendientes (processed: false).
+        break
+      else
+        # El siguiente golpe está a más de SERENO_MAX_SHIFT_HOURS: salida perdida.
+        create_attendance_record(employee.id, entry_time, nil, [ entry_event, *window ])
       end
 
-      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ])
-      used_entry_ids << entry_event.id
-      used_exit_ids << exit_event.id
+      index += 1 + window.length
     end
+  end
+
+  def shift_window(events, index, entry_time)
+    events[(index + 1)..].take_while do |event|
+      hours_between(entry_time, build_datetime(event)) <= SERENO_MAX_SHIFT_HOURS
+    end
+  end
+
+  def hours_between(from, to)
+    ((to - from) * 24).to_f
   end
 
   def handle_standard_attendance(employee, events)
     return if events.empty?
 
-    events_by_date = events.group_by(&:date).sort.to_h
-    used_event_ids = []
+    events.group_by(&:date).sort.each do |_date, day_events|
+      sorted_day_events = day_events.sort_by(&:time)
 
-    events_by_date.each do |_date, day_events|
-      sorted_day_events = day_events.reject { |e| used_event_ids.include?(e.id) }.sort_by(&:time)
-      next if sorted_day_events.empty?
-
-      entry_event = sorted_day_events.first
-      exit_event  = sorted_day_events.last
-
-      entry_time = build_datetime(entry_event)
-      exit_time  = build_datetime(exit_event)
+      entry_time = build_datetime(sorted_day_events.first)
+      exit_time  = build_datetime(sorted_day_events.last)
 
       # Verificamos si la diferencia es al menos 5 horas
       hours_diff = ((exit_time - entry_time) * 24).to_f
       exit_time = nil if hours_diff < 5
 
-      create_attendance_record(employee.id, entry_time, exit_time, [ entry_event, exit_event ].uniq)
-
-      used_event_ids << entry_event.id
-      used_event_ids << exit_event.id if exit_time
+      # El registro consume TODOS los golpes del día: los intermedios son
+      # re-marcaciones de la misma jornada y, si quedaran pendientes, la próxima
+      # corrida los convertiría en registros basura "sin salida".
+      create_attendance_record(employee.id, entry_time, exit_time, sorted_day_events)
     end
   end
 
@@ -117,6 +117,13 @@ class AttendanceProcessorService
       employee_id: employee_id,
       entry_time: entry_time
     )
+
+    # Nunca degradar un registro que ya tiene salida: un reproceso sin la salida
+    # a la vista (p. ej. una re-importación parcial) no debe borrar datos buenos.
+    if attendance.persisted? && attendance.exit_time.present? && exit_time.nil?
+      mark_events_as_processed(events)
+      return
+    end
 
     attendance.exit_time = exit_time
     attendance.device_id = first_device_id
