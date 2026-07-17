@@ -22,7 +22,14 @@
 require "test_helper"
 
 class EmployeeTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "sereno? detects any group containing sereno, like the production name" do
+    assert Employee.new(group: Group.create!(name: "Sereno")).sereno?
+    assert Employee.new(group: Group.create!(name: "Sereno - Diosnel")).sereno?
+    assert Employee.new(group: Group.create!(name: "SERENOS")).sereno?
+  end
+
+  test "sereno? is false for other groups and for employees without group" do
+    assert_not Employee.new(group: Group.create!(name: "Ventas")).sereno?
+    assert_not Employee.new.sereno?
+  end
 end

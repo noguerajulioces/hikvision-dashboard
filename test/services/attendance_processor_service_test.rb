@@ -2,11 +2,12 @@ require "test_helper"
 
 class AttendanceProcessorServiceTest < ActiveSupport::TestCase
   setup do
+    # Nombre real del grupo en producción: la detección debe funcionar por inclusión.
     @sereno = Employee.create!(
       document_number: "3489327",
       first_name: "DIOSNEL",
       last_name: "VILLAR",
-      group: Group.create!(name: "Sereno")
+      group: Group.create!(name: "Sereno - Diosnel")
     )
   end
 
