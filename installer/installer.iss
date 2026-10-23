@@ -50,6 +50,8 @@ Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 [Tasks]
 Name: "desktopicon"; Description: "Crear un acceso directo en el escritorio"; GroupDescription: "Accesos directos:"
 
+Name: "autostart"; Description: "Iniciar {#MyAppName} automáticamente al encender la PC"; GroupDescription: "Inicio:"
+
 [Dirs]
 ; Per-user writable data, kept separate from the program so updates/uninstall
 ; never delete it.
@@ -72,6 +74,8 @@ Source: "{#BuildDir}\seed\production.sqlite3"; DestDir: "{localappdata}\{#MyAppN
 Name: "{group}\{#MyAppName}";          Filename: "{app}\launcher\Multicarnes.vbs"; IconFilename: "{app}\Multicarnes.ico"
 Name: "{group}\Detener {#MyAppName}";  Filename: "{app}\launcher\stop.cmd";        IconFilename: "{app}\Multicarnes.ico"
 Name: "{autodesktop}\{#MyAppName}";    Filename: "{app}\launcher\Multicarnes.vbs"; IconFilename: "{app}\Multicarnes.ico"; Tasks: desktopicon
+
+Name: "{userstartup}\{#MyAppName}";   Filename: "{app}\launcher\Multicarnes.vbs"; IconFilename: "{app}\Multicarnes.ico"; Parameters: "--background"; Tasks: autostart
 
 [Run]
 Filename: "{app}\launcher\Multicarnes.vbs"; Description: "Iniciar {#MyAppName} ahora"; Flags: shellexec nowait postinstall skipifsilent

@@ -34,6 +34,9 @@ instalador `.exe`. No requiere internet, Docker ni PostgreSQL en la PC del clien
 La data real vive en el Postgres `multicarnes_development` dentro del EC2. Se
 copia **una vez** a un archivo SQLite que el instalador entrega al cliente.
 
+Atajo: `script/migrate_from_ec2.sh usuario@ip-ec2 [llave.pem]` hace todo esto desde tu
+computadora (respaldo `pg_dump`, túnel SSH, esquema y copia). Los pasos manuales:
+
 Correr **en el EC2** (o por un túnel SSH `ssh -L 5432:localhost:5432 ec2`):
 
 ```bash
@@ -54,6 +57,12 @@ de password, y verifica counts + foreign keys. Resultado:
 
 > Verificación incluida en el task: counts origen=destino por tabla y
 > `PRAGMA foreign_key_check`. Probá además el login de un usuario real.
+
+---
+
+> **No** metas `production.sqlite3` en el instalador/release: contiene datos reales del
+> cliente. Instalá el `.exe` y copiá el archivo a `%LOCALAPPDATA%\Multicarnes\data\`
+> antes del primer arranque; la app lo usa y aplica las migraciones pendientes.
 
 ---
 
