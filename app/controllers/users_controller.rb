@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  skip_before_action :require_password_change, only: %i[edit update]
   before_action :set_user, only: [ :edit, :update, :destroy, :toggle_active ]
 
   def index
@@ -23,7 +24,12 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update(user_params)
+    attrs = user_params
+    # Dejar la contraseña en blanco significa "no cambiarla".
+    attrs = attrs.except(:password, :password_confirmation) if attrs[:password].blank?
+    if @user.update(attrs)
+      # Devise cierra la sesión al cambiar la contraseña propia; mantenerla abierta.
+      bypass_sign_in(@user) if @user == current_user
       redirect_to users_path, notice: "Usuario actualizado exitosamente."
     else
       render :edit, status: :unprocessable_entity
@@ -57,10 +63,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    if action_name == "update"
-      params.require(:user).permit(:email, :name, :phone, :active, :role_ids)
-    else
-      params.require(:user).permit(:email, :name, :password, :password_confirmation, :phone, :active, :role_ids)
-    end
+    params.require(:user).permit(:email, :name, :password, :password_confirmation, :phone, :active, :role_ids)
   end
 end

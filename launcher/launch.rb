@@ -18,6 +18,9 @@ require "net/http"
 require "securerandom"
 require "fileutils"
 
+# --background: started at Windows login; run the server but do not open a browser.
+BACKGROUND = ARGV.include?("--background")
+
 BASE      = File.expand_path("..", __dir__)
 APP_ROOT  = File.join(BASE, "app")
 RUBY_DIR  = File.join(BASE, "ruby")
@@ -34,6 +37,7 @@ RUN_DIR   = File.join(ROOT_DATA, "run")
 LAUNCH_LOG = File.join(LOG_DIR, "launcher.log")
 PIDFILE    = File.join(RUN_DIR, "puma.pid")
 PORTFILE   = File.join(RUN_DIR, "port")
+LAUNCHER_PIDFILE = File.join(RUN_DIR, "launcher.pid")
 
 def log(msg)
   File.open(LAUNCH_LOG, "a") { |f| f.puts("[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{msg}") }
@@ -41,11 +45,21 @@ rescue StandardError
   nil
 end
 
+DEFAULT_PORT = Integer(ENV.fetch("MULTICARNES_PORT", "4567"))
+
 def free_port
   server = TCPServer.new("127.0.0.1", 0)
   port = server.addr[1]
   server.close
   port
+end
+
+# Fixed port so bookmarks keep working; falls back to a random one only if busy.
+def pick_port
+  TCPServer.new("127.0.0.1", DEFAULT_PORT).close
+  DEFAULT_PORT
+rescue StandardError
+  free_port
 end
 
 def up?(port)
@@ -98,7 +112,7 @@ if File.exist?(PORTFILE)
   existing = File.read(PORTFILE).strip.to_i
   if existing.positive? && up?(existing)
     log("Already running on port #{existing}; opening browser.")
-    open_browser("http://127.0.0.1:#{existing}")
+    open_browser("http://127.0.0.1:#{existing}") unless BACKGROUND
     exit 0
   end
 end
@@ -111,7 +125,8 @@ env = {
   "RAILS_SERVE_STATIC_FILES" => "1",
   "RAILS_MAX_THREADS"       => "3",
   "BUNDLE_GEMFILE"          => File.join(APP_ROOT, "Gemfile"),
-  "PIDFILE"                 => PIDFILE
+  "PIDFILE"                 => PIDFILE,
+  "BACKUP_KEEP"             => "30"
 }
 
 first_run = !File.exist?(File.join(DATA_DIR, "production.sqlite3"))
@@ -132,26 +147,59 @@ else
   end
 end
 
-port = free_port
+port = pick_port
 File.write(PORTFILE, port.to_s)
 log("Starting Puma on 127.0.0.1:#{port}.")
 
 server_env = env.merge("PORT" => port.to_s)
-puma_pid = Process.spawn(
-  server_env,
-  RUBYW, RAILS_BIN, "server", "-e", "production", "-p", port.to_s, "-b", "127.0.0.1",
-  chdir: APP_ROOT,
-  out: [ File.join(LOG_DIR, "production.log"), "a" ],
-  err: [ :child, :out ]
-)
-Process.detach(puma_pid)
+
+def start_puma(env, port)
+  Process.spawn(
+    env,
+    RUBYW, RAILS_BIN, "server", "-e", "production", "-p", port.to_s, "-b", "127.0.0.1",
+    chdir: APP_ROOT,
+    out: [ File.join(LOG_DIR, "production.log"), "a" ],
+    err: [ :child, :out ]
+  )
+end
+
+puma_pid = start_puma(server_env, port)
 
 if wait_until_up(port)
   log("Server is up; opening browser.")
-  open_browser("http://127.0.0.1:#{port}")
-  exit 0
+  open_browser("http://127.0.0.1:#{port}") unless BACKGROUND
 else
   log("Server did not become healthy within timeout. See production.log.")
-  open_browser("http://127.0.0.1:#{port}") # open anyway so the user sees the error
-  exit 1
+  open_browser("http://127.0.0.1:#{port}") # open anyway so the user sees the error unless BACKGROUND
+end
+
+# --- Supervisor: stay resident (hidden) to restart Puma if it dies and to take
+# one consistent backup per day. stop.cmd kills the process tree via puma.pid. ---
+File.write(LAUNCHER_PIDFILE, Process.pid.to_s)
+last_backup_day = nil
+loop do
+  sleep 30
+
+  alive = begin
+    Process.waitpid(puma_pid, Process::WNOHANG).nil?
+  rescue Errno::ECHILD
+    false
+  end
+  unless alive && up?(port)
+    log("Server not responding; restarting Puma.")
+    begin
+      Process.kill("KILL", puma_pid) if alive
+    rescue StandardError
+      nil
+    end
+    puma_pid = start_puma(server_env, port)
+    wait_until_up(port)
+  end
+
+  today = Time.now.strftime("%Y-%m-%d")
+  if last_backup_day != today
+    last_backup_day = today
+    log("Daily backup.")
+    run_rails(%w[db:backup], env)
+  end
 end
